@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: market-risk-processing
+  main:
+    # Spark manages its own web UI; disable Spring's embedded server unless needed
+    web-application-type: none
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+spark:
+  app-name: market-risk-processing
+  # Override to yarn or spark://<host>:7077 in production
+  master: local[*]
+
+logging:
+  level:
+    root: INFO
+    infrastructure: DEBUG
+    domain: DEBUG
+
+# Scheduler — disabled by default; enable per environment
+scenario:
+  schedule:
+    enabled: false
+    cron: "0 0 18 * * MON-FRI"
+    default-portfolio-path: data/portfolio.csv
+    default-prices-path: data/prices
+    default-confidence-level: 0.99
+    default-num-paths: 10000
+  kafka:
+    topic: scenario-notifications
+
+---
+# REST profile — activate with --spring.profiles.active=rest
+spring:
+  config:
+    activate:
+      on-profile: rest
+  main:
+    web-application-type: servlet
+
+server:
+  port: 8080
+
+---
+# Kafka profile — activate with --spring.profiles.active=kafka
+# (also requires spring.kafka.bootstrap-servers to be set)
+spring:
+  config:
+    activate:
+      on-profile: kafka
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: market-risk-processing
+      auto-offset-reset: earliest

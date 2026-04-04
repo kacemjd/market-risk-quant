@@ -1,0 +1,10 @@
+test:
+  scenario:
+    input-paths:
+      portfolio: market-data/portfolio.csv
+      prices:    market-data/prices
+    as-of-date:        "2017-11-10"
+    confidence-level:  0.99
+    num-paths:         1000
+    time-grid:         GRID_53
+
