@@ -165,25 +165,38 @@ Pure Java 21. No Spring, no Spark, no I/O.
 
 ```
 domain/
-  model/          Portfolio · Position · MarketData · VaRResult
-                  MaturityGrid · AssetClass
-  service/
-    simulation/   ParametricVaRCalculator
-                  MonteCarloSimulator
-                  VaRAggregator
-    calibration/  MarketDataCalibrationService
-                  MatrixCalibrator
-    pricing/      (stub — Phase 2)
-  exception/
+├── model/
+│   ├── Portfolio.java
+│   ├── Position.java
+│   ├── MarketData.java
+│   ├── VaRResult.java
+│   ├── MaturityGrid.java
+│   └── AssetClass.java
+├── service/
+│   ├── simulation/
+│   │   ├── ParametricVaRCalculator.java
+│   │   ├── MonteCarloSimulator.java
+│   │   ├── VaRAggregator.java
+│   │   └── VaRCalculator.java
+│   ├── calibration/
+│   │   ├── MarketDataCalibrationService.java
+│   │   ├── MarketDataCalibrator.java
+│   │   └── MatrixCalibrator.java
+│   └── pricing/                              (stub — Phase 2)
+└── exception/
 
 application/
-  port/in/        CalculateVaRUseCase
-                  CalibrateMarketDataUseCase
-                  RunMonteCarloVaRUseCase
-  port/out/       MarketDataRepository
-                  PortfolioRepository
-                  VaRResultPublisher
-  service/        MonteCarloVaRService
+├── port/
+│   ├── in/
+│   │   ├── CalculateVaRUseCase.java
+│   │   ├── CalibrateMarketDataUseCase.java
+│   │   └── RunMonteCarloVaRUseCase.java
+│   └── out/
+│       ├── MarketDataRepository.java
+│       ├── PortfolioRepository.java
+│       └── VaRResultPublisher.java
+└── service/
+    └── MonteCarloVaRService.java
 ```
 
 See [`market-risk-business/README.md`](market-risk-business/README.md) for the full mathematical derivations (parametric VaR formula, covariance matrix build, Monte Carlo algorithm, and JMH benchmark results).
@@ -217,30 +230,36 @@ Spring Boot 4 application. Entry point: `RiskPlatformApplication`.
 
 ```
 infrastructure/
-  RiskPlatformApplication          Spring Boot entry point
-  ScenarioNotificationHandler      TriggerScenarioUseCase implementation
-
-  adapter/in/
-    kafka/    KafkaConfig          Consumer factory (conditional on property)
-    rest/     RestScenarioController   POST /scenarios/run  (profile: rest)
-    scheduler/ScheduledScenarioTrigger Cron EOD trigger      (conditional)
-    spark/    SparkMarketDataIngestionAdapter  Price CSV → MarketData
-              JoinAdapter          Positions × latest spot → EnrichedPositionRow
-              ComposeAdapter       Group by portfolio → VaR → publish
-
-  adapter/out/
-    persistence/ InMemoryMarketDataRepository   (→ replace with DB)
-                 InMemoryPortfolioRepository    (→ replace with DB)
-    publisher/   LoggingVaRResultPublisher      (→ replace with Kafka/DB/REST)
-
-  config/
-    DomainConfig    Wires domain beans (MarketDataCalibrationService, VaRPipeline)
-    SparkConfig     Creates singleton SparkSession
-
-  model/
-    ScenarioRequest       REST request body
-    EnrichedPositionRow   Spark Dataset row (positions + spot price)
-    VaRResultRow          Spark Dataset row (output)
+├── RiskPlatformApplication.java              Spring Boot entry point
+├── ScenarioNotificationHandler.java          implements TriggerScenarioUseCase
+│
+├── adapter/
+│   ├── in/
+│   │   ├── kafka/
+│   │   │   └── KafkaConfig.java              Consumer factory (conditional on property)
+│   │   ├── rest/
+│   │   │   └── RestScenarioController.java   POST /scenarios/run  (Profile: rest)
+│   │   ├── scheduler/
+│   │   │   └── ScheduledScenarioTrigger.java Cron EOD trigger     (conditional)
+│   │   └── spark/
+│   │       ├── SparkMarketDataIngestionAdapter.java  CSV prices → MarketData
+│   │       ├── JoinAdapter.java              Positions × latest spot → EnrichedPositionRow
+│   │       └── ComposeAdapter.java           Group by portfolio → VaR → publish
+│   └── out/
+│       ├── persistence/
+│       │   ├── InMemoryMarketDataRepository.java     (→ replace with DB)
+│       │   └── InMemoryPortfolioRepository.java      (→ replace with DB)
+│       └── publisher/
+│           └── LoggingVaRResultPublisher.java         (→ replace with Kafka/DB/REST)
+│
+├── config/
+│   ├── DomainConfig.java                     Wires MarketDataCalibrationService, VaRPipeline
+│   └── SparkConfig.java                      Creates singleton SparkSession
+│
+└── model/
+    ├── ScenarioRequest.java                  REST request body
+    ├── EnrichedPositionRow.java              Spark Dataset row (positions + spot price)
+    └── VaRResultRow.java                     Spark Dataset row (output)
 ```
 
 ---
