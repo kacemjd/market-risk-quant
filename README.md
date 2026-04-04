@@ -121,6 +121,8 @@ flowchart TB
 | In-memory stubs for persistence | Deliberate Phase 1 scaffolding — ports are defined, swapping to real DB only touches the adapter |
 | Monte Carlo with Cholesky decomposition | Correctly propagates inter-asset correlations; `seed` is configurable for reproducible tests |
 
+> 📋 **[Architecture Review](docs/architecture-review.md)** — full scorecard, strengths, areas for improvement, and dependency direction verification.
+
 ### Scenario Execution Flow
 
 End-to-end data flow from the moment a trigger fires to the published VaR result:
