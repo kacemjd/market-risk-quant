@@ -1,20 +1,19 @@
 package application.port.in;
 
-import domain.model.MarketData;
-import domain.model.Portoflio;
+import domain.model.VaRResult;
 
 /**
  * Driving port — entry point for triggering a VaR calculation.
- * Implementations live in the domain service layer.
+ * Implementations live in the application service layer ({@code VaRService}).
  */
 public interface CalculateVaRUseCase {
 
     /**
-     * @param portfolio  the portfolio to evaluate
-     * @param marketData calibrated market data (vol, covariance …)
-     * @param alpha      confidence level, e.g. 0.95 or 0.99
-     * @return VaR expressed as a positive loss amount
+     * Executes the configured VaR methodology against the provided portfolio.
+     *
+     * @param command encapsulates the portfolio, market data, and simulation parameters
+     * @return full VaR result (value, confidence, scenario stats, expected shortfall)
      */
-    double calculate(Portoflio portfolio, MarketData marketData, double alpha);
+    VaRResult calculate(CalculateVaRCommand command);
 }
 

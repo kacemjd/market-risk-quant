@@ -1,5 +1,6 @@
 package infrastructure.adapter.in.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.model.MaturityGrid;
 import infrastructure.model.ScenarioRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,14 @@ import workflow.TriggerScenarioUseCase;
 
 import java.util.UUID;
 
+/**
+ * Inbound Kafka adapter — listens on {@code scenario-notifications} and delegates
+ * to {@link TriggerScenarioUseCase}.
+ *
+ * <p>The consumer factory is configured with {@code StringDeserializer}; this class
+ * owns the JSON → {@link ScenarioRequest} mapping via Jackson {@link ObjectMapper},
+ * avoiding the Spring Kafka 4.x deprecated {@code JsonDeserializer}.
+ */
 @Slf4j
 @ConditionalOnProperty(name = "spring.kafka.bootstrap-servers")
 @Component
@@ -19,15 +28,21 @@ import java.util.UUID;
 public class KafkaScenarioConsumer {
 
     private final TriggerScenarioUseCase triggerScenarioUseCase;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(
-            topics                = "${scenario.kafka.topic:scenario-notifications}",
-            containerFactory      = "scenarioListenerContainerFactory",
-            groupId               = "${spring.kafka.consumer.group-id:market-risk-processing}"
+            topics           = "${scenario.kafka.topic:scenario-notifications}",
+            containerFactory = "scenarioListenerContainerFactory",
+            groupId          = "${spring.kafka.consumer.group-id:market-risk-processing}"
     )
-    public void onNotification(ScenarioRequest request) {
-        log.info("Kafka trigger received | asOfDate={}", request.getAsOfDate());
-        triggerScenarioUseCase.trigger(toNotification(request));
+    public void onNotification(String message) {
+        try {
+            ScenarioRequest request = objectMapper.readValue(message, ScenarioRequest.class);
+            log.info("Kafka trigger received | asOfDate={}", request.getAsOfDate());
+            triggerScenarioUseCase.trigger(toNotification(request));
+        } catch (Exception e) {
+            log.error("Failed to deserialize or process Kafka scenario message", e);
+        }
     }
 
     private ScenarioNotification toNotification(ScenarioRequest r) {
@@ -42,4 +57,3 @@ public class KafkaScenarioConsumer {
                 .build();
     }
 }
-

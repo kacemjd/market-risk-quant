@@ -26,6 +26,12 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset:earliest}")
     private String autoOffsetReset;
 
+    /**
+     * Consumer factory producing raw {@code String} values.
+     * JSON-to-POJO conversion is handled by {@link KafkaScenarioConsumer}
+     * via Jackson {@code ObjectMapper} — avoids the Spring Kafka 4.x
+     * deprecated / removed {@code JsonDeserializer}.
+     */
     @Bean
     public ConsumerFactory<String, String> scenarioConsumerFactory() {
         Map<String, Object> props = new HashMap<>();

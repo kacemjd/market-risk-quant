@@ -3,7 +3,7 @@ package domain.bdd.steps;
 import domain.model.MarketData;
 import domain.model.Portoflio;
 import domain.model.Position;
-import domain.service.simulation.ParametricVaRCalculator;
+import domain.service.simulation.analytical.ParametricVaRCalculator;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -62,7 +62,7 @@ public class ParametricVaRSteps {
                 .riskFactors(List.of(TICKER))
                 .build();
 
-        varResult = calculator.calculate(portfolio, marketData, alpha);
+        varResult = calculator.calculate(portfolio, marketData, alpha).getVar();
     }
 
     @Then("the VaR should be positive")

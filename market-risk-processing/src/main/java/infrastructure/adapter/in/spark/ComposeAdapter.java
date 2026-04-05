@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ComposeAdapter {
 
-    private final SparkSession       spark;
-    private final VaRPipeline        varPipeline;
+    private final SparkSession spark;
+    private final VaRPipeline varPipeline;
     private final VaRResultPublisher varResultPublisher;
 
     public void compute(Dataset<EnrichedPositionRow> enriched,

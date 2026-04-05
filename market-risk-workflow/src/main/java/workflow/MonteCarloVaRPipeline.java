@@ -1,20 +1,28 @@
 package workflow;
 
-import application.service.MonteCarloVaRService;
 import domain.model.MarketData;
 import domain.model.Portoflio;
 import domain.model.VaRResult;
+import domain.service.simulation.stochastic.MonteCarloVaRCalculator;
 
+/**
+ * Concrete VaR pipeline that always executes Monte Carlo simulation,
+ * bypassing the method-dispatch logic in {@link VaRCalculationPipeline}.
+ *
+ * <p>Prefer {@link VaRCalculationPipeline} for runtime method selection
+ * (PARAMETRIC / MONTE_CARLO / HISTORICAL). Use this pipeline only when
+ * Monte Carlo is unconditionally required regardless of the notification's
+ * {@code varMethod} field.
+ */
 public class MonteCarloVaRPipeline implements VaRPipeline {
 
     @Override
     public VaRResult execute(Portoflio portfolio, MarketData marketData, ScenarioNotification notification) {
-        return MonteCarloVaRService.builder()
+        return MonteCarloVaRCalculator.builder()
                 .numPaths(notification.getNumPaths())
-                .confidenceLevel(notification.getConfidenceLevel())
                 .timeGrid(notification.getTimeGrid())
                 .build()
-                .runSimulation(portfolio, marketData);
+                .calculate(portfolio, marketData, notification.getConfidenceLevel());
     }
 }
 

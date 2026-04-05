@@ -54,12 +54,13 @@ public class MarketDataCalibrationService {
                 .volatilities(volatilities)
                 .correlationMatrix(correlationMatrix)
                 .covarianceMatrix(covarianceMatrix)
+                .historicalReturns(returnsMap) // Cache historical log returns directly
                 .build();
     }
 
     private double[] calculateLogReturns(List<Double> prices) {
         return IntStream.range(1, prices.size())
-                .mapToDouble(i -> Math.log(prices.get(i) / prices.get(i - 1)))
+                .mapToDouble(i -> Math.log(prices.get(i)) - Math.log(prices.get(i - 1)))
                 .toArray();
     }
 
@@ -75,14 +76,14 @@ public class MarketDataCalibrationService {
         double meanX = Arrays.stream(x).average().orElse(0.0);
         double meanY = Arrays.stream(y).average().orElse(0.0);
 
-        double numerator    = 0.0;
+        double numerator = 0.0;
         double denominatorX = 0.0;
         double denominatorY = 0.0;
 
         for (int i = 0; i < x.length; i++) {
             double diffX = x[i] - meanX;
             double diffY = y[i] - meanY;
-            numerator    += diffX * diffY;
+            numerator += diffX * diffY;
             denominatorX += diffX * diffX;
             denominatorY += diffY * diffY;
         }
@@ -96,7 +97,7 @@ public class MarketDataCalibrationService {
     }
 
     private double[][] calculateCorrelationMatrix(List<String> tickers,
-                                                   Map<String, double[]> returnsMap) {
+                                                  Map<String, double[]> returnsMap) {
         int n = tickers.size();
         double[][] matrix = new double[n][n];
         for (int i = 0; i < n; i++) {

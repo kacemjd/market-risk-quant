@@ -18,11 +18,12 @@ import workflow.TriggerScenarioUseCase;
 public class ScenarioNotificationHandler implements TriggerScenarioUseCase {
 
     private final SparkMarketDataIngestionAdapter ingestionAdapter;
-    private final JoinAdapter                     joinAdapter;
-    private final ComposeAdapter                  composeAdapter;
+    private final JoinAdapter joinAdapter;
+    private final ComposeAdapter composeAdapter;
 
     @Override
     public String trigger(ScenarioNotification notification) {
+
         log.info(">>> Scenario [{}] started | asOfDate={} | paths={} | α={}",
                 notification.getCorrelationId(),
                 notification.getAsOfDate(),

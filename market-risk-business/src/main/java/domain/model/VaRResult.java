@@ -8,9 +8,9 @@ import lombok.Value;
 public class VaRResult {
 
     double var;
+    double expectedShortfall;
     double alpha;
     int numberOfScenarios;
     double meanPnL;
     double stdDevPnL;
 }
-

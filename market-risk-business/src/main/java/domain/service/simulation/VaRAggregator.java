@@ -37,17 +37,27 @@ public class VaRAggregator {
         Arrays.sort(sorted);
 
         int idx = (int) Math.floor((1.0 - alpha) * n);
-        double var = -sorted[Math.min(idx, n - 1)];
+        idx = Math.max(0, Math.min(idx, n - 1));
+        double var = -sorted[idx];
+
+        // Expected Shortfall (CVaR) - average of tail losses
+        double tailLossesSum = 0.0;
+        int tailCount = idx + 1; // losses from index 0 to idx
+        for (int i = 0; i <= idx; i++) {
+            tailLossesSum += -sorted[i];
+        }
+        double expectedShortfall = tailCount > 0 ? (tailLossesSum / tailCount) : var;
 
         double mean = Arrays.stream(sorted).average().orElse(0.0);
         double variance = Arrays.stream(sorted)
                 .map(x -> Math.pow(x - mean, 2))
                 .sum() / (n - 1);
 
-        log.info("VaRAggregator: α={}, N={}, VaR={}", alpha, n, var);
+        log.info("VaRAggregator: α={}, N={}, VaR={}, ES={}", alpha, n, var, expectedShortfall);
 
         return VaRResult.builder()
                 .var(var)
+                .expectedShortfall(expectedShortfall)
                 .alpha(alpha)
                 .numberOfScenarios(n)
                 .meanPnL(mean)

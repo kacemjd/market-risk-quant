@@ -16,6 +16,7 @@ public class MarketData {
     double[][] correlationMatrix;
     double[][] covarianceMatrix;
     List<String> riskFactors;
+    Map<String, double[]> historicalReturns;
 
     public double getVolFor(String ticker) {
         return volatilities.getOrDefault(ticker, 0.0);

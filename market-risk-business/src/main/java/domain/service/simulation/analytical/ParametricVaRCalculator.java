@@ -1,7 +1,9 @@
-package domain.service.simulation;
+package domain.service.simulation.analytical;
 
 import domain.model.MarketData;
 import domain.model.Portoflio;
+import domain.model.VaRResult;
+import domain.service.simulation.VaRCalculator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
@@ -15,13 +17,28 @@ import static java.lang.Math.sqrt;
 public class ParametricVaRCalculator implements VaRCalculator {
 
     @Override
-    public double calculate(Portoflio portoflio, MarketData marketData, double alpha) {
+    public VaRResult calculate(Portoflio portoflio, MarketData marketData, double alpha) {
         double portfolioVariance = calculatePortfolioVariance(portoflio, marketData);
         double portfolioStdDev = sqrt(portfolioVariance);
-        double zScore = new NormalDistribution(0, 1).inverseCumulativeProbability(alpha);
+
+        NormalDistribution normal = new NormalDistribution(0, 1);
+        double zScore = normal.inverseCumulativeProbability(alpha);
         double valueAtRisk = zScore * portfolioStdDev;
-        log.debug("Portfolio variance = {}, stdDev = {}, z({}) = {}, VaR = {}", portfolioVariance, portfolioStdDev, alpha, zScore, valueAtRisk);
-        return valueAtRisk;
+
+        // Closed-form Gaussian ES: ES_α = σ × φ(Φ⁻¹(α)) / (1 − α)
+        // where φ is the standard normal PDF and Φ⁻¹ is the inverse CDF.
+        double expectedShortfall = portfolioStdDev * normal.density(zScore) / (1.0 - alpha);
+
+        log.debug("Portfolio stdDev={}, z({})={}, VaR={}, ES={}", portfolioStdDev, alpha, zScore, valueAtRisk, expectedShortfall);
+
+        return VaRResult.builder()
+                .var(valueAtRisk)
+                .expectedShortfall(expectedShortfall)
+                .alpha(alpha)
+                .numberOfScenarios(0)   // closed-form — no simulation scenarios
+                .meanPnL(0.0)           // zero-mean P&L assumption under Gaussian
+                .stdDevPnL(portfolioStdDev)
+                .build();
     }
 
     public double calculatePortfolioVariance(Portoflio portoflio, MarketData marketData) {
@@ -38,7 +55,7 @@ public class ParametricVaRCalculator implements VaRCalculator {
                 .sum();
     }
 
-    static double computeVarianceLoop(double[] deltas, double[][] sigma) {
+    public static double computeVarianceLoop(double[] deltas, double[][] sigma) {
         int n = deltas.length;
         double variance = 0.0;
         for (int i = 0; i < n; i++) {
@@ -49,7 +66,7 @@ public class ParametricVaRCalculator implements VaRCalculator {
         return variance;
     }
 
-    static double computeVarianceMatrix(double[] deltas, double[][] matrix) {
+    public static double computeVarianceMatrix(double[] deltas, double[][] matrix) {
         RealVector delta = new ArrayRealVector(deltas);
         RealMatrix sigma = new Array2DRowRealMatrix(matrix);
         return delta.dotProduct(sigma.operate(delta));
