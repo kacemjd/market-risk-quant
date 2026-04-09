@@ -78,6 +78,40 @@
     </dependency>
   </dependencies>
 
+  <!--
+    Local development profile — activates automatically when running on a dev machine
+    (no Spark cluster present). Overrides the Spark dependencies from `provided`
+    to `compile` so that `mvn spring-boot:run` and IDE run configurations work
+    without a pre-installed Spark distribution.
+
+    Activate explicitly:   mvn spring-boot:run -Plocal
+    Auto-activation:       set SPARK_HOME env var is absent  →  use -Plocal
+  -->
+  <profiles>
+    <profile>
+      <id>local</id>
+
+      <dependencies>
+        <!-- Override Spark scope: provided → compile for local/IDE execution -->
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-core_${scala.binary.version}</artifactId>
+          <scope>compile</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-sql_${scala.binary.version}</artifactId>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+
+      <!-- Spring Boot local app properties -->
+      <properties>
+        <spring.profiles.active>local</spring.profiles.active>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>

@@ -16,8 +16,8 @@ spark:
 logging:
   level:
     root: INFO
-    infrastructure: DEBUG
-    domain: DEBUG
+    com.kacemrisk.market.infrastructure: DEBUG
+    com.kacemrisk.market.domain: DEBUG
 
 # Scheduler — disabled by default; enable per environment
 scenario:
@@ -30,6 +30,26 @@ scenario:
     default-num-paths: 10000
   kafka:
     topic: scenario-notifications
+
+---
+# Local developer profile — activate with -Plocal (Maven) or --spring.profiles.active=local
+# Spark runs in-process (local[*]); no cluster, no Kafka required.
+spring:
+  config:
+    activate:
+      on-profile: local
+  main:
+    web-application-type: servlet   # expose REST endpoint for manual testing
+
+server:
+  port: 8080
+
+spark:
+  master: local[*]
+
+logging:
+  level:
+    com.kacemrisk.market: DEBUG     # verbose domain + infrastructure output
 
 ---
 # REST profile — activate with --spring.profiles.active=rest
