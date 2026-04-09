@@ -1,7 +1,7 @@
 # Market Risk Quant Platform
 
-> **Status:** Phase 1 TRIM — 3 VaR engines (Parametric, Monte Carlo, Historical), Expected Shortfall, Delta-Gamma pricing, Spark calibration, and multi-mode triggers are implemented.  
-> **Next:** Tech debt cleanup → Persistence → Quant depth (Component VaR, FHS, Stress Testing) → Observability.  
+> **Status:** Sprint 1 in progress — 4/8 tech-debt tasks done (package rename, Portfolio typo, REST validation, local Maven profile).  
+> **Next:** Finish Sprint 1 (immutable VaRAggregator, port cleanup, CI) → Persistence → Quant depth (Component VaR, FHS, Stress Testing) → Observability.  
 > **Target:** A fully-fledged, cloud-native market risk platform covering VaR, Greeks, stress testing, and real-time reporting.
 
 ---
@@ -78,18 +78,18 @@ flowchart TB
     end
 
     subgraph WF["market-risk-workflow  (orchestration · no framework)"]
-        VPL["VaRPipeline\nMonteCarloVaRPipeline"]
+        VPL["VaRCalculationPipeline"]
     end
 
     subgraph BIZ["market-risk-business  (pure domain · zero Spring / Spark)"]
         subgraph DOMAIN["Domain Services"]
             PV["ParametricVaRCalculator"]
-            MC["MonteCarloSimulator  (Cholesky)"]
+            MC["MonteCarloVaRCalculator  (Cholesky)"]
             AGG["VaRAggregator"]
             CAL["MarketDataCalibrationService"]
         end
         subgraph PORTS["Application Ports  (hexagonal boundary)"]
-            PIN[/"port/in\nCalculateVaRUseCase\nRunMonteCarloVaRUseCase"/]
+            PIN[/"port/in\nCalculateVaRUseCase\nCalibrateMarketDataUseCase"/]
             POUT[/"port/out\nMarketDataRepository\nVaRResultPublisher"/]
         end
     end
@@ -167,39 +167,51 @@ flowchart TD
 Pure Java 21. No Spring, no Spark, no I/O.
 
 ```
-domain/
-├── model/
-│   ├── Portfolio.java
-│   ├── Position.java
-│   ├── MarketData.java
-│   ├── VaRResult.java
-│   ├── MaturityGrid.java
-│   └── AssetClass.java
-├── service/
-│   ├── simulation/
-│   │   ├── ParametricVaRCalculator.java
-│   │   ├── MonteCarloSimulator.java
-│   │   ├── VaRAggregator.java
-│   │   └── VaRCalculator.java
-│   ├── calibration/
-│   │   ├── MarketDataCalibrationService.java
-│   │   ├── MarketDataCalibrator.java
-│   │   └── MatrixCalibrator.java
-│   └── pricing/                              (stub — Phase 2)
-└── exception/
-
-application/
-├── port/
-│   ├── in/
-│   │   ├── CalculateVaRUseCase.java
-│   │   ├── CalibrateMarketDataUseCase.java
-│   │   └── RunMonteCarloVaRUseCase.java
-│   └── out/
-│       ├── MarketDataRepository.java
-│       ├── PortfolioRepository.java
-│       └── VaRResultPublisher.java
-└── service/
-    └── MonteCarloVaRService.java
+com.kacemrisk.market/
+├── domain/
+│   ├── model/
+│   │   ├── Portfolio.java
+│   │   ├── Position.java
+│   │   ├── MarketData.java
+│   │   ├── VaRResult.java
+│   │   ├── VaRMethod.java
+│   │   ├── MaturityGrid.java
+│   │   └── AssetClass.java
+│   ├── service/
+│   │   ├── simulation/
+│   │   │   ├── analytical/ParametricVaRCalculator.java
+│   │   │   ├── historical/HistoricalVaRCalculator.java
+│   │   │   ├── stochastic/MonteCarloVaRCalculator.java
+│   │   │   ├── stochastic/MarketShockGenerator.java
+│   │   │   ├── VaRAggregator.java
+│   │   │   ├── VaRCalculator.java
+│   │   │   └── VaRCalculatorFactory.java
+│   │   ├── calibration/
+│   │   │   ├── MarketDataCalibrationService.java
+│   │   │   ├── MarketDataCalibrator.java
+│   │   │   └── MatrixCalibrator.java
+│   │   └── pricing/
+│   │       ├── Pricer.java
+│   │       ├── LinearPricer.java
+│   │       ├── DeltaGammaPricer.java
+│   │       ├── PricerFactory.java
+│   │       ├── PortfolioPricer.java
+│   │       └── PricingUtils.java
+│   └── exception/
+│       ├── DomainException.java
+│       └── VaRCalculationException.java
+└── application/
+    ├── port/
+    │   ├── in/
+    │   │   ├── CalculateVaRUseCase.java
+    │   │   ├── CalculateVaRCommand.java
+    │   │   └── CalibrateMarketDataUseCase.java
+    │   └── out/
+    │       ├── MarketDataRepository.java
+    │       ├── PortfolioRepository.java
+    │       └── VaRResultPublisher.java
+    └── service/
+        └── VaRService.java
 ```
 
 See [`market-risk-business/README.md`](market-risk-business/README.md) for the full mathematical derivations (parametric VaR formula, covariance matrix build, Monte Carlo algorithm, and JMH benchmark results).
@@ -215,7 +227,7 @@ Defines the top-level use-case contracts and the pipeline wiring that connects t
 | `TriggerScenarioUseCase` | Port — fire a named scenario and return its correlationId |
 | `ScenarioNotification` | Immutable trigger payload (Lombok `@Value @Builder`) |
 | `VaRPipeline` | Strategy interface — `execute(portfolio, marketData, notification)` |
-| `MonteCarloVaRPipeline` | Delegates to `MonteCarloVaRService` with notification parameters |
+| `VaRCalculationPipeline` | Active implementation — maps notification to `CalculateVaRCommand`, delegates to `CalculateVaRUseCase` |
 
 `ScenarioNotification` default values:
 
@@ -241,7 +253,9 @@ infrastructure/
 │   │   ├── kafka/
 │   │   │   └── KafkaConfig.java              Consumer factory (conditional on property)
 │   │   ├── rest/
-│   │   │   └── RestScenarioController.java   POST /scenarios/run  (Profile: rest)
+│   │   │   ├── RestScenarioController.java   POST /scenarios/run  (Profile: rest)
+│   │   │   ├── GlobalExceptionHandler.java   @RestControllerAdvice — 400/422/500 mapping
+│   │   │   └── ScenarioRiskException.java    Error envelope with errorCode, violations[]
 │   │   ├── scheduler/
 │   │   │   └── ScheduledScenarioTrigger.java Cron EOD trigger     (conditional)
 │   │   └── spark/
@@ -349,6 +363,9 @@ mvn verify -pl market-risk-processing -Dsurefire.skip=true
 ### Run the Application
 
 ```bash
+# Local dev — Spark in-process, REST on :8080 (no Kafka, no cluster needed)
+mvn spring-boot:run -pl market-risk-processing -Plocal
+
 # Default — no web server, no Kafka, scheduler disabled
 java -jar market-risk-processing/target/market-risk-processing-*.jar
 
@@ -554,17 +571,19 @@ Typical results (AverageTime, µs/op):
 | Spark calibration pipeline (CSV → σ → ρ → Σ) | Phase 1 |
 | 3 trigger modes (REST, Kafka, Cron) | Phase 1 |
 | BDD tests + JMH benchmarks | Phase 1 |
+| `Portfolio` typo fix | Sprint 1 |
+| Root Java package `com.kacemrisk.market.*` | Sprint 1 |
+| REST validation (`@Valid`, `ScenarioRiskException`, HTTP status mapping) | Sprint 1 |
+| `local` Maven profile (Spark `provided` → `compile`) | Sprint 1 |
 
-### 🔜 Next — Sprint 1: Tech Debt & Hygiene
+### 🔜 Sprint 1 — remaining
 
 | Item | Description |
 |---|---|
-| **`Portfolio` typo fix** | Rename `Portoflio` → `Portfolio` across all modules |
 | **Immutable `VaRAggregator`** | Constructor-inject `alpha`, remove mutable `atConfidence()` |
-| **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`, wire calibration through its port |
-| **Root Java package** | `com.kacemrisk.market.*` to avoid classpath collisions |
-| **REST validation & error handling** | `@Valid`, `@RestControllerAdvice`, proper HTTP status mapping |
-| **CI pipeline** | GitHub Actions: build → test → coverage badge |
+| **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`; wire `CalibrateMarketDataUseCase` |
+| **Delete `MonteCarloVaRPipeline`** | Superseded by `VaRCalculationPipeline` |
+| **CI pipeline** | GitHub Actions: `mvn clean verify` on push + coverage badge |
 
 ### 🔜 Next — Sprint 2: Persistence & Messaging
 
@@ -600,17 +619,18 @@ Typical results (AverageTime, µs/op):
 ## Project Layout
 
 ```
-market-risk-quant/                    ← Maven parent (pom.xml)
+market-risk-quant/                    ← Maven parent (groupId: com.kacemrisk.market)
 ├── market-risk-business/             ← Pure domain (Java 21, no framework)
 │   ├── src/main/java/
-│   │   ├── domain/                   model + services
-│   │   └── application/              ports + use-case services
+│   │   └── com/kacemrisk/market/     domain/ + application/
 │   └── src/test/                     JUnit 5 + Cucumber BDD
 ├── market-risk-workflow/             ← Orchestration contracts
-│   └── src/main/java/workflow/       VaRPipeline · ScenarioNotification
+│   └── src/main/java/
+│       └── com/kacemrisk/market/workflow/  VaRPipeline · ScenarioNotification
 └── market-risk-processing/           ← Spring Boot 4 + Spark 4 app
-    ├── src/main/java/infrastructure/ adapters · config · models
-    ├── src/main/resources/           application.yml
+    ├── src/main/java/
+    │   └── com/kacemrisk/market/infrastructure/  adapters · config · models
+    ├── src/main/resources/           application.yml (profiles: local, rest, kafka, int)
     └── src/test/                     Integration tests + test CSV data
 ```
 

@@ -1,8 +1,8 @@
 # Architecture Review
 
 > _Initial review: April 2026 — Phase 1 baseline._  
-> _Updated review: April 2026 — Phase 1 TRIM (current revision)._  
-> _Roadmap review: April 2026 — Production readiness plan._
+> _Updated review: April 2026 — Phase 1 TRIM._  
+> _Sprint 1 update: April 2026 — 4/8 hygiene tasks complete (package rename, REST validation, local profile, Portfolio typo)._
 
 ---
 
@@ -42,7 +42,7 @@
 | **Infrastructure isolation** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | — | `@Conditional` / `@Profile` wiring unchanged and correct |
 | **Scalability readiness** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | — | `collectAsList()` bottleneck still present in `ComposeAdapter` |
 | **Operational readiness** | ⭐⭐⭐ | ⭐⭐⭐ | — | Metrics, tracing, and health checks still absent (Phase 5) |
-| **API design** | ⭐⭐⭐ | ⭐⭐⭐ | — | No validation, error handling, or OpenAPI spec yet |
+| **API design** | ⭐⭐⭐ | ⭐⭐⭐⭐ | +1 | `@Valid` + `ScenarioRiskException` + HTTP status mapping added; OpenAPI spec still pending |
 | **Build stability** | ⭐⭐⭐⭐⭐ | ⭐⭐ | -3 | **Three compile-level defects introduced** (see §Critical Issues) |
 
 ---
@@ -319,10 +319,10 @@ flowchart TB
 | 8 | 🟡 MEDIUM | 🔜 **Sprint 1** | `CalibrateMarketDataUseCase` / `RunMonteCarloVaRUseCase` — orphaned ports |
 | 9 | 🟡 MEDIUM | 🔜 **Sprint 1** | `MarketDataCalibrationService` — injected as concrete class, bypasses port |
 | 10 | 🟡 MEDIUM | 🔜 **Sprint 1** | `VaRAggregator` — mutable via `atConfidence()`; inconsistent with immutable domain |
-| 11 | 🟢 LOW | 🔜 **Sprint 1** | No root Java package — classpath collision risk |
-| 12 | 🟢 LOW | 🔜 **Sprint 1** | No REST input validation (`@Valid`) or `@RestControllerAdvice` |
-| 13 | 🟢 LOW | 🔜 **Sprint 1** | No global exception handler at adapter boundaries |
-| 14 | 🟢 LOW | 🔜 **Sprint 1** | Spark `provided` scope — add `local` Maven profile |
+| 11 | 🟢 LOW | ✅ **FIXED** | Root package `com.kacemrisk.market.*` added; `groupId` updated to `com.kacemrisk.market` |
+| 12 | 🟢 LOW | ✅ **FIXED** | `@Valid` on `RestScenarioController`, Bean Validation constraints on `ScenarioRequest` |
+| 13 | 🟢 LOW | ✅ **FIXED** | `GlobalExceptionHandler` + `ScenarioRiskException` — 400/422/500 mapped with `errorCode` |
+| 14 | 🟢 LOW | ✅ **FIXED** | `local` Maven profile added; Spark scope overridden to `compile`; `local` Spring profile in `application.yml` |
 
 ---
 

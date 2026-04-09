@@ -18,9 +18,9 @@ public class ParametricVaRCalculator implements VaRCalculator {
 
     @Override
     public VaRResult calculate(Portfolio portfolio, MarketData marketData, double alpha) {
+
         double portfolioVariance = calculatePortfolioVariance(portfolio, marketData);
         double portfolioStdDev = sqrt(portfolioVariance);
-
         NormalDistribution normal = new NormalDistribution(0, 1);
         double zScore = normal.inverseCumulativeProbability(alpha);
         double valueAtRisk = zScore * portfolioStdDev;
