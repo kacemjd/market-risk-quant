@@ -71,15 +71,7 @@ public class HistoricalVaRCalculator implements VaRCalculator {
         return scenarioPnLs;
     }
 
-    /**
-     * Delegates to {@link VaRAggregator} to extract the (1 − α) left-tail quantile
-     * from the empirical P&L distribution.
-     *
-     * @return full {@link VaRResult} including mean, stdDev and scenario count
-     */
     VaRResult extractQuantile(double[] scenarioPnLs, double alpha) {
-        return VaRAggregator.of(scenarioPnLs)
-                .atConfidence(alpha)
-                .compute();
+        return VaRAggregator.of(scenarioPnLs, alpha).compute();
     }
 }

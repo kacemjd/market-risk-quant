@@ -9,28 +9,17 @@ import java.util.Arrays;
 public class VaRAggregator {
 
     private final double[] pnlScenarios;
-    private double alpha = 0.99; // VAR
+    private final double   alpha;
 
-    private VaRAggregator(double[] pnlScenarios) {
+    private VaRAggregator(double[] pnlScenarios, double alpha) {
         this.pnlScenarios = pnlScenarios;
+        this.alpha        = alpha;
     }
 
-    public static VaRAggregator of(double[] pnlScenarios) {
-        return new VaRAggregator(pnlScenarios);
+    public static VaRAggregator of(double[] pnlScenarios, double alpha) {
+        return new VaRAggregator(pnlScenarios, alpha);
     }
 
-    public VaRAggregator atConfidence(double alpha) {
-        this.alpha = alpha;
-        return this;
-    }
-
-    /**
-     * Computes VaR as the (1-α) left-tail quantile of the P&L distribution.
-     *
-     * Sort ascending → worst losses are at the front.
-     * Index = floor((1-α) × N)  e.g. α=0.99, N=10 000 → index 100 (1 % worst).
-     * VaR is expressed as a positive loss amount.
-     */
     public VaRResult compute() {
         int n = pnlScenarios.length;
         double[] sorted = Arrays.copyOf(pnlScenarios, n);

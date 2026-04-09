@@ -580,7 +580,7 @@ Typical results (AverageTime, µs/op):
 
 | Item | Description |
 |---|---|
-| **Immutable `VaRAggregator`** | Constructor-inject `alpha`, remove mutable `atConfidence()` |
+| **Immutable `VaRAggregator`** | Constructor-inject `alpha`, remove mutable `atConfidence()` | ✅ |
 | **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`; wire `CalibrateMarketDataUseCase` |
 | **Delete `MonteCarloVaRPipeline`** | Superseded by `VaRCalculationPipeline` |
 | **CI pipeline** | GitHub Actions: `mvn clean verify` on push + coverage badge |
