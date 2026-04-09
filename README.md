@@ -198,7 +198,7 @@ mvn test -pl market-risk-business -Dtest=VarianceComputationBenchmark#main -Dfai
 
 ## Roadmap
 
-**Sprint 1** (in progress — 6/8 done)
+**Sprint 1** — complete (8/8)
 
 | Item | Status |
 |---|---|
@@ -208,7 +208,7 @@ mvn test -pl market-risk-business -Dtest=VarianceComputationBenchmark#main -Dfai
 | `local` Maven profile (Spark `provided` → `compile`) | Done |
 | Immutable `VaRAggregator` | Done |
 | Port cleanup (`CalibrateMarketDataUseCase` wired) | Done |
-| Delete dead `MonteCarloVaRPipeline` | Pending |
+| Delete dead `MonteCarloVaRPipeline` | Done |
 | GitHub Actions CI | Done |
 
 **Sprint 2** — TimescaleDB persistence, VaR result query API, Kafka publisher, Docker Compose, Flyway
