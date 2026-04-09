@@ -211,7 +211,7 @@ mvn test -pl market-risk-business -Dtest=VarianceComputationBenchmark#main -Dfai
 | Delete dead `MonteCarloVaRPipeline` | Done |
 | GitHub Actions CI | Done |
 
-**Sprint 2** — TimescaleDB persistence, VaR result query API, Kafka publisher, Docker Compose, Flyway
+**Sprint 2** — QuestDB persistence (done), VaR result query API, Kafka publisher, Docker Compose, Flyway
 
 **Sprint 3** — Component VaR (Euler allocation), Filtered Historical Simulation, Stress Testing, distributed Spark compute
 

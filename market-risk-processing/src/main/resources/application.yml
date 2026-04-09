@@ -75,3 +75,21 @@ spring:
     consumer:
       group-id: market-risk-processing
       auto-offset-reset: earliest
+
+---
+# QuestDB profile — activate with --spring.profiles.active=local,questdb
+# Connects via the PostgreSQL wire protocol (port 8812).
+# Run QuestDB: docker compose up questdb
+spring:
+  config:
+    activate:
+      on-profile: questdb
+  datasource:
+    url: ${QUESTDB_URL:jdbc:postgresql://localhost:8812/questdb}
+    username: ${QUESTDB_USER:admin}
+    password: ${QUESTDB_PASSWORD:quest}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 5000
+

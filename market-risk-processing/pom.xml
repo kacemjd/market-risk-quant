@@ -45,6 +45,17 @@
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
+    <!-- QuestDB persistence (PG wire protocol — activated under questdb profile) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- Kafka (activate via spring.kafka.bootstrap-servers) -->
     <dependency>
       <groupId>org.springframework.kafka</groupId>

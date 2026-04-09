@@ -48,8 +48,8 @@ public class ComposeAdapter {
             Portfolio portfolio = buildPortfolio(portfolioId, rows);
             VaRResult varResult = varPipeline.execute(portfolio, marketData, notification);
             log.info("  Portfolio {} → VaR={}", portfolioId, varResult.getVar());
-            varResultPublisher.publish(portfolio, notification.getAsOfDate(),
-                    notification.getConfidenceLevel(), varResult.getVar());
+            varResultPublisher.publish(notification.getCorrelationId(), portfolio,
+                    notification.getAsOfDate(), varResult);
             results.add(buildResultRow(
                     notification.getCorrelationId(), portfolioId, notification.getAsOfDate(), varResult));
         });

@@ -2,27 +2,23 @@ package com.kacemrisk.market.infrastructure.adapter.out.publisher;
 
 import com.kacemrisk.market.application.port.out.VaRResultPublisher;
 import com.kacemrisk.market.domain.model.Portfolio;
+import com.kacemrisk.market.domain.model.VaRResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-/**
- * Outbound adapter — logs VaR results.
- * Replace or extend with a messaging / reporting implementation for production
- * (e.g. Kafka producer, database writer, REST call).
- */
 @Slf4j
 @Component
+@Profile("!questdb")
 public class LoggingVaRResultPublisher implements VaRResultPublisher {
 
     @Override
-    public void publish(Portfolio portfolio, LocalDate asOfDate, double alpha, double varAmount) {
-        log.info(
-            "VaR result | portfolio={} | asOfDate={} | alpha={} | VaR={}",
-            portfolio.getId(), asOfDate, alpha, varAmount
-        );
-        // TODO: replace with Kafka/DB/REST outbound call
+    public void publish(String correlationId, Portfolio portfolio, LocalDate asOfDate, VaRResult result) {
+        log.info("VaR result | correlationId={} | portfolio={} | asOfDate={} | α={} | VaR={} | ES={}",
+                correlationId, portfolio.getId(), asOfDate,
+                result.getAlpha(), result.getVar(), result.getExpectedShortfall());
     }
 }
 
