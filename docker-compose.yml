@@ -18,6 +18,31 @@ services:
       timeout: 5s
       retries: 5
 
+  redpanda:
+    image: redpandadata/redpanda:v24.2.18
+    container_name: market-risk-redpanda
+    ports:
+      - "9092:9092"   # Kafka wire protocol
+      - "9644:9644"   # Admin API
+      - "8081:8081"   # Schema Registry
+    command:
+      - redpanda
+      - start
+      - --smp 1
+      - --memory 512M
+      - --reserve-memory 0M
+      - --node-id 0
+      - --kafka-addr PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://localhost:9092
+      - --set redpanda.enable_transactions=true
+      - --set redpanda.enable_idempotence=true
+      - --set redpanda.auto_create_topics_enabled=true
+    healthcheck:
+      test: [ "CMD", "rpk", "cluster", "info" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   questdb-data:
 

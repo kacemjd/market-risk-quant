@@ -31,7 +31,7 @@ public class ComposeAdapter {
 
     private final SparkSession spark;
     private final VaRPipeline varPipeline;
-    private final VaRResultPublisher varResultPublisher;
+    private final List<VaRResultPublisher> publishers;
 
     public void compute(Dataset<EnrichedPositionRow> enriched,
                         MarketData marketData,
@@ -48,8 +48,8 @@ public class ComposeAdapter {
             Portfolio portfolio = buildPortfolio(portfolioId, rows);
             VaRResult varResult = varPipeline.execute(portfolio, marketData, notification);
             log.info("  Portfolio {} → VaR={}", portfolioId, varResult.getVar());
-            varResultPublisher.publish(notification.getCorrelationId(), portfolio,
-                    notification.getAsOfDate(), varResult);
+            publishers.forEach(p -> p.publish(notification.getCorrelationId(), portfolio,
+                    notification.getAsOfDate(), varResult, notification.getVarMethod()));
             results.add(buildResultRow(
                     notification.getCorrelationId(), portfolioId, notification.getAsOfDate(), varResult));
         });

@@ -65,7 +65,6 @@ server:
 
 ---
 # Kafka profile — activate with --spring.profiles.active=kafka
-# (also requires spring.kafka.bootstrap-servers to be set)
 spring:
   config:
     activate:
@@ -75,6 +74,14 @@ spring:
     consumer:
       group-id: market-risk-processing
       auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+var:
+  results:
+    kafka:
+      topic: ${VAR_RESULTS_TOPIC:var-results}
 
 ---
 # QuestDB profile — activate with --spring.profiles.active=local,questdb
