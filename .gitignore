@@ -36,5 +36,4 @@ build/
 .DS_Store
 
 ### Internal docs ###
-docs/roadmap.md
-docs/architecture-review.md
+internal-docs/

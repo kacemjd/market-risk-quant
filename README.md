@@ -122,7 +122,7 @@ flowchart TB
 | In-memory stubs for persistence | Deliberate Phase 1 scaffolding — ports are defined, swapping to real DB only touches the adapter |
 | Monte Carlo with Cholesky decomposition | Correctly propagates inter-asset correlations; `seed` is configurable for reproducible tests |
 
-> 📋 **[Architecture Review](docs/architecture-review.md)** — full scorecard, strengths, areas for improvement, and dependency direction verification.
+> 📋 **Architecture Review** — full scorecard, strengths, areas for improvement, and dependency direction verification. _(internal doc — not in repo)_
 
 ### Scenario Execution Flow
 
@@ -556,7 +556,7 @@ Typical results (AverageTime, µs/op):
 
 ## Roadmap
 
-> 📋 **[Full Production Roadmap](docs/roadmap.md)** — detailed sprint plan with effort estimates and priority matrix.
+> 📋 **Full Production Roadmap** — detailed sprint plan with effort estimates and priority matrix. _(internal doc — not in repo)_
 
 ### ✅ Completed
 
