@@ -16,22 +16,23 @@
     <module>market-risk-processing</module>
   </modules>
 
-  <properties>
-    <java.version>21</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Dependency versions -->
-    <lombok.version>1.18.36</lombok.version>
-    <logback.version>1.5.21</logback.version>
-    <junit-jupiter.version>5.11.4</junit-jupiter.version>
-    <cucumber.version>7.22.0</cucumber.version>
-    <spring-boot.version>4.0.5</spring-boot.version>
-    <spark.version>4.0.0</spark.version>
-    <scala.binary.version>2.13</scala.binary.version>
-    <jmh.version>1.37</jmh.version>
-  </properties>
+        <!-- Dependency versions -->
+        <lombok.version>1.18.36</lombok.version>
+        <logback.version>1.5.21</logback.version>
+        <junit-jupiter.version>5.11.4</junit-jupiter.version>
+        <cucumber.version>7.22.0</cucumber.version>
+        <spring-boot.version>4.0.5</spring-boot.version>
+        <spark.version>4.0.0</spark.version>
+        <scala.binary.version>2.13</scala.binary.version>
+        <jmh.version>1.37</jmh.version>
+        <jacoco.version>0.8.12</jacoco.version>
+    </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -131,7 +132,28 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.5.2</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <executions>
+            <execution>
+              <goals><goal>prepare-agent</goal></goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>verify</phase>
+              <goals><goal>report</goal></goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 </project>

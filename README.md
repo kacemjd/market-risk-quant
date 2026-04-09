@@ -1,5 +1,8 @@
 # Market Risk Quant Platform
 
+[![CI](https://github.com/kacemjd/market-risk-quant/actions/workflows/ci.yml/badge.svg)](https://github.com/kacemjd/market-risk-quant/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/kacemjd/market-risk-quant/branch/master/graph/badge.svg)](https://codecov.io/gh/kacemjd/market-risk-quant)
+
 Enterprise-grade VaR engine — Parametric, Monte Carlo (Cholesky GBM), and Historical Simulation — built on Hexagonal Architecture with Spring Boot 4 and Apache Spark 4.
 
 ---
@@ -206,7 +209,7 @@ mvn test -pl market-risk-business -Dtest=VarianceComputationBenchmark#main -Dfai
 | Immutable `VaRAggregator` | Done |
 | Port cleanup (`CalibrateMarketDataUseCase` wired) | Done |
 | Delete dead `MonteCarloVaRPipeline` | Pending |
-| GitHub Actions CI | Pending |
+| GitHub Actions CI | Done |
 
 **Sprint 2** — TimescaleDB persistence, VaR result query API, Kafka publisher, Docker Compose, Flyway
 
