@@ -1,7 +1,8 @@
 # Architecture Review
 
 > _Initial review: April 2026 — Phase 1 baseline._  
-> _Updated review: April 2026 — Phase 1 TRIM (current revision)._
+> _Updated review: April 2026 — Phase 1 TRIM (current revision)._  
+> _Roadmap review: April 2026 — Production readiness plan._
 
 ---
 
@@ -23,7 +24,7 @@
 
 ## Overall Assessment
 
-**Phase 1 TRIM is a material step forward.** Three VaR methodologies are now implemented end-to-end, Expected Shortfall is live, and the pricing layer adds the foundation for non-linear books. The hexagonal boundary, module dependency graph, and test coverage remain exemplary. Several compile-level defects introduced in this revision need immediate attention before the codebase can be considered TRIM-ready.
+**Phase 1 TRIM is a material step forward.** Three VaR methodologies are now implemented end-to-end, Expected Shortfall is live, and the pricing layer adds the foundation for non-linear books. The hexagonal boundary, module dependency graph, and test coverage remain exemplary. Critical compile-level defects from the previous revision have been resolved. Open issues are now limited to code hygiene and scalability prep.
 
 ---
 
@@ -285,41 +286,6 @@ flowchart TB
         end
     end
 
-    REST  --> HANDLER
-    KFK   --> HANDLER
-    CRON  --> HANDLER
-    HANDLER --> INGEST
-    HANDLER --> JOIN
-    INGEST --> CAL
-    INGEST --> MDREP
-    INGEST -->|MarketData| COMPOSE
-    JOIN   -->|Dataset| COMPOSE
-    COMPOSE --> VCLP
-    COMPOSE --> PUB
-    VCLP --> VSVC
-    VSVC --> FACTORY
-    FACTORY --> PVaR
-    FACTORY --> MC
-    FACTORY --> HS
-    MC --> MCAL
-    MC --> PPRICER
-    MC --> AGG
-    HS --> PPRICER
-    HS --> AGG
-    MDREP -. implements .-> POUT
-    PREP  -. implements .-> POUT
-    PUB   -. implements .-> POUT
-    VSVC  -. implements .-> PIN
-    HANDLER -. implements .-> TSU
-    VCLP  -. implements .-> VP
-```
-
----
-
-## Dependency Direction Verification
-
-```mermaid
-flowchart LR
     subgraph COMPILE["Compile-time dependency graph"]
         BIZ["market-risk-business\n(0 internal deps)"]
         WF["market-risk-workflow"]
@@ -345,25 +311,21 @@ flowchart LR
 |---|---|---|---|
 | 1 | 🔴 BUILD BREAK | ✅ **FIXED** | `ParametricVaRCalculator` — package was already `analytical`; no-op |
 | 2 | 🔴 BUILD BREAK | ✅ **FIXED** | `MonteCarloVaRPipeline` — rewired to use `MonteCarloVaRCalculator` directly; `MonteCarloVaRService` reference removed |
-| 3 | 🔴 RUNTIME BREAK | ✅ **FIXED** | `KafkaScenarioConsumer` — reverted to `StringDeserializer`; consumer now accepts `String` and parses via `ObjectMapper` (avoids Spring Kafka 4.x deprecated `JsonDeserializer`) |
+| 3 | 🔴 RUNTIME BREAK | ✅ **FIXED** | `KafkaScenarioConsumer` — reverted to `StringDeserializer`; consumer now accepts `String` and parses via `ObjectMapper` |
 | 4 | 🟠 HIGH | ✅ **FIXED** | `MarketShockGenerator` — replaced `ThreadLocalRandom` with `new Random(seed)`; seed is now functional |
-| 5 | 🟠 HIGH | ✅ **FIXED** | `ParametricVaRCalculator` — closed-form Gaussian ES implemented: `σ × φ(Φ⁻¹(α)) / (1 − α)` |
-| 6 | 🟡 MEDIUM | Open | `Portoflio` typo — pervasive misspelling across all modules |
-| 7 | 🟡 MEDIUM | Open | `ComposeAdapter.collectAsList()` — driver-side collection; OOM risk at scale |
-| 8 | 🟡 MEDIUM | Open | `CalibrateMarketDataUseCase` / `RunMonteCarloVaRUseCase` — orphaned ports with no implementation |
-| 9 | 🟡 MEDIUM | Open | `MarketDataCalibrationService` — injected as concrete class, bypasses port |
-| 10 | 🟡 MEDIUM | Open | `VaRAggregator` — mutable via `atConfidence()`; inconsistent with immutable domain |
-| 11 | 🟢 LOW | Open | No root Java package — classpath collision risk |
-| 12 | 🟢 LOW | Open | No REST input validation (`@Valid`) or `@RestControllerAdvice` |
-| 13 | 🟢 LOW | Open | No global exception handler at adapter boundaries |
-| 14 | 🟢 LOW | Open | Spark `provided` scope — add `local` Maven profile for developer convenience |
+| 5 | 🟠 HIGH | ✅ **FIXED** | `ParametricVaRCalculator` — closed-form Gaussian ES implemented |
+| 6 | 🟡 MEDIUM | 🔜 **Sprint 1** | `Portoflio` typo — pervasive misspelling across all modules |
+| 7 | 🟡 MEDIUM | 🔜 **Sprint 3** | `ComposeAdapter.collectAsList()` — driver-side collection; OOM risk at scale |
+| 8 | 🟡 MEDIUM | 🔜 **Sprint 1** | `CalibrateMarketDataUseCase` / `RunMonteCarloVaRUseCase` — orphaned ports |
+| 9 | 🟡 MEDIUM | 🔜 **Sprint 1** | `MarketDataCalibrationService` — injected as concrete class, bypasses port |
+| 10 | 🟡 MEDIUM | 🔜 **Sprint 1** | `VaRAggregator` — mutable via `atConfidence()`; inconsistent with immutable domain |
+| 11 | 🟢 LOW | 🔜 **Sprint 1** | No root Java package — classpath collision risk |
+| 12 | 🟢 LOW | 🔜 **Sprint 1** | No REST input validation (`@Valid`) or `@RestControllerAdvice` |
+| 13 | 🟢 LOW | 🔜 **Sprint 1** | No global exception handler at adapter boundaries |
+| 14 | 🟢 LOW | 🔜 **Sprint 1** | Spark `provided` scope — add `local` Maven profile |
 
 ---
 
 ## Recommended Next Steps (Priority Order)
 
-1. **Rename `Portoflio` → `Portfolio`** (Issue 6) — single IDE refactor, high symbolic value.
-2. **Replace `ComposeAdapter.collectAsList()`** (Issue 7) — `groupByKey` + `mapPartitions` to keep VaR execution distributed.
-3. **Remove or implement orphaned ports** (Issue 8) — retire `RunMonteCarloVaRUseCase`; implement or remove `CalibrateMarketDataUseCase`.
-4. **Wire `MarketDataCalibrationService` through its port** (Issue 9).
-5. **Make `VaRAggregator` immutable** (Issue 10) — constructor-inject `alpha`.
+See **[Production Roadmap](roadmap.md)** for the full phased plan.

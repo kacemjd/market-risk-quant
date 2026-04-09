@@ -1,6 +1,7 @@
 # Market Risk Quant Platform
 
-> **Status:** Phase 1 — core VaR engines, Spark ingestion pipeline, and multi-mode triggers are production-ready.  
+> **Status:** Phase 1 TRIM — 3 VaR engines (Parametric, Monte Carlo, Historical), Expected Shortfall, Delta-Gamma pricing, Spark calibration, and multi-mode triggers are implemented.  
+> **Next:** Tech debt cleanup → Persistence → Quant depth (Component VaR, FHS, Stress Testing) → Observability.  
 > **Target:** A fully-fledged, cloud-native market risk platform covering VaR, Greeks, stress testing, and real-time reporting.
 
 ---
@@ -538,45 +539,61 @@ Typical results (AverageTime, µs/op):
 
 ## Roadmap
 
-### Phase 2 — Persistence & Messaging
+> 📋 **[Full Production Roadmap](docs/roadmap.md)** — detailed sprint plan with effort estimates and priority matrix.
+
+### ✅ Completed
+
+| Feature | Phase |
+|---|---|
+| Parametric VaR (closed-form Gaussian) | Phase 1 |
+| Monte Carlo VaR (Cholesky GBM, seeded RNG) | Phase 1 |
+| Historical Simulation VaR (full-revaluation) | Phase 1 TRIM |
+| Expected Shortfall / CVaR (all 3 methods) | Phase 1 TRIM |
+| Delta-Gamma pricing layer | Phase 1 TRIM |
+| VaR method dispatch (factory + strategy) | Phase 1 TRIM |
+| Spark calibration pipeline (CSV → σ → ρ → Σ) | Phase 1 |
+| 3 trigger modes (REST, Kafka, Cron) | Phase 1 |
+| BDD tests + JMH benchmarks | Phase 1 |
+
+### 🔜 Next — Sprint 1: Tech Debt & Hygiene
 
 | Item | Description |
 |---|---|
-| **Database persistence** | Replace `InMemoryMarketDataRepository` and `InMemoryPortfolioRepository` with TimescaleDB / PostgreSQL adapters — only the outbound adapter changes, domain untouched |
-| **Kafka VaR result publisher** | Replace `LoggingVaRResultPublisher` with a Kafka producer to a `var-results` topic, enabling downstream consumers (reporting, regulatory, desk systems) |
-| **Result query API** | REST endpoints to retrieve historical VaR results by portfolio, date range, and methodology |
-| **Idempotent scenario runs** | De-duplicate re-delivered Kafka messages via `correlationId` |
+| **`Portfolio` typo fix** | Rename `Portoflio` → `Portfolio` across all modules |
+| **Immutable `VaRAggregator`** | Constructor-inject `alpha`, remove mutable `atConfidence()` |
+| **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`, wire calibration through its port |
+| **Root Java package** | `com.kacemrisk.market.*` to avoid classpath collisions |
+| **REST validation & error handling** | `@Valid`, `@RestControllerAdvice`, proper HTTP status mapping |
+| **CI pipeline** | GitHub Actions: build → test → coverage badge |
 
-### Phase 3 — Additional Risk Methodologies
-
-| Item | Description |
-|---|---|
-| **Historical Simulation VaR** | Replay actual historical P&L scenarios — no distribution assumption |
-| **Expected Shortfall (CVaR)** | Average loss beyond the VaR threshold — required under FRTB |
-| **Incremental & Marginal VaR** | Decompose portfolio VaR to individual position contributions |
-| **Gamma / Vega (options)** | Second-order Greeks for non-linear books; Taylor-expand P&L to include Gamma and Vega terms |
-| **Interest Rate Risk** | DV01, key-rate durations, full curve scenarios for fixed-income positions |
-| **FX Risk** | Multi-currency book with FX sensitivities |
-
-### Phase 4 — Real-Time & Distributed Scale
+### 🔜 Next — Sprint 2: Persistence & Messaging
 
 | Item | Description |
 |---|---|
-| **Streaming price ingest** | Replace batch CSV reads with a Kafka/Kinesis → Spark Structured Streaming pipeline |
-| **Distributed Spark cluster** | Deploy on YARN or Kubernetes; `spark.master=yarn` with no code change |
-| **Intraday VaR** | Triggered on every price tick rather than EOD batch |
-| **Additional `MaturityGrid` horizons** | 1-day, 10-day (Basel), 1-month grids alongside existing GRID_53 |
-| **Distributed Cholesky** | Off-load large covariance matrix decomposition to GPU or distributed BLAS |
+| **Database persistence** | TimescaleDB / PostgreSQL adapters replacing in-memory stubs |
+| **VaR result query API** | `GET /results?portfolioId=&from=&to=&method=` with OpenAPI spec |
+| **Kafka VaR result publisher** | Produce to `var-results` topic, conditional on `kafka` profile |
+| **Idempotent scenario runs** | `correlationId` dedup + run status tracking |
+| **Docker Compose** | Full stack: app + TimescaleDB + Kafka (Redpanda) + Flyway migrations |
 
-### Phase 5 — Observability & Operations
+### 🔜 Next — Sprint 3: Quant Depth & Scalability
 
 | Item | Description |
 |---|---|
-| **Structured metrics** | Micrometer → Prometheus → Grafana dashboard (scenario latency, VaR by portfolio, calibration drift) |
-| **Distributed tracing** | OpenTelemetry + Jaeger — trace a `correlationId` across Kafka → Spark → domain → publisher |
+| **Component & Marginal VaR** | Euler allocation — decompose portfolio VaR to position contributions |
+| **Filtered Historical Simulation** | EWMA vol-scaled historical returns — FRTB IMA hybrid approach |
+| **Stress testing framework** | Regulatory shocks (equity crash, rate shift, FX dislocation) + bespoke scenarios |
+| **Distributed VaR compute** | Replace `collectAsList()` with `groupByKey` + `mapPartitions` |
+| **Multi-currency support** | FX risk factor, cross-currency P&L conversion |
+
+### 🔜 Next — Sprint 4: Observability & Operations
+
+| Item | Description |
+|---|---|
+| **Metrics** | Micrometer → Prometheus → Grafana (scenario latency, VaR by portfolio, calibration drift) |
+| **Distributed tracing** | OpenTelemetry + Jaeger — trace `correlationId` across the full pipeline |
+| **Health checks** | Spark session, DB, Kafka broker indicators |
 | **Alerting** | VaR breach alerts, data quality checks (missing tickers, stale prices, Cholesky failure) |
-| **Regulatory reporting** | Pre-built FRTB SA report templates; audit-trail logging with immutable event store |
-| **UI / Dashboard** | React front end over the REST result API for desk-level risk visibility |
 
 ---
 
