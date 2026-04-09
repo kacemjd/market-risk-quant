@@ -163,17 +163,17 @@ The `collectAsList()` call pulls all enriched rows to the Spark driver heap. Rep
 
 `RestScenarioController.run()` has no `@Valid`, no `@RestControllerAdvice`, and no exception-to-HTTP status mapping. A bad request will propagate as a 500.
 
-### 5. `MarketDataCalibrationService` bypasses its port
+### 5. `MarketDataCalibrationService` bypasses its port ✅ Fixed
 
-`SparkMarketDataIngestionAdapter` injects `MarketDataCalibrationService` (concrete class) directly, not through `CalibrateMarketDataUseCase`. The port exists but has no consumer.
+`SparkMarketDataIngestionAdapter` now injects `CalibrateMarketDataUseCase` and calls `calibrate(asOfDate, historicalPrices)`. The concrete `MarketDataCalibrationService` is wired behind the port in `DomainConfig`.
 
 ### 6. Spark `provided` scope complicates local development
 
 Spark is `<scope>provided</scope>` — correct for cluster but requires manual classpath configuration for `java -jar` locally. Add a `local` Maven profile.
 
-### 7. `VaRAggregator` is mutable
+### 7. `VaRAggregator` is mutable ✅ Fixed
 
-`atConfidence(double)` mutates instance state. Inconsistent with the immutable domain model. Use constructor injection or a builder.
+`atConfidence(double)` removed. `alpha` is now `final`, constructor-injected via `VaRAggregator.of(pnlScenarios, alpha)`.
 
 ---
 
@@ -214,9 +214,9 @@ ES_α = σ × φ(Φ⁻¹(α)) / (1 − α)
 ```
 where `φ` is the standard normal PDF. The parametric calculator should populate `expectedShortfall` using this formula for consistency with the other two strategies.
 
-### 10. `CalibrateMarketDataUseCase` and `RunMonteCarloVaRUseCase` remain orphaned
+### 10. `CalibrateMarketDataUseCase` and `RunMonteCarloVaRUseCase` — orphaned ports ✅ Fixed
 
-Both ports still have no implementations. `RunMonteCarloVaRUseCase` is particularly confusing now that `MonteCarloVaRPipeline` is being removed. Clean up: either implement them or delete them.
+`RunMonteCarloVaRUseCase` was already absent from the new package structure and has been removed from docs. `CalibrateMarketDataUseCase` is now wired: `MarketDataCalibrator` implements it, registered as a Spring bean in `DomainConfig`, injected into `SparkMarketDataIngestionAdapter`.
 
 ### 11. `MonteCarloVaRCalculator` seed is also non-functional
 
@@ -266,7 +266,7 @@ flowchart TB
     subgraph BIZ["market-risk-business  ·  pure domain · Java 21 · zero Spring / Spark"]
         direction TB
         subgraph PORTS["Hexagonal Boundary  (Ports)"]
-            PIN(["port/in\nCalculateVaRUseCase\nCalibrateMarketDataUseCase ⚠orphaned\nRunMonteCarloVaRUseCase ⚠orphaned"])
+            PIN(["port/in\nCalculateVaRUseCase\nCalibrateMarketDataUseCase"])
             POUT(["port/out\nMarketDataRepository\nPortfolioRepository\nVaRResultPublisher"])
         end
 
@@ -316,9 +316,9 @@ flowchart TB
 | 5 | 🟠 HIGH | ✅ **FIXED** | `ParametricVaRCalculator` — closed-form Gaussian ES implemented |
 | 6 | 🟡 MEDIUM | 🔜 **Sprint 1** | `Portoflio` typo — pervasive misspelling across all modules |
 | 7 | 🟡 MEDIUM | 🔜 **Sprint 3** | `ComposeAdapter.collectAsList()` — driver-side collection; OOM risk at scale |
-| 8 | 🟡 MEDIUM | 🔜 **Sprint 1** | `CalibrateMarketDataUseCase` / `RunMonteCarloVaRUseCase` — orphaned ports |
-| 9 | 🟡 MEDIUM | 🔜 **Sprint 1** | `MarketDataCalibrationService` — injected as concrete class, bypasses port |
-| 10 | 🟡 MEDIUM | 🔜 **Sprint 1** | `VaRAggregator` — mutable via `atConfidence()`; inconsistent with immutable domain |
+| 8 | 🟡 MEDIUM | ✅ **FIXED** | `RunMonteCarloVaRUseCase` — deleted (superseded); `CalibrateMarketDataUseCase` wired via `MarketDataCalibrator` |
+| 9 | 🟡 MEDIUM | ✅ **FIXED** | `MarketDataCalibrationService` — `SparkMarketDataIngestionAdapter` now injects the port, not the concrete class |
+| 10 | 🟡 MEDIUM | ✅ **FIXED** | `VaRAggregator` — `alpha` is now `final`, injected via `of(pnlScenarios, alpha)`; `atConfidence()` removed |
 | 11 | 🟢 LOW | ✅ **FIXED** | Root package `com.kacemrisk.market.*` added; `groupId` updated to `com.kacemrisk.market` |
 | 12 | 🟢 LOW | ✅ **FIXED** | `@Valid` on `RestScenarioController`, Bean Validation constraints on `ScenarioRequest` |
 | 13 | 🟢 LOW | ✅ **FIXED** | `GlobalExceptionHandler` + `ScenarioRiskException` — 400/422/500 mapped with `errorCode` |

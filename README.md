@@ -1,6 +1,6 @@
 # Market Risk Quant Platform
 
-> **Status:** Sprint 1 in progress — 4/8 tech-debt tasks done (package rename, Portfolio typo, REST validation, local Maven profile).  
+> **Status:** Sprint 1 in progress — 6/8 tech-debt tasks done (package rename, Portfolio typo, REST validation, local Maven profile, immutable VaRAggregator, port cleanup).  
 > **Next:** Finish Sprint 1 (immutable VaRAggregator, port cleanup, CI) → Persistence → Quant depth (Component VaR, FHS, Stress Testing) → Observability.  
 > **Target:** A fully-fledged, cloud-native market risk platform covering VaR, Greeks, stress testing, and real-time reporting.
 
@@ -581,7 +581,7 @@ Typical results (AverageTime, µs/op):
 | Item | Description |
 |---|---|
 | **Immutable `VaRAggregator`** | Constructor-inject `alpha`, remove mutable `atConfidence()` | ✅ |
-| **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`; wire `CalibrateMarketDataUseCase` |
+| **Port cleanup** | Delete orphaned `RunMonteCarloVaRUseCase`; wire `CalibrateMarketDataUseCase` | ✅ |
 | **Delete `MonteCarloVaRPipeline`** | Superseded by `VaRCalculationPipeline` |
 | **CI pipeline** | GitHub Actions: `mvn clean verify` on push + coverage badge |
 

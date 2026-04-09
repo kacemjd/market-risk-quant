@@ -1,37 +1,31 @@
 package com.kacemrisk.market.infrastructure.adapter.in.spark;
 
+import com.kacemrisk.market.application.port.in.CalibrateMarketDataUseCase;
 import com.kacemrisk.market.application.port.out.MarketDataRepository;
 import com.kacemrisk.market.domain.model.MarketData;
-import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;import org.springframework.stereotype.Component;
+import org.apache.spark.sql.SparkSession;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.apache.spark.sql.functions.*;
 
-/**
- * Inbound adapter — reads raw market data from a Spark data source
- * and delegates calibration to the domain use case.
- *
- * This is the entry point for batch/stream ingestion in the hexagonal architecture.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class SparkMarketDataIngestionAdapter {
 
-    private final SparkSession spark;
-    private final MarketDataRepository marketDataRepository;
-    private final MarketDataCalibrationService calibrationService;
+    private final SparkSession              spark;
+    private final MarketDataRepository      marketDataRepository;
+    private final CalibrateMarketDataUseCase calibrateMarketData;
 
     /**
      * Reads a single-ticker price CSV, calibrates market data up to {@code asOfDate},
@@ -62,9 +56,7 @@ public class SparkMarketDataIngestionAdapter {
 
         log.info("Loaded {} price observations for {} (up to {})", prices.size(), ticker, asOfDate);
 
-        MarketData marketData = calibrationService.calibrateFromPrices(
-                asOfDate, Map.of(ticker, prices));
-
+        MarketData marketData = calibrateMarketData.calibrate(asOfDate, Map.of(ticker, prices));
         marketDataRepository.save(marketData);
         log.info("Market data saved — ticker={}, vol={}", ticker, marketData.getVolFor(ticker));
         return marketData;
@@ -99,7 +91,7 @@ public class SparkMarketDataIngestionAdapter {
 
         log.info("Collected prices for {} ticker(s): {}", tickerPrices.size(), tickerPrices.keySet());
 
-        MarketData marketData = calibrationService.calibrateFromPrices(asOfDate, tickerPrices);
+        MarketData marketData = calibrateMarketData.calibrate(asOfDate, tickerPrices);
         marketDataRepository.save(marketData);
         log.info("Market data saved for {} ticker(s) as of {}", tickerPrices.size(), asOfDate);
         return marketData;
