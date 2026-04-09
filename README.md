@@ -169,9 +169,9 @@ Error responses follow `ScenarioRiskException` — `errorCode`, `status`, `messa
 
 **Portfolio CSV** — `portfolioId,ticker,quantity,assetClass`
 
-**Prices directory** — one `{TICKER}.csv` per risk factor, columns: `Date,Open,High,Low,Close,Volume,OpenInt`
+**Prices CSV** — `Ticker,Date,Open,High,Low,Close,Volume,OpenInt`
 
-Only `Date` and `Close` are consumed. `Date` must be `YYYY-MM-DD`.
+The `Ticker` column identifies the risk factor. `Date` must be `YYYY-MM-DD`. Only `Ticker`, `Date`, and `Close` are consumed; other columns are ignored.
 
 ---
 

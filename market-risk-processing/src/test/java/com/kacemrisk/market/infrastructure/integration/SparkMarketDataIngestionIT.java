@@ -24,11 +24,11 @@ class SparkMarketDataIngestionIT {
 
     @Test
     void should_calibrate_nvda_market_data_from_csv() throws Exception {
-        URL resource = getClass().getClassLoader().getResource("market-data/nvda.csv");
+        URL resource = getClass().getClassLoader().getResource("market-data/prices/nvda.csv");
         assertThat(resource).isNotNull();
         String csvPath = Paths.get(resource.toURI()).toString();
 
-        MarketData result = ingestionAdapter.ingest(TICKER, csvPath, AS_OF);
+        MarketData result = ingestionAdapter.ingest(csvPath, AS_OF);
 
         assertThat(result).isNotNull();
         assertThat(result.getAsOfDate()).isEqualTo(AS_OF);

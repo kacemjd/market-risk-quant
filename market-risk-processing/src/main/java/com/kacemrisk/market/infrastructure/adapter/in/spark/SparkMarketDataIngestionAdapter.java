@@ -27,58 +27,37 @@ public class SparkMarketDataIngestionAdapter {
     private final MarketDataRepository      marketDataRepository;
     private final CalibrateMarketDataUseCase calibrateMarketData;
 
-    /**
-     * Reads a single-ticker price CSV, calibrates market data up to {@code asOfDate},
-     * persists the result and returns it.
-     *
-     * Expected CSV schema: Date, Open, High, Low, Close, Volume, OpenInt
-     *
-     * @param ticker    risk-factor name (e.g. "NVDA")
-     * @param csvPath   path to the CSV file (local, HDFS, S3 …)
-     * @param asOfDate  calibration reference date — only prices on or before this date are used
-     * @return calibrated {@link MarketData} snapshot
-     */
-    public MarketData ingest(String ticker, String csvPath, LocalDate asOfDate) {
-        log.info("Ingesting {} from '{}' as of {}", ticker, csvPath, asOfDate);
+    public MarketData ingest(String csvPath, LocalDate asOfDate) {
+        log.info("Ingesting from '{}' as of {}", csvPath, asOfDate);
 
-        Dataset<Row> raw = spark.read()
-                .option("header", "true")
-                .csv(csvPath);
+        Map<String, List<Double>> tickerPrices = readPrices(
+                spark.read().option("header", "true").csv(csvPath), asOfDate);
 
-        List<Double> prices = raw
-                .select(col("Date"), col("Close").cast("double"))
-                .filter(col("Date").leq(asOfDate.toString()))
-                .sort(col("Date").asc())
-                .collectAsList()
-                .stream()
-                .map(row -> row.getDouble(1))
-                .toList();
+        log.info("Collected prices for {} ticker(s): {}", tickerPrices.size(), tickerPrices.keySet());
 
-        log.info("Loaded {} price observations for {} (up to {})", prices.size(), ticker, asOfDate);
-
-        MarketData marketData = calibrateMarketData.calibrate(asOfDate, Map.of(ticker, prices));
+        MarketData marketData = calibrateMarketData.calibrate(asOfDate, tickerPrices);
         marketDataRepository.save(marketData);
-        log.info("Market data saved — ticker={}, vol={}", ticker, marketData.getVolFor(ticker));
         return marketData;
     }
 
-    /**
-     * Reads every {TICKER}.csv file in {@code pricesDir}, calibrates a multi-ticker
-     * {@link MarketData} snapshot using all prices on or before {@code asOfDate},
-     * persists it, and returns it.
-     *
-     * @param pricesDir directory containing one CSV per ticker (e.g. NVDA.csv)
-     * @param asOfDate  calibration reference date
-     */
     public MarketData ingestDirectory(String pricesDir, LocalDate asOfDate) {
         log.info("Ingesting all tickers from '{}' as of {}", pricesDir, asOfDate);
 
+        Map<String, List<Double>> tickerPrices = readPrices(
+                spark.read().option("header", "true").csv(pricesDir + "/*.csv"), asOfDate);
+
+        log.info("Collected prices for {} ticker(s): {}", tickerPrices.size(), tickerPrices.keySet());
+
+        MarketData marketData = calibrateMarketData.calibrate(asOfDate, tickerPrices);
+        marketDataRepository.save(marketData);
+        log.info("Market data saved for {} ticker(s) as of {}", tickerPrices.size(), asOfDate);
+        return marketData;
+    }
+
+    private Map<String, List<Double>> readPrices(Dataset<Row> raw, LocalDate asOfDate) {
         Map<String, List<Double>> tickerPrices = new LinkedHashMap<>();
-        spark.read()
-                .option("header", "true")
-                .csv(pricesDir + "/*.csv")
-                .select(
-                        upper(regexp_extract(col("_metadata.file_path"), ".*/([^/\\.]+)\\.csv$", 1)).as("ticker"),
+        raw.select(
+                        upper(col("Ticker")).as("ticker"),
                         col("Date"),
                         col("Close").cast("double").as("close"))
                 .filter(col("Date").leq(asOfDate.toString()))
@@ -88,12 +67,6 @@ public class SparkMarketDataIngestionAdapter {
                 .forEachRemaining(row -> tickerPrices
                         .computeIfAbsent(row.getString(0), k -> new ArrayList<>())
                         .add(row.getDouble(2)));
-
-        log.info("Collected prices for {} ticker(s): {}", tickerPrices.size(), tickerPrices.keySet());
-
-        MarketData marketData = calibrateMarketData.calibrate(asOfDate, tickerPrices);
-        marketDataRepository.save(marketData);
-        log.info("Market data saved for {} ticker(s) as of {}", tickerPrices.size(), asOfDate);
-        return marketData;
+        return tickerPrices;
     }
 }
