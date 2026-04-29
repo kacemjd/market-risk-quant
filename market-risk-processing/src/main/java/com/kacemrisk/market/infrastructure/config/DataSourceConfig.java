@@ -3,9 +3,9 @@ package com.kacemrisk.market.infrastructure.config;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -13,7 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile("questdb")
+@ConditionalOnProperty(name = "output.sink", havingValue = "questdb")
 public class DataSourceConfig {
 
     @Value("${spring.datasource.url:jdbc:postgresql://localhost:8812/questdb}")
@@ -53,4 +53,3 @@ public class DataSourceConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 }
-

@@ -5,12 +5,19 @@ import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.domain.model.VaRResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+/**
+ * Default (stdout) {@link VaRResultPublisher}.
+ * Active when {@code output.sink=log} or when the property is absent entirely.
+ * No external services required — safe for local and CI environments.
+ */
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "output.sink", havingValue = "log", matchIfMissing = true)
 public class LoggingVaRResultPublisher implements VaRResultPublisher {
 
     @Override

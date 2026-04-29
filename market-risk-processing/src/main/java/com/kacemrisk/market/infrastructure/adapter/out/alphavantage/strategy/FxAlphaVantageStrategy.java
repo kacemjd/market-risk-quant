@@ -10,16 +10,6 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
 
-/**
- * Alpha Vantage strategy for <strong>FX (Foreign Exchange)</strong> instruments.
- *
- * <p>Uses the {@code FX_DAILY} function. Currency pair tickers are expected in
- * 6-character format (e.g. {@code EURUSD}) and are automatically split into
- * {@code from_symbol} / {@code to_symbol} parameters.
- *
- * <p>Alpha Vantage endpoint:
- * {@code GET /query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&outputsize=compact&apikey=…}
- */
 @Slf4j
 @Component
 public class FxAlphaVantageStrategy implements AlphaVantageRequestStrategy {

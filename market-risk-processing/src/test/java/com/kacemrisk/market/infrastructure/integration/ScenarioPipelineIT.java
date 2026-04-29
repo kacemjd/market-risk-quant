@@ -8,19 +8,15 @@ import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.domain.model.VaRResult;
 import com.kacemrisk.market.infrastructure.RiskPlatformApplication;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import com.kacemrisk.market.workflow.ScenarioNotification;
 import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
 
-import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -29,17 +25,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Full pipeline integration test.
+ *
+ * <p>Profile {@code int} activates {@code input.source=csv} pointing at
+ * {@code src/test/resources/market-data/prices/} — no API key required.
+ * The portfolio is read from the same classpath location.
+ * Only NVDA has fixture data, so only one enriched position is expected.
+ */
 @SpringBootTest(classes = RiskPlatformApplication.class)
 @ActiveProfiles("int")
 class ScenarioPipelineIT {
-
-    // ── injected from application-int.yml ────────────────────────────────────
-    @Value("${test.scenario.input-paths.portfolio}") private String portfolioCsvPath;
-    @Value("${test.scenario.input-paths.prices}")    private String pricesCsvPath;
-    @Value("${test.scenario.as-of-date}")            private String asOfDateStr;
-    @Value("${test.scenario.confidence-level}")      private double confidenceLevel;
-    @Value("${test.scenario.num-paths}")             private int    numPaths;
-    @Value("${test.scenario.time-grid}")             private String timeGrid;
 
     @Autowired private TriggerScenarioUseCase triggerScenarioUseCase;
     @Autowired private MarketDataRepository   marketDataRepository;
@@ -47,25 +43,21 @@ class ScenarioPipelineIT {
     @MockitoSpyBean
     private VaRResultPublisher varResultPublisher;
 
-    private ScenarioNotification notification;
-
-    @BeforeEach
-    void initNotification() throws Exception {
-        notification = ScenarioNotification.builder()
-                .correlationId(UUID.randomUUID().toString())
-                .portfolioCsvPath(resolveTestPath(portfolioCsvPath))
-                .pricesCsvPath(resolveTestPath(pricesCsvPath))
-                .asOfDate(LocalDate.parse(asOfDateStr))
-                .confidenceLevel(confidenceLevel)
-                .numPaths(numPaths)
-                .timeGrid(MaturityGrid.valueOf(timeGrid))
-                .build();
-    }
-
     @Test
-    void should_run_full_var_pipeline_from_scenario_notification() throws Exception {
+    void should_run_full_var_pipeline_from_scenario_notification() {
 
-        // ── trigger full platform ─────────────────────────────────────────────
+        ScenarioNotification notification = ScenarioNotification.builder()
+                .correlationId(UUID.randomUUID().toString())
+                .portfolioCsvPath("market-data/portfolio.csv")
+                .asOfDate(LocalDate.of(2017, 11, 10))
+                .varMethod(VaRMethod.HISTORICAL)
+                .confidenceLevel(0.99)
+                .historicalWindow(50)          // 50 trading-day window; NVDA fixture covers this
+                .numPaths(1000)
+                .timeGrid(MaturityGrid.GRID_53)
+                .build();
+
+        // ── trigger ───────────────────────────────────────────────────────────
         String returnedId = triggerScenarioUseCase.trigger(notification);
 
         // ── correlationId round-trips ─────────────────────────────────────────
@@ -80,8 +72,8 @@ class ScenarioPipelineIT {
         assertThat(marketData.getRiskFactors()).contains("NVDA");
         assertThat(marketData.getVolFor("NVDA")).isGreaterThan(0.0);
 
-        // ── VaR was published for portfolio PTFL-001 ──────────────────────────
-        ArgumentCaptor<Portfolio>  portfolioCaptor = ArgumentCaptor.forClass(Portfolio.class);
+        // ── VaR was published ─────────────────────────────────────────────────
+        ArgumentCaptor<Portfolio> portfolioCaptor = ArgumentCaptor.forClass(Portfolio.class);
         ArgumentCaptor<VaRResult>  varResultCaptor = ArgumentCaptor.forClass(VaRResult.class);
 
         verify(varResultPublisher).publish(
@@ -95,11 +87,5 @@ class ScenarioPipelineIT {
         assertThat(varResultCaptor.getValue().getVar())
                 .as("VaR must be a positive loss amount")
                 .isGreaterThan(0.0);
-    }
-
-    private String resolveTestPath(String classpathRelative) throws Exception {
-        URL resource = getClass().getClassLoader().getResource(classpathRelative);
-        assertThat(resource).as("Test resource not found: " + classpathRelative).isNotNull();
-        return Paths.get(resource.toURI()).toString();
     }
 }

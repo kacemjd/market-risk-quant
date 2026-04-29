@@ -3,7 +3,7 @@ package com.kacemrisk.market.infrastructure.adapter.out.persistence;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@Profile("questdb")
+@ConditionalOnProperty(name = "output.sink", havingValue = "questdb")
 @RequiredArgsConstructor
 public class QuestDbMigrationRunner {
 

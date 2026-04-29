@@ -1,10 +1,9 @@
-test:
-  scenario:
-    input-paths:
-      portfolio: market-data/portfolio.csv
-      prices:    market-data/prices
-    as-of-date:        "2017-11-10"
-    confidence-level:  0.99
-    num-paths:         1000
-    time-grid:         GRID_53
-
+# ── Integration test profile ──────────────────────────────────────────────
+# Activated by @ActiveProfiles("int") in integration tests.
+# Uses local CSV price files so no API key is needed.
+input:
+  source: csv
+  portfolio:
+    path: market-data/portfolio.csv   # resolves to src/test/resources/market-data/portfolio.csv
+  csv:
+    prices-path: market-data/prices   # resolves to src/test/resources/market-data/prices/

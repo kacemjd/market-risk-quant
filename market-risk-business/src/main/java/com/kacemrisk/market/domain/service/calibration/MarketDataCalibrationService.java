@@ -13,7 +13,7 @@ public class MarketDataCalibrationService {
     private static final int DAYS_IN_YEAR = 252;
 
     public MarketData calibrateFromPrices(LocalDate asOfDate,
-                                          Map<String, List<Double>> historicalPrices) {
+                                          Map<String, double[]> historicalPrices) {
 
         List<String> tickers = new ArrayList<>(historicalPrices.keySet());
         int n = tickers.size();
@@ -21,8 +21,8 @@ public class MarketDataCalibrationService {
 
         Map<String, double[]> returnsMap = new HashMap<>();
         tickers.forEach(ticker -> {
-            List<Double> prices = historicalPrices.get(ticker);
-            if (prices == null || prices.size() < 2) {
+            double[] prices = historicalPrices.get(ticker);
+            if (prices == null || prices.length < 2) {
                 throw new IllegalArgumentException(
                         "Ticker " + ticker + " requires at least 2 price observations.");
             }
@@ -58,9 +58,9 @@ public class MarketDataCalibrationService {
                 .build();
     }
 
-    private double[] calculateLogReturns(List<Double> prices) {
-        return IntStream.range(1, prices.size())
-                .mapToDouble(i -> Math.log(prices.get(i)) - Math.log(prices.get(i - 1)))
+    private double[] calculateLogReturns(double[] prices) {
+        return IntStream.range(1, prices.length)
+                .mapToDouble(i -> Math.log(prices[i]) - Math.log(prices[i - 1]))
                 .toArray();
     }
 

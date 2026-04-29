@@ -6,7 +6,7 @@ import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.domain.model.VaRResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @Slf4j
 @Component
-@Profile("questdb")
+@ConditionalOnProperty(name = "output.sink", havingValue = "questdb")
 @RequiredArgsConstructor
 public class QuestDbVaRResultPublisher implements VaRResultPublisher {
 

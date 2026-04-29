@@ -1,0 +1,28 @@
+# Maven build outputs
+**/target/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Docs
+*.md
+internal-docs/
+
+# OS files
+.DS_Store
+Thumbs.db
+

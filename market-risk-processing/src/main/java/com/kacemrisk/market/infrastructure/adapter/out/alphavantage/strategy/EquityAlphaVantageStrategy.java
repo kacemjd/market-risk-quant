@@ -10,15 +10,6 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDate;
 
-/**
- * Alpha Vantage strategy for <strong>Equity (EQD)</strong> instruments.
- *
- * <p>Uses the {@code TIME_SERIES_DAILY} function, which returns adjusted daily
- * OHLCV data for exchange-listed stocks (NYSE, NASDAQ, …).
- *
- * <p>Alpha Vantage endpoint:
- * {@code GET /query?function=TIME_SERIES_DAILY&symbol=AAPL&outputsize=compact&apikey=…}
- */
 @Slf4j
 @Component
 public class EquityAlphaVantageStrategy implements AlphaVantageRequestStrategy {

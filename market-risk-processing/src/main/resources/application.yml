@@ -24,19 +24,23 @@ logging:
     com.kacemrisk.market.infrastructure: DEBUG
     com.kacemrisk.market.domain: DEBUG
 
-# Scheduler — disabled by default; enable per environment
+# ── Scheduler ────────────────────────────────────────────────────────────────
+# Disabled by default; flip scenario.schedule.enabled=true per environment.
+# All fields mirror ScenarioRequest — the scheduler builds a full notification from these.
 scenario:
   schedule:
     enabled: false
     cron: "0 0 18 * * MON-FRI"
-    default-portfolio-path: data/portfolio.csv
-    default-prices-path: data/prices
-    default-confidence-level: 0.99
-    default-num-paths: 10000
+    portfolio-path:     data/portfolio.csv
+    var-method:         HISTORICAL
+    confidence-level:   0.99
+    historical-window:  99          # ≤ 100 → stays within Alpha Vantage compact output
+    num-paths:          10000       # used only by MONTE_CARLO
+    time-grid:          GRID_53
   kafka:
     topic: scenario-notifications
 
-# Alpha Vantage historical price provider
+# ── Alpha Vantage ─────────────────────────────────────────────────────────────
 # Override alphavantage.api-key via the ALPHA_VANTAGE_API_KEY environment variable.
 # Free tier: 25 req/day → keep fetch-concurrency low (default 5).
 alphavantage:
@@ -53,21 +57,49 @@ springdoc:
   swagger-ui:
     enabled: false
 
+# ── Data-source strategy ──────────────────────────────────────────────────
+# input.source           : rest (Alpha Vantage API, default) | csv (local files)
+# input.csv.prices-path  : classpath root-relative folder containing <TICKER>.csv files
+# input.portfolio.path   : portfolio CSV — classpath-relative, absolute, s3://, or hdfs://
+# output.sink            : log (stdout, default) | questdb | kafka
+input:
+  source: rest
+  portfolio:
+    path: data/portfolio.csv
+  csv:
+    prices-path: data/prices
+
+output:
+  sink: log
+
 ---
-# Local developer profile — activate with -Plocal (Maven) or --spring.profiles.active=local
+# ── Local developer profile ───────────────────────────────────────────────────
+# Activate with --spring.profiles.active=local
 # Spark runs in-process (local[*]); no cluster, no Kafka required.
+# Trigger via: POST http://localhost:8080/scenarios/run  (body: {} or full ScenarioRequest)
 spring:
   config:
     activate:
       on-profile: local
   main:
-    web-application-type: servlet   # expose REST endpoint for manual testing
+    web-application-type: servlet   # expose REST + Swagger UI
 
 server:
   port: 8080
 
 spark:
   master: local[*]
+
+# CSV price loader — no API key needed for local development
+input:
+  source: csv
+  portfolio:
+    path: data/portfolio.csv
+  csv:
+    prices-path: data/prices
+
+output:
+  sink: log
 
 springdoc:
   api-docs:
@@ -79,11 +111,11 @@ springdoc:
 
 logging:
   level:
-    com.kacemrisk.market: DEBUG     # verbose domain + infrastructure output
-
+    com.kacemrisk.market: DEBUG
 
 ---
-# Kafka profile — activate with --spring.profiles.active=kafka
+# ── Kafka profile ─────────────────────────────────────────────────────────────
+# Activate with --spring.profiles.active=kafka
 spring:
   config:
     activate:
@@ -97,13 +129,58 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+output:
+  sink: kafka
+
 var:
   results:
     kafka:
       topic: ${VAR_RESULTS_TOPIC:var-results}
 
 ---
-# QuestDB profile — activate with --spring.profiles.active=local,questdb
+# ── Docker profile ────────────────────────────────────────────────────────────
+# Activate with SPRING_PROFILES_ACTIVE=docker
+# Starts with REST + Swagger UI exposed on :8080.
+# Trigger the pipeline via: POST http://localhost:8080/scenarios/run
+# Minimal body example (all defaults):  {}
+# Full body example:
+#   { "varMethod": "HISTORICAL", "historicalWindow": 99, "confidenceLevel": 0.99 }
+spring:
+  config:
+    activate:
+      on-profile: docker
+  main:
+    web-application-type: servlet
+
+server:
+  port: 8080
+
+spark:
+  master: local[1]          # single thread — conserves Docker container memory
+
+# Alpha Vantage REST loader (set ALPHA_VANTAGE_API_KEY env var)
+input:
+  source: rest
+  portfolio:
+    path: data/portfolio.csv
+
+output:
+  sink: log                 # override to questdb by adding the questdb profile
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.kacemrisk.market: DEBUG
+
+---
+# ── QuestDB profile ───────────────────────────────────────────────────────────
+# Activate with --spring.profiles.active=local,questdb (or docker,questdb)
 # Connects via the PostgreSQL wire protocol (port 8812).
 # Run QuestDB: docker compose up questdb
 spring:
@@ -117,5 +194,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
-      connection-timeout: 5000
+      connection-timeout: 60000   # 60 s — gives QuestDB time to accept connections on restart
+      initialization-fail-timeout: -1  # -1 = keep retrying pool init indefinitely
 
+output:
+  sink: questdb             # activates QuestDbVaRResultPublisher, DataSourceConfig, etc.

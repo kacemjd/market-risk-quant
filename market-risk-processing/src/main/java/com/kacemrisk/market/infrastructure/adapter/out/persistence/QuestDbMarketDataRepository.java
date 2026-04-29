@@ -4,7 +4,7 @@ import com.kacemrisk.market.application.port.out.MarketDataRepository;
 import com.kacemrisk.market.domain.model.MarketData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
-@Profile("questdb")
+@ConditionalOnProperty(name = "output.sink", havingValue = "questdb")
 @RequiredArgsConstructor
 public class QuestDbMarketDataRepository implements MarketDataRepository {
 

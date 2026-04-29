@@ -19,15 +19,16 @@ public class VaRCalculationPipeline implements VaRPipeline {
     private final CalculateVaRUseCase calculateVaRUseCase;
 
     @Override
-    public VaRResult execute(Portfolio portfolio, MarketData marketData, ScenarioNotification notification) {
+    public VaRResult execute(Portfolio portfolio, MarketData marketData, RunContext ctx) {
+
         CalculateVaRCommand command = CalculateVaRCommand.builder()
                 .portfolio(portfolio)
                 .marketData(marketData)
-                .method(notification.getVarMethod())
-                .alpha(notification.getConfidenceLevel())
-                .numPaths(notification.getNumPaths())
-                .historicalWindow(notification.getHistoricalWindow())
-                .timeGrid(notification.getTimeGrid())
+                .method(ctx.varMethod())
+                .alpha(ctx.confidenceLevel())
+                .numPaths(ctx.numPaths())
+                .historicalWindow(ctx.historicalWindow())
+                .timeGrid(ctx.timeGrid())
                 .build();
 
         return calculateVaRUseCase.calculate(command);

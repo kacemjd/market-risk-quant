@@ -1,6 +1,7 @@
 package com.kacemrisk.market.infrastructure.adapter.in.rest;
 
 import com.kacemrisk.market.domain.model.MaturityGrid;
+import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.infrastructure.model.ScenarioRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.kacemrisk.market.workflow.ScenarioNotification;
 import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,13 +25,23 @@ public class RestScenarioController {
 
     private final TriggerScenarioUseCase triggerScenarioUseCase;
 
-    @Operation(summary = "Trigger VaR scenario", description = "Runs the full Monte Carlo + Parametric VaR pipeline for the given portfolio and returns a correlationId")
+    @Operation(
+            summary = "Trigger VaR scenario",
+            description = """
+                    Runs the full VaR pipeline for the portfolio defined in the request.
+                    All fields are optional — an empty `{}` body runs a Historical VaR
+                    against today's date with the default portfolio and parameters.
+                    Returns a correlationId that can be used to query results.
+                    """)
     @PostMapping("/run")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Map<String, String> run(@RequestBody ScenarioRequest request) {
-        log.info("REST trigger received | asOfDate={}", request.getAsOfDate());
-        ScenarioNotification notification = toNotification(request);
-        String correlationId = triggerScenarioUseCase.trigger(notification);
+    public Map<String, String> run(@RequestBody(required = false) ScenarioRequest request) {
+        if (request == null) request = new ScenarioRequest();
+        log.info("REST trigger | method={} | asOfDate={} | portfolio={}",
+                request.getVarMethod(),
+                request.getAsOfDate() != null ? request.getAsOfDate() : "today",
+                request.getPortfolioCsvPath());
+        String correlationId = triggerScenarioUseCase.trigger(toNotification(request));
         return Map.of("correlationId", correlationId);
     }
 
@@ -37,9 +49,10 @@ public class RestScenarioController {
         return ScenarioNotification.builder()
                 .correlationId(UUID.randomUUID().toString())
                 .portfolioCsvPath(r.getPortfolioCsvPath())
-                .pricesCsvPath(r.getPricesCsvPath())
-                .asOfDate(r.getAsOfDate())
+                .asOfDate(r.getAsOfDate() != null ? r.getAsOfDate() : LocalDate.now())
+                .varMethod(VaRMethod.valueOf(r.getVarMethod()))
                 .confidenceLevel(r.getConfidenceLevel())
+                .historicalWindow(r.getHistoricalWindow())
                 .numPaths(r.getNumPaths())
                 .timeGrid(MaturityGrid.valueOf(r.getTimeGrid()))
                 .build();

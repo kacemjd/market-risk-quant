@@ -5,85 +5,104 @@ import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.Position;
 import com.kacemrisk.market.domain.model.VaRResult;
-import com.kacemrisk.market.infrastructure.model.EnrichedPositionRow;
-import com.kacemrisk.market.infrastructure.model.VaRResultRow;
+import com.kacemrisk.market.infrastructure.model.RiskPosition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.SparkSession;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.kacemrisk.market.workflow.ScenarioNotification;
+import com.kacemrisk.market.workflow.RunContext;
 import com.kacemrisk.market.workflow.VaRPipeline;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Drives the VaR business pipeline for every portfolio in the referential and fans out
+ * results to the configured sinks.
+ *
+ * <p>Sinks are implementations of {@link VaRResultPublisher}, selected at startup via
+ * {@code output.sink}:
+ * <ul>
+ *   <li>{@code log}     → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.LoggingVaRResultPublisher} (default)</li>
+ *   <li>{@code questdb} → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.QuestDbVaRResultPublisher}</li>
+ *   <li>{@code kafka}   → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.KafkaVaRResultPublisher}</li>
+ * </ul>
+ * To add a Parquet or CSV sink, implement {@link VaRResultPublisher} and register it as a
+ * Spring bean — no changes here required.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ComposeAdapter {
 
-    private final SparkSession spark;
     private final VaRPipeline varPipeline;
     private final List<VaRResultPublisher> publishers;
 
-    public void compute(Dataset<EnrichedPositionRow> enriched,
+    /**
+     * Iterates over every portfolio group, executes the VaR pipeline, and fans the result
+     * out to all registered sinks.
+     *
+     * @param positionsByPortfolio positions pre-grouped by portfolioId
+     *                             (from {@link com.kacemrisk.market.infrastructure.model.RiskModelReferential#positionsByPortfolio()})
+     * @param marketData           calibrated volatilities and covariance
+     * @param ctx                  execution metadata (method, confidence level, etc.)
+     */
+    public void compute(Map<String, List<RiskPosition>> positionsByPortfolio,
                         MarketData marketData,
-                        ScenarioNotification notification) {
-        log.info("ComposeAdapter: computing VaR for scenario [{}]", notification.getCorrelationId());
+                        RunContext ctx) {
+        log.info("ComposeAdapter: computing VaR for scenario [{}] — {} portfolio(s)",
+                ctx.correlationId(), positionsByPortfolio.size());
 
-        Map<String, List<EnrichedPositionRow>> byPortfolio = enriched.collectAsList()
-                .stream()
-                .collect(Collectors.groupingBy(EnrichedPositionRow::getPortfolioId));
-
-
-        List<VaRResultRow> results = new ArrayList<>();
-        byPortfolio.forEach((portfolioId, rows) -> {
+        positionsByPortfolio.forEach((portfolioId, rows) -> {
             Portfolio portfolio = buildPortfolio(portfolioId, rows);
-            VaRResult varResult = varPipeline.execute(portfolio, marketData, notification);
-            log.info("  Portfolio {} → VaR={}", portfolioId, varResult.getVar());
-            publishers.forEach(p -> p.publish(notification.getCorrelationId(), portfolio,
-                    notification.getAsOfDate(), varResult, notification.getVarMethod()));
-            results.add(buildResultRow(
-                    notification.getCorrelationId(), portfolioId, notification.getAsOfDate(), varResult));
+            VaRResult varResult = varPipeline.execute(portfolio, marketData, ctx);
+
+            log.info("  portfolio={} | VaR={} | ES={}",
+                    portfolioId, varResult.getVar(), varResult.getExpectedShortfall());
+
+            // Fan out to all registered sinks (log / QuestDB / Kafka / …)
+            publishers.forEach(sink -> sink.publish(
+                    ctx.correlationId(), portfolio,
+                    ctx.asOfDate(), varResult, ctx.varMethod()));
         });
 
-        // Streaming-style push: each partition writes its rows independently
-        spark.createDataset(results, Encoders.bean(VaRResultRow.class))
-                .foreachPartition((Iterator<VaRResultRow> iter) ->
-                        iter.forEachRemaining(row ->
-                                LoggerFactory.getLogger(ComposeAdapter.class)
-                                        .info("[Stream] Persist → portfolio={} VaR={} α={}",
-                                                row.getPortfolioId(), row.getVarAmount(), row.getAlpha())));
-
-        log.info("ComposeAdapter: scenario [{}] — {}/{} portfolio(s) written",
-                notification.getCorrelationId(), results.size(), byPortfolio.size());
+        log.info("ComposeAdapter: scenario [{}] complete — {} portfolio(s) published",
+                ctx.correlationId(), positionsByPortfolio.size());
     }
 
-    private Portfolio buildPortfolio(String portfolioId, List<EnrichedPositionRow> rows) {
+    // ── Portfolio assembly ────────────────────────────────────────────────────────────────
+
+    private Portfolio buildPortfolio(String portfolioId, List<RiskPosition> rows) {
         List<Position> positions = rows.stream()
-                .map(r -> Position.equitySpot(r.getTicker(), r.getQuantity(), r.getSpotPrice()))
+                .map(this::toPosition)
                 .collect(Collectors.toList());
-        return Portfolio.builder().id(portfolioId).positions(positions).build();
+        return Portfolio.builder()
+                .id(portfolioId)
+                .positions(positions)
+                .build();
     }
 
-    private VaRResultRow buildResultRow(String correlationId, String portfolioId,
-                                        LocalDate asOfDate, VaRResult result) {
-        VaRResultRow row = new VaRResultRow();
-        row.setCorrelationId(correlationId);
-        row.setPortfolioId(portfolioId);
-        row.setAsOfDate(asOfDate.toString());
-        row.setVarAmount(result.getVar());
-        row.setAlpha(result.getAlpha());
-        row.setNumberOfScenarios(result.getNumberOfScenarios());
-        row.setMeanPnL(result.getMeanPnL());
-        row.setStdDevPnL(result.getStdDevPnL());
-        return row;
+    /**
+     * Maps one {@link RiskPosition} to a domain {@link Position}.
+     *
+     * <p>Spot (linear) instrument assumptions:
+     * <ul>
+     *   <li>delta = 1.0 — P&amp;L moves 1:1 with the spot price</li>
+     *   <li>gamma = 0.0 — no convexity for spot positions</li>
+     *   <li>maturityInYears = 0.0 — no time dimension for spot</li>
+     * </ul>
+     * When options or futures are introduced, extend this method to branch on
+     * {@code riskPosition.getAssetClass()} and apply the appropriate pricing factory.
+     */
+    private Position toPosition(RiskPosition r) {
+        return Position.builder()
+                .ticker(r.getTicker())
+                .assetClass(r.getAssetClass())   // ← actual enum from RiskPosition, not hardcoded EQD
+                .quantity(r.getQuantity())
+                .spotPrice(r.getSpotPrice())
+                .delta(1.0)
+                .gamma(0.0)
+                .maturityInYears(0.0)
+                .build();
     }
 }

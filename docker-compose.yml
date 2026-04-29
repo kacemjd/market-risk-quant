@@ -12,11 +12,14 @@ services:
       QDB_LINE_TCP_MAINTENANCE_JOB_INTERVAL: 100
     volumes:
       - questdb-data:/root/.questdb
+    # Use the /exec SQL endpoint — more reliable than /health and confirms the engine
+    # is truly ready (not just the HTTP listener).  Falls back to wget if curl is absent.
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/health" ]
+      test: ["CMD-SHELL", "curl -sf 'http://localhost:9000/exec?query=select%201' >/dev/null 2>&1 || wget -qO- 'http://localhost:9000/exec?query=select%201' >/dev/null 2>&1"]
+      start_period: 60s   # Windows/Docker-Desktop WSL2 is slower — give extra grace
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 15
 
   redpanda:
     image: redpandadata/redpanda:v24.2.18
@@ -41,6 +44,39 @@ services:
       test: [ "CMD", "rpk", "cluster", "info" ]
       interval: 10s
       timeout: 5s
+      retries: 5
+
+  # ── Historical VaR processing service ─────────────────────────────────────
+  # Starts after QuestDB is healthy, then:
+  #   1. Fetches historical prices from Alpha Vantage (set ALPHA_VANTAGE_API_KEY)
+  #   2. Runs Historical Simulation VaR for each portfolio in data/portfolio.csv
+  #   3. Persists market calibration + VaR results to QuestDB
+  #   4. Exposes REST API on port 8080 (Swagger UI: http://localhost:8080/swagger-ui.html)
+  #
+  # Usage:
+  #   ALPHA_VANTAGE_API_KEY=<your-key> docker compose up --build
+  market-risk-processing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: market-risk-processing
+    depends_on:
+      questdb:
+        condition: service_started   # don't gate on healthcheck — app retries via HikariCP
+    restart: on-failure              # if QuestDB isn't ready yet, Docker restarts the app
+    ports:
+      - "8080:8080"
+    environment:
+      ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY:-demo}
+      QUESTDB_URL: jdbc:postgresql://questdb:8812/questdb
+      QUESTDB_USER: admin
+      QUESTDB_PASSWORD: quest
+    mem_limit: 3g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/ >/dev/null 2>&1 || wget -qO- http://localhost:8080/ >/dev/null 2>&1"]
+      start_period: 120s
+      interval: 15s
+      timeout: 10s
       retries: 5
 
 volumes:

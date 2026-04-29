@@ -3,7 +3,7 @@ package com.kacemrisk.market.infrastructure.adapter.out.persistence;
 import com.kacemrisk.market.application.port.out.MarketDataRepository;
 import com.kacemrisk.market.domain.model.MarketData;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Repository
-@Profile("!questdb")
+@ConditionalOnMissingBean(name = "questDbMarketDataRepository")
 public class InMemoryMarketDataRepository implements MarketDataRepository {
 
     private final Map<LocalDate, MarketData> store = new ConcurrentHashMap<>();

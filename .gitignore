@@ -37,3 +37,7 @@ build/
 
 ### Internal docs ###
 internal-docs/
+
+### Secrets — never commit API keys ###
+.env
+
