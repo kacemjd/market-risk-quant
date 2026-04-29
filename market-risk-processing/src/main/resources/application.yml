@@ -4,9 +4,14 @@ spring:
   main:
     # Spark manages its own web UI; disable Spring's embedded server unless needed
     web-application-type: none
-  jackson:
-    serialization:
-      write-dates-as-timestamps: false
+  # DataSource auto-configuration is disabled globally; QuestDB is optional.
+  # Activated only under the "questdb" profile via DataSourceConfig bean.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration
 
 spark:
   app-name: market-risk-processing
@@ -31,6 +36,23 @@ scenario:
   kafka:
     topic: scenario-notifications
 
+# Alpha Vantage historical price provider
+# Override alphavantage.api-key via the ALPHA_VANTAGE_API_KEY environment variable.
+# Free tier: 25 req/day → keep fetch-concurrency low (default 5).
+alphavantage:
+  api-key: ${ALPHA_VANTAGE_API_KEY:demo}
+  base-url: https://www.alphavantage.co/query
+  # compact = last 100 trading days | full = up to 20 years
+  output-size: compact
+  fetch-concurrency: 5
+
+# OpenAPI / Swagger UI — disabled by default (no servlet container in default profile)
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 ---
 # Local developer profile — activate with -Plocal (Maven) or --spring.profiles.active=local
 # Spark runs in-process (local[*]); no cluster, no Kafka required.
@@ -47,21 +69,18 @@ server:
 spark:
   master: local[*]
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: method
+
 logging:
   level:
     com.kacemrisk.market: DEBUG     # verbose domain + infrastructure output
 
----
-# REST profile — activate with --spring.profiles.active=rest
-spring:
-  config:
-    activate:
-      on-profile: rest
-  main:
-    web-application-type: servlet
-
-server:
-  port: 8080
 
 ---
 # Kafka profile — activate with --spring.profiles.active=kafka

@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -73,6 +74,18 @@ public class GlobalExceptionHandler {
                 .errorCode(ScenarioRiskException.ErrorCode.VAR_CALCULATION_FAILED.name())
                 .status(422)
                 .error("Unprocessable Entity")
+                .message(ex.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ScenarioRiskException> handleNotFound(NoResourceFoundException ex) {
+        // 404s for missing static resources (e.g. /, /favicon.ico) are not server errors — log at DEBUG only
+        log.debug("[NOT_FOUND] {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ScenarioRiskException.builder()
+                .errorCode("NOT_FOUND")
+                .status(HttpStatus.NOT_FOUND.value())
+                .error(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .message(ex.getMessage())
                 .build());
     }

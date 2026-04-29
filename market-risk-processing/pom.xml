@@ -29,14 +29,16 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- Spring Boot -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
+    <!-- Spring Boot Web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- WebFlux — reactive WebClient for Alpha Vantage HTTP calls -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
     <!-- Bean Validation (@Valid, @NotBlank, @NotNull, @DecimalMin …) -->
@@ -62,16 +64,31 @@
       <artifactId>spring-kafka</artifactId>
     </dependency>
 
-    <!-- Spark 4 — provided at runtime by the cluster; compile scope for local dev -->
+    <!-- Spark 4 — compile scope by default for local/IDE runs (Spark master = local[*]).
+         Override to `provided` on a real cluster by activating the `cluster` profile.
+         Exclude only log4j-slf4j2-impl to avoid SLF4J multiple-provider conflict with
+         logback. log4j-core must remain: Spark loads it dynamically at runtime. -->
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_${scala.binary.version}</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j2-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-sql_${scala.binary.version}</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j2-impl</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Utilities -->
@@ -79,6 +96,13 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- OpenAPI / Swagger UI -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc.version}</version>
     </dependency>
 
     <!-- Testing -->
@@ -89,37 +113,37 @@
     </dependency>
   </dependencies>
 
-  <!--
-    Local development profile — activates automatically when running on a dev machine
-    (no Spark cluster present). Overrides the Spark dependencies from `provided`
-    to `compile` so that `mvn spring-boot:run` and IDE run configurations work
-    without a pre-installed Spark distribution.
-
-    Activate explicitly:   mvn spring-boot:run -Plocal
-    Auto-activation:       set SPARK_HOME env var is absent  →  use -Plocal
-  -->
   <profiles>
     <profile>
       <id>local</id>
-
-      <dependencies>
-        <!-- Override Spark scope: provided → compile for local/IDE execution -->
-        <dependency>
-          <groupId>org.apache.spark</groupId>
-          <artifactId>spark-core_${scala.binary.version}</artifactId>
-          <scope>compile</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.spark</groupId>
-          <artifactId>spark-sql_${scala.binary.version}</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-
       <!-- Spring Boot local app properties -->
       <properties>
         <spring.profiles.active>local</spring.profiles.active>
       </properties>
+    </profile>
+
+    <!--
+      Cluster profile — activate with -Pcluster when submitting to a real Spark cluster
+      (YARN, standalone, etc.). Overrides Spark scope to `provided` because the cluster
+      already ships its own Spark distribution.
+
+      Activate explicitly:   mvn package -Pcluster
+    -->
+    <profile>
+      <id>cluster</id>
+      <dependencies>
+        <!-- Override Spark scope: compile → provided for cluster submission -->
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-core_${scala.binary.version}</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-sql_${scala.binary.version}</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 

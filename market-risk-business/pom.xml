@@ -21,6 +21,13 @@
       <version>3.6.1</version>
     </dependency>
 
+    <!-- Reactor Core — reactive streams support for HistoricalPriceProvider port.
+         Version managed by the Spring Boot BOM imported in the parent POM. -->
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+    </dependency>
+
     <!-- Core utilities — no frameworks -->
     <dependency>
       <groupId>org.projectlombok</groupId>

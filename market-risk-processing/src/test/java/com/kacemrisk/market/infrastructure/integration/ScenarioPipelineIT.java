@@ -5,6 +5,8 @@ import com.kacemrisk.market.application.port.out.VaRResultPublisher;
 import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.MaturityGrid;
 import com.kacemrisk.market.domain.model.Portfolio;
+import com.kacemrisk.market.domain.model.VaRMethod;
+import com.kacemrisk.market.domain.model.VaRResult;
 import com.kacemrisk.market.infrastructure.RiskPlatformApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -78,17 +81,18 @@ class ScenarioPipelineIT {
         assertThat(marketData.getVolFor("NVDA")).isGreaterThan(0.0);
 
         // ── VaR was published for portfolio PTFL-001 ──────────────────────────
-        ArgumentCaptor<Portfolio> portfolioCaptor = ArgumentCaptor.forClass(Portfolio.class);
-        ArgumentCaptor<Double>    varCaptor       = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<Portfolio>  portfolioCaptor = ArgumentCaptor.forClass(Portfolio.class);
+        ArgumentCaptor<VaRResult>  varResultCaptor = ArgumentCaptor.forClass(VaRResult.class);
 
         verify(varResultPublisher).publish(
+                eq(notification.getCorrelationId()),
                 portfolioCaptor.capture(),
                 eq(notification.getAsOfDate()),
-                eq(notification.getConfidenceLevel()),
-                varCaptor.capture());
+                varResultCaptor.capture(),
+                any(VaRMethod.class));
 
         assertThat(portfolioCaptor.getValue().getId()).isEqualTo("PTFL-001");
-        assertThat(varCaptor.getValue())
+        assertThat(varResultCaptor.getValue().getVar())
                 .as("VaR must be a positive loss amount")
                 .isGreaterThan(0.0);
     }

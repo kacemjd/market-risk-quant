@@ -24,14 +24,15 @@
 
         <!-- Dependency versions -->
         <lombok.version>1.18.36</lombok.version>
-        <logback.version>1.5.21</logback.version>
+        <logback.version>1.5.32</logback.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <cucumber.version>7.22.0</cucumber.version>
         <spring-boot.version>4.0.5</spring-boot.version>
-        <spark.version>4.0.0</spark.version>
+        <spark.version>4.1.1</spark.version>
         <scala.binary.version>2.13</scala.binary.version>
         <jmh.version>1.37</jmh.version>
         <jacoco.version>0.8.12</jacoco.version>
+        <springdoc.version>2.8.9</springdoc.version>
     </properties>
 
   <dependencyManagement>
@@ -57,6 +58,11 @@
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
         <version>${logback.version}</version>
       </dependency>
 

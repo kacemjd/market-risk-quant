@@ -2,9 +2,10 @@ package com.kacemrisk.market.infrastructure.adapter.in.rest;
 
 import com.kacemrisk.market.domain.model.MaturityGrid;
 import com.kacemrisk.market.infrastructure.model.ScenarioRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.kacemrisk.market.workflow.ScenarioNotification;
@@ -14,14 +15,15 @@ import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
-@Profile("rest")
 @RestController
 @RequestMapping("/scenarios")
 @RequiredArgsConstructor
+@Tag(name = "Scenarios", description = "Trigger VaR scenario pipelines")
 public class RestScenarioController {
 
     private final TriggerScenarioUseCase triggerScenarioUseCase;
 
+    @Operation(summary = "Trigger VaR scenario", description = "Runs the full Monte Carlo + Parametric VaR pipeline for the given portfolio and returns a correlationId")
     @PostMapping("/run")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Map<String, String> run(@RequestBody ScenarioRequest request) {
@@ -43,4 +45,3 @@ public class RestScenarioController {
                 .build();
     }
 }
-
