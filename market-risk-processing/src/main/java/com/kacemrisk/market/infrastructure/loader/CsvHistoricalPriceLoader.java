@@ -1,5 +1,6 @@
 package com.kacemrisk.market.infrastructure.loader;
 
+import com.kacemrisk.market.application.port.out.HistoricalPriceProvider;
 import com.kacemrisk.market.domain.model.AssetClass;
 import com.kacemrisk.market.domain.model.HistoricalPrice;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link HistoricalPriceLoader} implementation that reads prices from local CSV files.
+ * {@link HistoricalPriceProvider} that reads prices from local CSV files.
  *
  * <p>Active when {@code input.source=csv}. Used by the {@code local} profile so developers
  * can work offline without consuming Alpha Vantage API quota.
+ *
+ * <p>Implements the per-ticker {@link #fetch} method directly; the bulk {@link #fetchAll}
+ * default on the port interface delegates to it sequentially (no network I/O so concurrency
+ * is not needed here).
  *
  * <h3>Expected layout (classpath)</h3>
  * <pre>
@@ -34,56 +39,67 @@ import java.util.Map;
  * <pre>Ticker,Date,Open,High,Low,Close,Volume,OpenInt</pre>
  * Column names are detected case-insensitively; only {@code Date} and {@code Close} are required.
  * Rows outside [{@code from}, {@code to}] are silently skipped.
- *
- * <p>To seed the local prices directory, copy the test fixtures from
- * {@code src/test/resources/market-data/prices/} into
- * {@code src/main/resources/data/prices/}.
  */
 @Slf4j
 @Component
 @ConditionalOnProperty(name = "input.source", havingValue = "csv")
-public class CsvHistoricalPriceLoader implements HistoricalPriceLoader {
+public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
 
     @Value("${input.csv.prices-path:data/prices}")
     private String pricesPath;
 
+    /**
+     * Loads closing prices for a single ticker from its CSV file.
+     */
     @Override
-    public List<HistoricalPrice> load(Map<String, AssetClass> tickerAssetClass,
-                                      LocalDate from, LocalDate to) {
+    public List<HistoricalPrice> fetch(String ticker, AssetClass assetClass,
+                                       LocalDate from, LocalDate to) {
+        String pattern = "classpath:" + pricesPath + "/" + ticker + ".csv";
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        try {
+            Resource[] resources = resolver.getResources(pattern);
+            if (resources.length == 0) {
+                log.warn("[CSV] No file found for ticker '{}' at {}", ticker, pattern);
+                return List.of();
+            }
+            List<HistoricalPrice> prices = parseCsv(resources[0], ticker, from, to);
+            log.debug("[CSV] ticker={} → {} price record(s)", ticker, prices.size());
+            return prices;
+        } catch (Exception e) {
+            log.warn("[CSV] Failed to load ticker '{}': {}", ticker, e.getMessage());
+            return List.of();
+        }
+    }
+
+    /**
+     * Bulk load — overrides the default to add aggregate logging.
+     */
+    @Override
+    public List<HistoricalPrice> fetchAll(Map<String, AssetClass> tickers,
+                                          LocalDate from, LocalDate to) {
         log.info("[CSV] Loading {} ticker(s) from classpath:{} | window=[{} → {}]",
-                tickerAssetClass.size(), pricesPath, from, to);
+                tickers.size(), pricesPath, from, to);
 
         List<HistoricalPrice> result = new ArrayList<>();
         int loaded = 0;
         int missing = 0;
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
-        for (String ticker : tickerAssetClass.keySet()) {
-            String pattern = "classpath:" + pricesPath + "/" + ticker + ".csv";
-            try {
-                Resource[] resources = resolver.getResources(pattern);
-                if (resources.length == 0) {
-                    log.warn("[CSV] No file found for ticker '{}' at {}", ticker, pattern);
-                    missing++;
-                    continue;
-                }
-                List<HistoricalPrice> prices = parseCsv(resources[0], ticker, from, to);
-                result.addAll(prices);
-                log.debug("[CSV] ticker={} → {} price record(s)", ticker, prices.size());
-                loaded++;
-            } catch (Exception e) {
-                log.warn("[CSV] Failed to load ticker '{}': {}", ticker, e.getMessage());
+        for (Map.Entry<String, AssetClass> entry : tickers.entrySet()) {
+            List<HistoricalPrice> prices = fetch(entry.getKey(), entry.getValue(), from, to);
+            if (prices.isEmpty()) {
                 missing++;
+            } else {
+                result.addAll(prices);
+                loaded++;
             }
         }
 
         log.info("[CSV] Loaded {} records | {}/{} tickers ok | {} missing",
-                result.size(), loaded, tickerAssetClass.size(), missing);
+                result.size(), loaded, tickers.size(), missing);
         return result;
     }
 
     private List<HistoricalPrice> parseCsv(Resource resource, String ticker,
-                                           LocalDate from, LocalDate to) throws Exception {
+                                            LocalDate from, LocalDate to) throws Exception {
         List<HistoricalPrice> prices = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(

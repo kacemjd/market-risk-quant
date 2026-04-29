@@ -1,6 +1,7 @@
 package com.kacemrisk.market.infrastructure;
 
 import com.kacemrisk.market.infrastructure.adapter.in.spark.ComposeAdapter;
+import com.kacemrisk.market.infrastructure.adapter.in.spark.EnrichedDataset;
 import com.kacemrisk.market.infrastructure.adapter.in.spark.JoinAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,8 @@ import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
 /**
  * Pure trigger — translates an inbound {@link ScenarioNotification} into a pipeline run.
  *
- * <p>No business logic here: join produces enriched positions,
- * compose drives calibration + VaR + publishing.
+ * <p>No business logic here: join produces an {@link EnrichedDataset},
+ * compose drives calibration (once) + VaR (per portfolio) + publishing.
  */
 @Slf4j
 @Component
@@ -31,7 +32,8 @@ public class ScenarioNotificationHandler implements TriggerScenarioUseCase {
                 notification.getConfidenceLevel());
 
         RunContext ctx = RunContext.from(notification);
-        composeAdapter.compute(joinAdapter.enrich(ctx), ctx);
+        EnrichedDataset enriched = joinAdapter.enrich(ctx);
+        composeAdapter.compute(enriched, ctx);
 
         log.info("<<< Scenario [{}] completed", ctx.correlationId());
         return ctx.correlationId();

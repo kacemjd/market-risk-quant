@@ -7,7 +7,6 @@ import com.kacemrisk.market.application.port.out.HistoricalPriceProvider;
 import com.kacemrisk.market.application.service.FetchHistoricalPricesService;
 import com.kacemrisk.market.application.service.VaRService;
 import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrationService;
-import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrator;
 import com.kacemrisk.market.workflow.VaRCalculationPipeline;
 import com.kacemrisk.market.workflow.VaRPipeline;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +16,8 @@ import org.springframework.context.annotation.Configuration;
 public class DomainConfig {
 
     @Bean
-    public MarketDataCalibrationService marketDataCalibrationService() {
+    public CalibrateMarketDataUseCase calibrateMarketDataUseCase() {
         return new MarketDataCalibrationService();
-    }
-
-    @Bean
-    public CalibrateMarketDataUseCase calibrateMarketDataUseCase(MarketDataCalibrationService calibrationService) {
-        return new MarketDataCalibrator(calibrationService);
     }
 
     @Bean
@@ -32,9 +26,8 @@ public class DomainConfig {
     }
 
     @Bean
-    public VaRPipeline varPipeline(CalibrateMarketDataUseCase calibrateMarketDataUseCase,
-                                   CalculateVaRUseCase calculateVaRUseCase) {
-        return new VaRCalculationPipeline(calibrateMarketDataUseCase, calculateVaRUseCase);
+    public VaRPipeline varPipeline(CalculateVaRUseCase calculateVaRUseCase) {
+        return new VaRCalculationPipeline(calculateVaRUseCase);
     }
 
 

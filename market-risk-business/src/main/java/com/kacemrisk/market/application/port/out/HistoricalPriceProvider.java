@@ -4,24 +4,14 @@ import com.kacemrisk.market.domain.model.AssetClass;
 import com.kacemrisk.market.domain.model.HistoricalPrice;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Driven port — SPI that infrastructure adapters must implement to supply
- * historical closing prices for a single instrument.
- *
- * <p>Implementations are asset-class–aware so they can dispatch to the correct
- * endpoint (e.g. {@code TIME_SERIES_DAILY} for equities, {@code FX_DAILY} for
- * currency pairs).
- *
- * <p>On unrecoverable errors the implementation throws
- * {@link com.kacemrisk.market.domain.exception.HistoricalPriceFetchException}
- * so callers can apply consistent audit handling.
- */
 public interface HistoricalPriceProvider {
 
     /**
-     * Fetch historical closing prices for the given instrument within the
+     * Fetch historical closing prices for a single instrument within the
      * specified date window.
      *
      * @param ticker     instrument identifier (stock symbol, FX pair, ETF symbol …)
@@ -32,4 +22,28 @@ public interface HistoricalPriceProvider {
      */
     List<HistoricalPrice> fetch(String ticker, AssetClass assetClass,
                                 LocalDate from, LocalDate to);
+
+    /**
+     * Fetch historical closing prices for <em>all</em> tickers in one call.
+     *
+     * <p>The default implementation calls {@link #fetch} sequentially for each ticker.
+     * Adapters that support concurrency (e.g. {@code AlphaVantageHistoricalPriceAdapter})
+     * <strong>must</strong> override this method with a concurrent implementation so that
+     * per-ticker API calls are parallelised up to their configured concurrency limit.
+     *
+     * <p>Tickers that fail are silently skipped by the overriding adapter — callers
+     * receive a partial result rather than an exception for individual ticker failures.
+     *
+     * @param tickers    map of ticker → {@link AssetClass} for every instrument to fetch
+     * @param from       start of the date range (inclusive)
+     * @param to         end of the date range (inclusive)
+     * @return flat list of {@link HistoricalPrice} records across all tickers
+     */
+    default List<HistoricalPrice> fetchAll(Map<String, AssetClass> tickers,
+                                           LocalDate from, LocalDate to) {
+        List<HistoricalPrice> result = new ArrayList<>();
+        tickers.forEach((ticker, assetClass) ->
+                result.addAll(fetch(ticker, assetClass, from, to)));
+        return result;
+    }
 }

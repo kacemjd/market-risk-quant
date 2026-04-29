@@ -2,23 +2,19 @@ package com.kacemrisk.market.workflow;
 
 import com.kacemrisk.market.application.port.in.CalculateVaRCommand;
 import com.kacemrisk.market.application.port.in.CalculateVaRUseCase;
-import com.kacemrisk.market.application.port.in.CalibrateMarketDataUseCase;
 import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.VaRResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
-
 /**
  * Framework-free VaR pipeline.
  *
- * <p>Owns the full per-portfolio computation chain:
- * <ol>
- *   <li>Calibrate market data (volatilities, covariance) from price histories</li>
- *   <li>Compute VaR using the configured strategy</li>
- * </ol>
+ * <p>Owns the per-portfolio VaR computation step only. Calibration has been moved
+ * to scenario level ({@code ComposeAdapter}) so the same {@link MarketData} is reused
+ * across all portfolio groups — eliminating redundant O(tickers²) covariance
+ * recomputation and duplicate {@code MarketData} persistence (Phase 2, P2.5).
  *
  * <p>No Spring annotations — instantiated and wired by infrastructure configuration.
  */
@@ -26,20 +22,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class VaRCalculationPipeline implements VaRPipeline {
 
-    private final CalibrateMarketDataUseCase calibrateMarketData;
     private final CalculateVaRUseCase calculateVaR;
 
     @Override
-    public VaROutput execute(Portfolio portfolio, Map<String, double[]> pricesByTicker, RunContext ctx) {
-        log.debug("[Pipeline] portfolio={} | tickers={} | method={} | α={}",
-                portfolio.getId(), pricesByTicker.keySet(), ctx.varMethod(), ctx.confidenceLevel());
+    public VaROutput execute(Portfolio portfolio, MarketData marketData, RunContext ctx) {
+        log.debug("[Pipeline] portfolio={} | method={} | α={}",
+                portfolio.getId(), ctx.varMethod(), ctx.confidenceLevel());
 
-        // Step 1 — calibrate market data for this portfolio's tickers
-        MarketData marketData = calibrateMarketData.calibrate(ctx.asOfDate(), pricesByTicker);
-        log.debug("[Pipeline] Calibrated {} risk factor(s) for portfolio={}",
-                marketData.getRiskFactors().size(), portfolio.getId());
-
-        // Step 2 — compute VaR
         VaRResult varResult = calculateVaR.calculate(CalculateVaRCommand.builder()
                 .portfolio(portfolio)
                 .marketData(marketData)

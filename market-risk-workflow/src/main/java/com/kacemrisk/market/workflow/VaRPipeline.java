@@ -1,18 +1,26 @@
 package com.kacemrisk.market.workflow;
 
+import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
 
-import java.util.Map;
-
+/**
+ * Framework-free port — executes VaR computation for a single portfolio.
+ *
+ * <p>Calibration has been moved out of this pipeline and is performed once at
+ * scenario level by the caller ({@code ComposeAdapter}) before iterating over
+ * portfolio groups. The pre-calibrated {@link MarketData} is passed in here so
+ * the pipeline only needs to run the VaR calculation step.
+ */
 public interface VaRPipeline {
 
     /**
-     * Executes calibration + VaR computation for a single portfolio group.
+     * Computes VaR for a single portfolio using pre-calibrated market data.
      *
-     * @param portfolio       domain portfolio built from one portfolioId group
-     * @param pricesByTicker  price histories for every ticker in the portfolio (oldest→newest)
-     * @param ctx             execution metadata (method, confidence, window, …)
-     * @return {@link VaROutput} carrying the calibrated {@code MarketData} and {@code VaRResult}
+     * @param portfolio  domain portfolio for this group
+     * @param marketData calibrated market data (volatilities, covariance, returns) — produced
+     *                   once per scenario run, shared across all portfolio groups
+     * @param ctx        execution metadata (method, confidence, window, …)
+     * @return {@link VaROutput} carrying the portfolio, market data, and VaR result
      */
-    VaROutput execute(Portfolio portfolio, Map<String, double[]> pricesByTicker, RunContext ctx);
+    VaROutput execute(Portfolio portfolio, MarketData marketData, RunContext ctx);
 }

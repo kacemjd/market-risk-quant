@@ -1,7 +1,9 @@
 package com.kacemrisk.market.infrastructure.adapter.in.spark;
 
+import com.kacemrisk.market.application.port.in.FetchHistoricalPricesCommand;
+import com.kacemrisk.market.application.port.in.FetchHistoricalPricesUseCase;
 import com.kacemrisk.market.domain.model.AssetClass;
-import com.kacemrisk.market.infrastructure.loader.MarketPriceService;
+import com.kacemrisk.market.domain.model.HistoricalPrice;
 import com.kacemrisk.market.infrastructure.loader.PortfolioLoader;
 import com.kacemrisk.market.infrastructure.model.RiskPosition;
 import com.kacemrisk.market.workflow.RunContext;
@@ -21,6 +23,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Spark enrichment adapter — joins portfolio positions with historical market prices
+ * and produces an enriched {@link Dataset} of {@link RiskPosition}s ready for VaR.
+ *
+ * <h3>Phase execution</h3>
+ * <ol>
+ *   <li><b>Phase A</b> — collect unique {@code ticker → assetClass} from the cached portfolio dataset</li>
+ *   <li><b>Phase B</b> — bulk-fetch prices via {@link FetchHistoricalPricesUseCase#fetch},
+ *       serialise {@code List<HistoricalPrice>} to {@code Map<ticker, double[]>} (sorted oldest→newest),
+ *       then broadcast to all executors</li>
+ *   <li><b>Phase C</b> — {@code groupByKey(ticker) → flatMapGroups} to build one
+ *       {@link RiskPosition} per (portfolioId, ticker) pair</li>
+ * </ol>
+ *
+ * <h3>Lifecycle</h3>
+ * The returned {@link EnrichedDataset} carries the broadcast and the cached portfolio dataset.
+ * The caller ({@code ComposeAdapter}) <b>must</b> call {@link EnrichedDataset#release()} in
+ * a {@code finally} block after {@code collectAsList()} to prevent per-scenario Spark memory leaks.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -28,19 +49,27 @@ public class JoinAdapter {
 
     private final SparkSession spark;
     private final PortfolioLoader portfolioLoader;
-    private final MarketPriceService marketPriceService;
+    private final FetchHistoricalPricesUseCase fetchHistoricalPricesUseCase;
 
-    public Dataset<RiskPosition> enrich(RunContext ctx) {
+    /**
+     * Enriches the portfolio with historical prices and returns a lazy {@link EnrichedDataset}.
+     *
+     * <p>The portfolio dataset is cached for Phase A re-use by Phase C. Both the cache
+     * and the price broadcast are owned by the returned {@link EnrichedDataset} and
+     * released by the caller via {@link EnrichedDataset#release()}.
+     */
+    public EnrichedDataset enrich(RunContext ctx) {
 
         Dataset<Row> portfolioDs = portfolioLoader.load().cache();
 
         if (portfolioDs.isEmpty()) {
             log.error("[JoinAdapter] Portfolio dataset is empty — aborting.");
             portfolioDs.unpersist();
-            return spark.emptyDataset(Encoders.kryo(RiskPosition.class));
+            return new EnrichedDataset(
+                    spark.emptyDataset(Encoders.kryo(RiskPosition.class)), null, null);
         }
 
-        // ── Phase A — collect unique ticker→assetClass (reuses cached dataset) ──
+        // ── Phase A — collect unique ticker→assetClass (cache hit avoids second CSV read) ──
         Map<String, AssetClass> tickerAssetClass = portfolioDs
                 .select("ticker", "assetClass")
                 .distinct()
@@ -58,24 +87,43 @@ public class JoinAdapter {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a));
         log.info("[JoinAdapter] Phase A — {} unique ticker(s)", tickerAssetClass.size());
 
-        // ── Phase B — single loadPrices call, then broadcast ─────────────────────
+        // ── Phase B — bulk fetch + serialise to Map<ticker, double[]> ────────────────────
         var from = ctx.asOfDate().minusDays(ctx.historicalWindow());
-        Map<String, double[]> pricesByTicker = marketPriceService.loadPrices(
-                tickerAssetClass, from, ctx.asOfDate());
 
-        if (pricesByTicker.isEmpty()) {
+        List<HistoricalPrice> rawPrices = fetchHistoricalPricesUseCase.fetch(
+                FetchHistoricalPricesCommand.builder()
+                        .tickers(tickerAssetClass)
+                        .from(from)
+                        .to(ctx.asOfDate())
+                        .build());
+
+        if (rawPrices.isEmpty()) {
             log.error("[JoinAdapter] No prices loaded for window [{} → {}] — aborting.", from, ctx.asOfDate());
             portfolioDs.unpersist();
-            return spark.emptyDataset(Encoders.kryo(RiskPosition.class));
+            return new EnrichedDataset(
+                    spark.emptyDataset(Encoders.kryo(RiskPosition.class)), null, null);
         }
+
+        // Serialise List<HistoricalPrice> → Map<ticker, double[]> sorted oldest→newest
+        Map<String, double[]> pricesByTicker = rawPrices.stream()
+                .collect(Collectors.groupingBy(
+                        HistoricalPrice::getTicker,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.stream()
+                                        .sorted(Comparator.comparing(HistoricalPrice::getDate))
+                                        .mapToDouble(HistoricalPrice::getClosePrice)
+                                        .toArray())));
+
+        log.info("[JoinAdapter] Phase B — {} ticker(s) serialised, {} total price records",
+                pricesByTicker.size(), rawPrices.size());
 
         Broadcast<Map<String, double[]>> priceBroadcast =
                 JavaSparkContext.fromSparkContext(spark.sparkContext()).broadcast(pricesByTicker);
 
-        // ── Phase C — enrich via broadcast, return lazy Dataset ──────────────────
-        // Caller is responsible for collectAsList(), then priceBroadcast.unpersist()
-        // and portfolioDs.unpersist() to release memory.
-        return portfolioDs
+        // ── Phase C — enrich via broadcast, return lazy Dataset ──────────────────────────
+        // Caller owns release(): priceBroadcast.destroy() + portfolioDs.unpersist()
+        Dataset<RiskPosition> positions = portfolioDs
                 .groupByKey(
                         (MapFunction<Row, String>) row -> row.getAs("ticker"),
                         Encoders.STRING())
@@ -95,5 +143,7 @@ public class JoinAdapter {
                             return out.iterator();
                         },
                         Encoders.kryo(RiskPosition.class));
+
+        return new EnrichedDataset(positions, priceBroadcast, portfolioDs);
     }
 }
