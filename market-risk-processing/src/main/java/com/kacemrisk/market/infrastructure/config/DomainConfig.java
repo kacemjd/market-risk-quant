@@ -7,11 +7,14 @@ import com.kacemrisk.market.application.port.out.HistoricalPriceProvider;
 import com.kacemrisk.market.application.service.FetchHistoricalPricesService;
 import com.kacemrisk.market.application.service.VaRService;
 import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrationService;
-import com.kacemrisk.market.workflow.VaRCalculationPipeline;
-import com.kacemrisk.market.workflow.VaRPipeline;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.SparkSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Spring wiring for framework-free domain services and Spark context helpers.
+ */
 @Configuration
 public class DomainConfig {
 
@@ -25,9 +28,13 @@ public class DomainConfig {
         return new VaRService();
     }
 
+    /**
+     * Provides a {@link JavaSparkContext} wrapping the singleton {@link SparkSession},
+     * used by {@code ComposeAdapter} to broadcast objects to executors.
+     */
     @Bean
-    public VaRPipeline varPipeline(CalculateVaRUseCase calculateVaRUseCase) {
-        return new VaRCalculationPipeline(calculateVaRUseCase);
+    public JavaSparkContext javaSparkContext(SparkSession sparkSession) {
+        return JavaSparkContext.fromSparkContext(sparkSession.sparkContext());
     }
 
 

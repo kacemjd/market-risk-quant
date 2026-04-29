@@ -5,9 +5,12 @@ import com.kacemrisk.market.domain.model.MarketData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +25,29 @@ public class QuestDbMarketDataRepository implements MarketDataRepository {
 
     private final JdbcTemplate jdbc;
 
+    /**
+     * Persists all volatility entries for the scenario in a single JDBC batch,
+     * reducing round-trips from N_tickers to 1 per scenario save.
+     */
     @Override
     public void save(MarketData marketData) {
         String asOfDate = marketData.getAsOfDate().toString();
-        marketData.getVolatilities().forEach((ticker, vol) -> {
-            jdbc.update("""
-                    INSERT INTO market_calibration (as_of_date, ticker, volatility, ts)
-                    VALUES (?, ?, ?, systimestamp())
-                    """, asOfDate, ticker, vol);
-            log.debug("Saved calibration — ticker={} vol={} asOfDate={}", ticker, vol, asOfDate);
-        });
+        List<Map.Entry<String, Double>> entries = List.copyOf(marketData.getVolatilities().entrySet());
+
+        jdbc.batchUpdate(
+                "INSERT INTO market_calibration (as_of_date, ticker, volatility, ts) VALUES (?, ?, ?, systimestamp())",
+                new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps, int i) throws SQLException {
+                        ps.setString(1, asOfDate);
+                        ps.setString(2, entries.get(i).getKey());
+                        ps.setDouble(3, entries.get(i).getValue());
+                    }
+                    @Override
+                    public int getBatchSize() { return entries.size(); }
+                });
+
+        log.info("Saved calibration batch — {} ticker(s) | asOfDate={}", entries.size(), asOfDate);
     }
 
     @Override

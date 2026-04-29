@@ -149,11 +149,15 @@ public class MarketDataCalibrationService implements CalibrateMarketDataUseCase 
                                                   Map<String, double[]> returnsMap) {
         int n = tickers.size();
         double[][] matrix = new double[n][n];
+        // Exploit symmetry: ρ(X,Y) = ρ(Y,X) — compute upper triangle only, mirror to lower.
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                matrix[i][j] = calculatePearsonCorrelation(
+            matrix[i][i] = 1.0;
+            for (int j = i + 1; j < n; j++) {
+                double corr = calculatePearsonCorrelation(
                         returnsMap.get(tickers.get(i)),
                         returnsMap.get(tickers.get(j)));
+                matrix[i][j] = corr;
+                matrix[j][i] = corr;
             }
         }
         return matrix;

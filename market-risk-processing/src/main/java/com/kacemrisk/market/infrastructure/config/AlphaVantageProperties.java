@@ -36,5 +36,29 @@ public class AlphaVantageProperties {
      * The free tier is capped at 25 requests/day; keep this low to avoid 429s.
      */
     private int fetchConcurrency = 5;
+
+    /**
+     * TCP connect timeout per request (seconds).
+     * Surfaces unreachable hosts quickly rather than waiting for OS-level timeout.
+     */
+    private int connectTimeoutSeconds = 10;
+
+    /**
+     * Maximum time to wait for a complete HTTP response for a single ticker (seconds).
+     * Applied at the Netty layer — fires before the batch-level {@link #fetchTimeoutSeconds}.
+     */
+    private int responseTimeoutSeconds = 30;
+
+    /**
+     * Maximum wall-clock time for a full {@code fetchAll} batch (seconds).
+     * Acts as the outer safety net after per-request timeouts have already fired.
+     */
+    private int fetchTimeoutSeconds = 120;
+
+    /**
+     * Ticker used by {@code AlphaVantageHealthIndicator} for the lightweight probe call.
+     * IBM is Alpha Vantage's canonical demo symbol and is always available on the free tier.
+     */
+    private String healthCheckTicker = "IBM";
 }
 

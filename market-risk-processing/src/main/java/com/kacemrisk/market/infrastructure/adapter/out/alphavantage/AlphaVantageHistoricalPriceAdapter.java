@@ -8,7 +8,6 @@ import com.kacemrisk.market.infrastructure.adapter.out.alphavantage.strategy.Alp
 import com.kacemrisk.market.infrastructure.config.AlphaVantageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -40,8 +39,6 @@ public class AlphaVantageHistoricalPriceAdapter implements HistoricalPriceProvid
     private final WebClient alphaVantageWebClient;
     private final AlphaVantageProperties properties;
 
-    @Value("${alphavantage.fetch-timeout-seconds:60}")
-    private int fetchTimeoutSeconds;
 
     /**
      * Per-ticker fetch — delegates to the asset-class–specific strategy.
@@ -67,7 +64,7 @@ public class AlphaVantageHistoricalPriceAdapter implements HistoricalPriceProvid
                         ex -> new HistoricalPriceFetchException(ticker, assetClass,
                                 "Strategy execution failed: " + ex.getMessage(), ex))
                 .collectList()
-                .block(Duration.ofSeconds(fetchTimeoutSeconds));
+                .block(Duration.ofSeconds(properties.getFetchTimeoutSeconds()));
     }
 
     /**
@@ -107,6 +104,6 @@ public class AlphaVantageHistoricalPriceAdapter implements HistoricalPriceProvid
                             });
                 }, properties.getFetchConcurrency())
                 .collectList()
-                .block(Duration.ofSeconds(fetchTimeoutSeconds));
+                .block(Duration.ofSeconds(properties.getFetchTimeoutSeconds()));
     }
 }

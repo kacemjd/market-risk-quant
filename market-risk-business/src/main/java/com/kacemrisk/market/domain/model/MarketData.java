@@ -3,13 +3,18 @@ package com.kacemrisk.market.domain.model;
 import lombok.Builder;
 import lombok.Value;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @Value
 @Builder
-public class MarketData {
+public class MarketData implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     LocalDate asOfDate;
     Map<String, Double> volatilities;

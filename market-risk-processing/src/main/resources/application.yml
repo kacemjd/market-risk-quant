@@ -17,6 +17,18 @@ spark:
   app-name: market-risk-processing
   # Override to yarn or spark://<host>:7077 in production
   master: local[*]
+  serializer:
+    type: org.apache.spark.serializer.KryoSerializer
+    kryo:
+      registration-required: false
+      classes-to-register:
+        - com.kacemrisk.market.infrastructure.model.RiskPosition
+        - com.kacemrisk.market.domain.model.AssetClass
+        - com.kacemrisk.market.domain.model.MarketData
+        - com.kacemrisk.market.domain.model.Portfolio
+        - com.kacemrisk.market.domain.model.Position
+        - com.kacemrisk.market.domain.model.VaRResult
+        - com.kacemrisk.market.domain.model.VaRMethod
 
 logging:
   level:
@@ -49,8 +61,25 @@ alphavantage:
   # compact = last 100 trading days | full = up to 20 years
   output-size: compact
   fetch-concurrency: 5
-  # Max wall-clock seconds to wait for all tickers to complete (free tier is slow)
+  # TCP handshake must complete within this window (seconds)
+  connect-timeout-seconds: 10
+  # Max time to receive a full response for a single ticker (seconds) — Netty layer
+  response-timeout-seconds: 30
+  # Max wall-clock seconds to wait for all tickers to complete (free tier is slow) — outer batch safety net
   fetch-timeout-seconds: 120
+  # Ticker used by AlphaVantageHealthIndicator — IBM is always available on the free tier
+  health-check-ticker: IBM
+
+# ── Actuator ──────────────────────────────────────────────────────────────────
+# Expose /actuator/health — includes AlphaVantageHealthIndicator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
 
 # OpenAPI / Swagger UI — disabled by default (no servlet container in default profile)
 springdoc:
