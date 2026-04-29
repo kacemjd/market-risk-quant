@@ -4,7 +4,7 @@ import com.kacemrisk.market.application.port.in.CalculateVaRUseCase;
 import com.kacemrisk.market.application.port.in.CalibrateMarketDataUseCase;
 import com.kacemrisk.market.application.port.in.FetchHistoricalPricesUseCase;
 import com.kacemrisk.market.application.port.out.HistoricalPriceProvider;
-import com.kacemrisk.market.application.service.historical.FetchHistoricalPricesService;
+import com.kacemrisk.market.application.service.FetchHistoricalPricesService;
 import com.kacemrisk.market.application.service.VaRService;
 import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrationService;
 import com.kacemrisk.market.domain.service.calibration.MarketDataCalibrator;
@@ -32,23 +32,15 @@ public class DomainConfig {
     }
 
     @Bean
-    public VaRPipeline varPipeline(CalculateVaRUseCase calculateVaRUseCase) {
-        return new VaRCalculationPipeline(calculateVaRUseCase);
+    public VaRPipeline varPipeline(CalibrateMarketDataUseCase calibrateMarketDataUseCase,
+                                   CalculateVaRUseCase calculateVaRUseCase) {
+        return new VaRCalculationPipeline(calibrateMarketDataUseCase, calculateVaRUseCase);
     }
 
-    /**
-     * Wires the bulk historical price fetch use case — consistent with the VaRService
-     * and MarketDataCalibrator pattern (plain constructor injection, no @Service annotation).
-     *
-     * <p>{@code fetchConcurrency} is sourced from {@link AlphaVantageProperties} so it
-     * can be tuned per environment without touching application code.
-     */
+
     @Bean
     public FetchHistoricalPricesUseCase fetchHistoricalPricesUseCase(
-            HistoricalPriceProvider historicalPriceProvider,
-            AlphaVantageProperties alphaVantageProperties) {
-        return new FetchHistoricalPricesService(
-                historicalPriceProvider,
-                alphaVantageProperties.getFetchConcurrency());
+            HistoricalPriceProvider historicalPriceProvider) {
+        return new FetchHistoricalPricesService(historicalPriceProvider);
     }
 }

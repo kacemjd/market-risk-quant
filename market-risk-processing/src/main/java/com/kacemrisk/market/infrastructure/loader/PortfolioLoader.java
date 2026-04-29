@@ -8,33 +8,20 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.upper;
 
-/**
- * Loads the portfolio CSV into a Spark {@link Dataset} using
- * {@code spark.read().csv(path)} — Spark owns the parsing.
- *
- * <p>The file path is resolved from {@code input.portfolio.path}:
- * <ul>
- *   <li>Absolute or cloud paths ({@code s3://}, {@code hdfs://}) are passed straight
- *       to Spark so it can use its native connectors.</li>
- *   <li>Classpath-relative paths (e.g. {@code data/portfolio.csv}) are resolved to the
- *       real filesystem path via Spring's {@link ResourceLoader} — this works for both
- *       exploded builds and integration-test classpaths.</li>
- * </ul>
- *
- * <p>The returned {@link Dataset} is normalised (upper-case ticker + assetClass),
- * null rows are dropped, and (portfolioId, ticker) pairs are deduplicated.
- * Callers are responsible for {@code .cache()} / {@code .unpersist()} if the
- * dataset is consumed more than once.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -84,14 +71,25 @@ public class PortfolioLoader {
         if (path.startsWith("s3://") || path.startsWith("hdfs://") || Paths.get(path).isAbsolute()) {
             return path;
         }
+        Resource resource = resourceLoader.getResource("classpath:" + path);
         try {
-            return resourceLoader.getResource("classpath:" + path)
-                    .getFile()
-                    .getAbsolutePath();
+            // Works in exploded builds and integration-test classpaths
+            return resource.getFile().getAbsolutePath();
         } catch (IOException e) {
-            log.warn("[PortfolioLoader] Cannot resolve '{}' to filesystem path ({}); passing through.",
-                    path, e.getMessage());
-            return path;
+            // Inside a fat JAR the resource lives inside the archive and has no real File.
+            // Extract it to a temp file so Spark can open it via the local filesystem.
+            log.info("[PortfolioLoader] Resource '{}' is inside a JAR — extracting to temp file.", path);
+            try (InputStream in = resource.getInputStream()) {
+                String suffix = path.contains(".") ? path.substring(path.lastIndexOf('.')) : ".tmp";
+                Path tmp = Files.createTempFile("portfolio-", suffix);
+                tmp.toFile().deleteOnExit();
+                Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
+                log.info("[PortfolioLoader] Extracted to '{}'", tmp);
+                return tmp.toAbsolutePath().toString();
+            } catch (IOException ex) {
+                log.warn("[PortfolioLoader] Cannot extract '{}' ({}); passing through.", path, ex.getMessage());
+                return path;
+            }
         }
     }
 }

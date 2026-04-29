@@ -8,10 +8,11 @@ import com.kacemrisk.market.infrastructure.adapter.out.alphavantage.strategy.Alp
 import com.kacemrisk.market.infrastructure.config.AlphaVantageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,14 +21,8 @@ import java.util.List;
  * to the appropriate {@link AlphaVantageRequestStrategy} based on the instrument's
  * {@link AssetClass}.
  *
- * <p>Spring auto-collects all {@code @Component} strategy implementations into the
- * injected {@code List<AlphaVantageRequestStrategy>}, so adding a new asset class
- * only requires creating a new strategy bean — this class never changes.
- *
- * <p>On failure the error is wrapped as a {@link HistoricalPriceFetchException}
- * (carrying {@code ticker} + {@code assetClass} for structured audit logging)
- * so the upstream {@code FetchHistoricalPricesService} can apply consistent
- * {@code onErrorResume} handling across the bulk fetch stream.
+ * <p>Reactor is an internal implementation detail of this adapter — it is never
+ * exposed through the port contract.
  */
 @Slf4j
 @Component
@@ -38,28 +33,28 @@ public class AlphaVantageHistoricalPriceAdapter implements HistoricalPriceProvid
     private final WebClient alphaVantageWebClient;
     private final AlphaVantageProperties properties;
 
+    @Value("${alphavantage.fetch-timeout-seconds:60}")
+    private int fetchTimeoutSeconds;
+
     @Override
-    public Flux<HistoricalPrice> fetch(String ticker, AssetClass assetClass,
+    public List<HistoricalPrice> fetch(String ticker, AssetClass assetClass,
                                        LocalDate from, LocalDate to) {
-        return strategies.stream()
+        log.debug("Fetching | ticker={} | assetClass={} | from={} | to={}", ticker, assetClass, from, to);
+
+        AlphaVantageRequestStrategy strategy = strategies.stream()
                 .filter(s -> s.supports(assetClass))
                 .findFirst()
-                .map(strategy -> {
-                    log.debug("Dispatching to {} | ticker={} | from={} | to={}",
-                            strategy.getClass().getSimpleName(), ticker, from, to);
-                    return strategy.fetch(ticker, from, to,
-                            alphaVantageWebClient,
-                            properties.getApiKey(),
-                            properties.getOutputSize())
-                            // Wrap any strategy-level error so callers get a HistoricalPriceFetchException
-                            // with full ticker + assetClass context for audit purposes.
-                            .onErrorMap(ex -> !(ex instanceof HistoricalPriceFetchException),
-                                    ex -> new HistoricalPriceFetchException(ticker, assetClass,
-                                            "Strategy execution failed: " + ex.getMessage(), ex));
-                })
-                .orElseGet(() -> Flux.error(
-                        new HistoricalPriceFetchException(ticker, assetClass,
-                                "No AlphaVantageRequestStrategy registered for assetClass=" + assetClass)));
+                .orElseThrow(() -> new HistoricalPriceFetchException(ticker, assetClass,
+                        "No AlphaVantageRequestStrategy registered for assetClass=" + assetClass));
+
+        return strategy.fetch(ticker, from, to,
+                        alphaVantageWebClient,
+                        properties.getApiKey(),
+                        properties.getOutputSize())
+                .onErrorMap(ex -> !(ex instanceof HistoricalPriceFetchException),
+                        ex -> new HistoricalPriceFetchException(ticker, assetClass,
+                                "Strategy execution failed: " + ex.getMessage(), ex))
+                .collectList()
+                .block(Duration.ofSeconds(fetchTimeoutSeconds));
     }
 }
-

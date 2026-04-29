@@ -22,10 +22,6 @@ import java.util.stream.Collectors;
  *   <li>{@code array[i]}            — historical close on trading day {@code i}</li>
  *   <li>{@code array[array.length-1]} — spot price (latest close as of {@code to})</li>
  * </ul>
- *
- * <p>This map is intended to be <b>broadcast</b> by the caller before executing
- * the Spark enrichment stage, ensuring every executor gets a single, efficient copy
- * rather than shipping it per-row over the shuffle.
  */
 @Slf4j
 @Component

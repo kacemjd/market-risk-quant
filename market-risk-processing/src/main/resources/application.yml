@@ -49,6 +49,8 @@ alphavantage:
   # compact = last 100 trading days | full = up to 20 years
   output-size: compact
   fetch-concurrency: 5
+  # Max wall-clock seconds to wait for all tickers to complete (free tier is slow)
+  fetch-timeout-seconds: 120
 
 # OpenAPI / Swagger UI — disabled by default (no servlet container in default profile)
 springdoc:

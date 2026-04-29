@@ -1,34 +1,36 @@
 package com.kacemrisk.market.infrastructure.adapter.in.spark;
 
+import com.kacemrisk.market.application.port.out.MarketDataRepository;
 import com.kacemrisk.market.application.port.out.VaRResultPublisher;
-import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.Position;
-import com.kacemrisk.market.domain.model.VaRResult;
 import com.kacemrisk.market.infrastructure.model.RiskPosition;
+import com.kacemrisk.market.workflow.RunContext;
+import com.kacemrisk.market.workflow.VaROutput;
+import com.kacemrisk.market.workflow.VaRPipeline;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.spark.sql.Dataset;
 import org.springframework.stereotype.Component;
-import com.kacemrisk.market.workflow.RunContext;
-import com.kacemrisk.market.workflow.VaRPipeline;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
+
 /**
- * Drives the VaR business pipeline for every portfolio in the referential and fans out
- * results to the configured sinks.
+ * Infrastructure adapter that drives the full VaR scenario pipeline.
  *
- * <p>Sinks are implementations of {@link VaRResultPublisher}, selected at startup via
- * {@code output.sink}:
- * <ul>
- *   <li>{@code log}     → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.LoggingVaRResultPublisher} (default)</li>
- *   <li>{@code questdb} → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.QuestDbVaRResultPublisher}</li>
- *   <li>{@code kafka}   → {@link com.kacemrisk.market.infrastructure.adapter.out.publisher.KafkaVaRResultPublisher}</li>
- * </ul>
- * To add a Parquet or CSV sink, implement {@link VaRResultPublisher} and register it as a
- * Spring bean — no changes here required.
+ * <p>Owns the Spark exit boundary and all orchestration steps:
+ * <ol>
+ *   <li>Collect {@code Dataset<RiskPosition>} from the join stage</li>
+ *   <li>Group positions by {@code portfolioId}</li>
+ *   <li>For each group: map to domain types, run {@link VaRPipeline} (calibrate + compute)</li>
+ *   <li>Persist calibrated {@code MarketData} via {@link MarketDataRepository}</li>
+ *   <li>Fan-out {@code VaRResult} to all registered {@link VaRResultPublisher} sinks</li>
+ * </ol>
  */
 @Slf4j
 @Component
@@ -36,44 +38,55 @@ import java.util.stream.Collectors;
 public class ComposeAdapter {
 
     private final VaRPipeline varPipeline;
+    private final MarketDataRepository marketDataRepository;
     private final List<VaRResultPublisher> publishers;
 
     /**
-     * Iterates over every portfolio group, executes the VaR pipeline, and fans the result
-     * out to all registered sinks.
-     *
-     * @param positionsByPortfolio positions pre-grouped by portfolioId
-     *                             (from {@link com.kacemrisk.market.infrastructure.model.RiskModelReferential#positionsByPortfolio()})
-     * @param marketData           calibrated volatilities and covariance
-     * @param ctx                  execution metadata (method, confidence level, etc.)
+     * Entry point — receives the lazy enriched dataset directly from {@link JoinAdapter}.
      */
-    public void compute(Map<String, List<RiskPosition>> positionsByPortfolio,
-                        MarketData marketData,
-                        RunContext ctx) {
-        log.info("ComposeAdapter: computing VaR for scenario [{}] — {} portfolio(s)",
-                ctx.correlationId(), positionsByPortfolio.size());
+    public void compute(Dataset<RiskPosition> positionsDs, RunContext ctx) {
+        log.info("[ComposeAdapter] Scenario [{}] — collecting positions", ctx.correlationId());
 
-        positionsByPortfolio.forEach((portfolioId, rows) -> {
-            Portfolio portfolio = buildPortfolio(portfolioId, rows);
-            VaRResult varResult = varPipeline.execute(portfolio, marketData, ctx);
+        List<RiskPosition> positions = positionsDs.collectAsList();  // ← single Spark exit boundary
+        positionsDs.unpersist();
 
-            log.info("  portfolio={} | VaR={} | ES={}",
-                    portfolioId, varResult.getVar(), varResult.getExpectedShortfall());
+        if (positions.isEmpty()) {
+            log.error("[ComposeAdapter] No positions after enrichment — aborting scenario [{}]", ctx.correlationId());
+            return;
+        }
 
-            // Fan out to all registered sinks (log / QuestDB / Kafka / …)
+        Map<String, List<RiskPosition>> byPortfolio = positions.stream()
+                .collect(groupingBy(RiskPosition::getPortfolioId));
+
+        log.info("[ComposeAdapter] Scenario [{}] — {} portfolio(s) to process",
+                ctx.correlationId(), byPortfolio.size());
+
+        byPortfolio.forEach((portfolioId, group) -> {
+            Portfolio portfolio = buildPortfolio(portfolioId, group);
+
+            Map<String, double[]> pricesByTicker = group.stream()
+                    .collect(toMap(RiskPosition::getTicker, RiskPosition::getPriceHistory, (a, b) -> a));
+
+            VaROutput output = varPipeline.execute(portfolio, pricesByTicker, ctx);
+
+            marketDataRepository.save(output.marketData());
+            log.info("[ComposeAdapter] portfolio={} | VaR={} | ES={} | tickers={}",
+                    portfolioId, output.varResult().getVar(),
+                    output.varResult().getExpectedShortfall(), pricesByTicker.keySet());
+
             publishers.forEach(sink -> sink.publish(
-                    ctx.correlationId(), portfolio,
-                    ctx.asOfDate(), varResult, ctx.varMethod()));
+                    ctx.correlationId(), output.portfolio(),
+                    ctx.asOfDate(), output.varResult(), ctx.varMethod()));
         });
 
-        log.info("ComposeAdapter: scenario [{}] complete — {} portfolio(s) published",
-                ctx.correlationId(), positionsByPortfolio.size());
+        log.info("[ComposeAdapter] Scenario [{}] complete — {} portfolio(s) published",
+                ctx.correlationId(), byPortfolio.size());
     }
 
-    // ── Portfolio assembly ────────────────────────────────────────────────────────────────
+    // ── RiskPosition → domain Portfolio ──────────────────────────────────────
 
-    private Portfolio buildPortfolio(String portfolioId, List<RiskPosition> rows) {
-        List<Position> positions = rows.stream()
+    private Portfolio buildPortfolio(String portfolioId, List<RiskPosition> group) {
+        List<Position> positions = group.stream()
                 .map(this::toPosition)
                 .collect(Collectors.toList());
         return Portfolio.builder()
@@ -85,24 +98,22 @@ public class ComposeAdapter {
     /**
      * Maps one {@link RiskPosition} to a domain {@link Position}.
      *
-     * <p>Spot (linear) instrument assumptions:
-     * <ul>
-     *   <li>delta = 1.0 — P&amp;L moves 1:1 with the spot price</li>
-     *   <li>gamma = 0.0 — no convexity for spot positions</li>
-     *   <li>maturityInYears = 0.0 — no time dimension for spot</li>
-     * </ul>
-     * When options or futures are introduced, extend this method to branch on
-     * {@code riskPosition.getAssetClass()} and apply the appropriate pricing factory.
+     * <p>Uses the dedicated factory for known linear instruments.
+     * Non-equity asset classes (CTY, FX, IRD) default to delta=1.0 / gamma=0.0 / maturity=0.0
+     * (linear spot assumption) — extend this switch when options or futures are introduced.
      */
     private Position toPosition(RiskPosition r) {
-        return Position.builder()
-                .ticker(r.getTicker())
-                .assetClass(r.getAssetClass())   // ← actual enum from RiskPosition, not hardcoded EQD
-                .quantity(r.getQuantity())
-                .spotPrice(r.getSpotPrice())
-                .delta(1.0)
-                .gamma(0.0)
-                .maturityInYears(0.0)
-                .build();
+        return switch (r.getAssetClass()) {
+            case EQD -> Position.equitySpot(r.getTicker(), r.getQuantity(), r.getSpotPrice());
+            case CTY, FX, IRD -> Position.builder()
+                    .ticker(r.getTicker())
+                    .assetClass(r.getAssetClass())
+                    .quantity(r.getQuantity())
+                    .spotPrice(r.getSpotPrice())
+                    .delta(1.0)
+                    .gamma(0.0)
+                    .maturityInYears(0.0)
+                    .build();
+        };
     }
 }

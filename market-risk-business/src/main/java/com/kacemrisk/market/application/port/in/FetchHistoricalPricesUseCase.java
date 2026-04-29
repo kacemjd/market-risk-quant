@@ -1,10 +1,10 @@
 package com.kacemrisk.market.application.port.in;
 
 import com.kacemrisk.market.domain.model.HistoricalPrice;
-import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 public interface FetchHistoricalPricesUseCase {
 
-    Flux<HistoricalPrice> fetchForPortfolio(FetchHistoricalPricesCommand command);
+    List<HistoricalPrice> fetch(FetchHistoricalPricesCommand command);
 }
-
