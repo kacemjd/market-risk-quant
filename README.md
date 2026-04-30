@@ -3,7 +3,56 @@
 [![CI](https://github.com/kacemjd/market-risk-quant/actions/workflows/ci.yml/badge.svg)](https://github.com/kacemjd/market-risk-quant/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/kacemjd/market-risk-quant/branch/master/graph/badge.svg)](https://codecov.io/gh/kacemjd/market-risk-quant)
 
-Enterprise-grade VaR engine — Parametric, Monte Carlo (Cholesky GBM), and Historical Simulation — built on Hexagonal Architecture with Spring Boot 4 and Apache Spark 4.
+Enterprise-grade VaR engine — Parametric, Monte Carlo (Cholesky GBM), and Historical Simulation — built on **strict Hexagonal Architecture** with Spring Boot 4 and Apache Spark 4.
+
+The platform is engineered around two non-negotiable principles:
+
+| Principle | How it is applied |
+|---|---|
+| **Hexagonal Architecture** | Domain (`market-risk-business`) is 100 % framework-free. All I/O crosses a named port. Adapters are the only code allowed to touch Spring, Spark, Kafka, or QuestDB. Dependency direction is enforced by the Maven module graph: `processing → workflow → business`. |
+| **Behavior-Driven Development (BDD)** | All quantitative scenarios are specified as Cucumber feature files before implementation. Feature files act as the living specification of the VaR engine and are executed on every CI run. |
+
+---
+
+## Quick Start (Docker)
+
+**Prerequisites:** Docker & Docker Compose
+
+```bash
+docker compose up
+```
+
+The REST API is available at `http://localhost:8080`.
+
+### Run a scenario
+
+```bash
+curl -X POST http://localhost:8080/scenarios/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "portfolioCsvPath": "/data/portfolio.csv",
+    "pricesCsvPath":    "/data/prices",
+    "asOfDate":         "2024-12-31",
+    "confidenceLevel":  0.99,
+    "numPaths":         10000,
+    "timeGrid":         "GRID_53"
+  }'
+# → HTTP 202  { "correlationId": "..." }
+```
+
+---
+
+## Local Dev (no Docker)
+
+**Prerequisites:** JDK 21+, Maven 3.9+
+
+```bash
+# build + tests
+mvn clean verify
+
+# run locally (Spark in-process, REST on :8080)
+mvn spring-boot:run -pl market-risk-processing -Plocal
+```
 
 ---
 
@@ -14,6 +63,7 @@ Enterprise-grade VaR engine — Parametric, Monte Carlo (Cholesky GBM), and Hist
 | Language | Java 21 |
 | Framework | Spring Boot 4.0.5 |
 | Compute | Apache Spark 4.0.0 (Scala 2.13) |
+| Persistence | QuestDB |
 | Messaging | Apache Kafka (optional) |
 | Build | Maven multi-module |
 
@@ -30,141 +80,49 @@ market-risk-quant/
 └── market-risk-processing/   Spring Boot 4 + Spark 4 application
 ```
 
-### Hexagonal Layout
+Inbound triggers: REST, Kafka consumer, cron scheduler.  
+Outbound: QuestDB (persistence) + Kafka / logging (VaR result publishing).
 
 ```mermaid
 flowchart TB
     subgraph PROC["market-risk-processing  (Spring Boot 4 · Spark 4)"]
-        subgraph IN["Inbound Adapters"]
+        direction TB
+        subgraph IN["Inbound"]
             REST("REST\nPOST /scenarios/run")
-            KFK("Kafka Consumer\nscenario-notifications")
-            CRON("Cron Scheduler\nMon-Fri 18:00")
+            KFK("Kafka Consumer")
+            CRON("Cron Scheduler\nMon–Fri 18:00")
         end
+
         HANDLER["ScenarioNotificationHandler"]
+
         subgraph SPARK["Spark Pipeline"]
-            INGEST["SparkMarketDataIngestionAdapter\nCSV → log-returns → vol → rho → Sigma"]
-            JOIN["JoinAdapter\npositions x latest spot"]
-            COMPOSE["ComposeAdapter\ngroupBy portfolioId → VaRPipeline → publish"]
+            INGEST["MarketDataIngestion\nCSV → log-returns → Σ"]
+            JOIN["JoinAdapter\npositions × latest spot"]
+            COMPOSE["ComposeAdapter\ngroupBy portfolio → VaRPipeline"]
         end
-        subgraph OUT["Outbound Adapters"]
-            MDREP[("MarketDataRepository\n(in-memory → DB)")]
-            PUB[("VaRResultPublisher\n(logging → Kafka)")]
+
+        subgraph OUT["Outbound"]
+            DB[("QuestDB")]
+            PUB[("Kafka / Log\nVaRResultPublisher")]
         end
     end
 
     subgraph WF["market-risk-workflow"]
-        VPL["VaRCalculationPipeline\nimplements VaRPipeline"]
+        VPL["VaRCalculationPipeline"]
     end
 
     subgraph BIZ["market-risk-business  (pure domain)"]
-        subgraph PORTS["Ports"]
-            PIN[/"in: CalculateVaRUseCase\n    CalibrateMarketDataUseCase"/]
-            POUT[/"out: MarketDataRepository\n     VaRResultPublisher"/]
-        end
-        subgraph DOMAIN["Domain"]
-            CALC["VaRCalculatorFactory\nParametric · MonteCarlo · Historical"]
-            AGG["VaRAggregator\nVaR + ES quantile"]
-            CAL["MarketDataCalibrator"]
-            PRICER["PortfolioPricer\nLinear / DeltaGamma"]
-        end
+        CALC["VaRCalculatorFactory\nParametric · MonteCarlo · Historical"]
+        AGG["VaRAggregator\nquantile · ES"]
     end
 
-    REST --> HANDLER
-    KFK  --> HANDLER
-    CRON --> HANDLER
-    HANDLER -->|ScenarioNotification| INGEST
-    HANDLER -->|ScenarioNotification| JOIN
-    INGEST --> MDREP
-    INGEST -->|MarketData| COMPOSE
-    JOIN   -->|Dataset| COMPOSE
-    COMPOSE -->|execute| VPL
+    REST & KFK & CRON --> HANDLER
+    HANDLER --> INGEST & JOIN
+    INGEST --> DB
+    INGEST & JOIN --> COMPOSE
+    COMPOSE --> VPL --> CALC --> AGG
     COMPOSE --> PUB
-    VPL --> CALC
-    CALC --> AGG
-    INGEST --> CAL
-    MDREP -. implements .-> POUT
-    PUB   -. implements .-> POUT
-    VPL   -. implements .-> PIN
 ```
-
-### Scenario Execution Flow
-
-```mermaid
-flowchart TD
-    TRG([Trigger — correlationId assigned]) --> HDLR["ScenarioNotificationHandler"]
-
-    HDLR -->|pricesDir, asOfDate| INGEST["SparkMarketDataIngestionAdapter\n.ingestDirectory()"]
-    HDLR -->|notification| JOIN["JoinAdapter\n.enrich()"]
-
-    INGEST --> CSV["Spark reads TICKER.csv\nfilter <= asOfDate, sort asc"]
-    CSV --> CAL["CalibrateMarketDataUseCase\nlog-returns · sigma_ann · rho · Sigma"]
-    CAL --> SAVE[(MarketDataRepository)]
-    CAL --> MD["MarketData snapshot"]
-
-    JOIN --> ENR["Spark window join\nlatest close per ticker → EnrichedPositionRow"]
-
-    MD  --> COMPOSE["ComposeAdapter\n.compute()"]
-    ENR --> COMPOSE
-
-    COMPOSE --> PIPE["VaRPipeline.execute()"]
-    PIPE --> CALC2["VaRCalculatorFactory\n→ Parametric / MonteCarlo / Historical"]
-    CALC2 --> AGG["VaRAggregator\nsort PnL · quantile at 1-alpha · ES"]
-    AGG --> RES["VaRResult — var, expectedShortfall, alpha, meanPnL, stdDevPnL"]
-    RES --> PUB["VaRResultPublisher"]
-    PUB --> DONE([correlationId returned])
-```
-
----
-
-## Quick Start
-
-**Prerequisites:** JDK 21+, Maven 3.9+
-
-```bash
-# full build + tests
-mvn clean verify
-
-# local dev — Spark in-process, REST on :8080
-mvn spring-boot:run -pl market-risk-processing -Plocal
-
-# REST trigger
-java -jar market-risk-processing/target/market-risk-processing-*.jar \
-  --spring.profiles.active=rest
-
-# Kafka trigger
-java -jar market-risk-processing/target/market-risk-processing-*.jar \
-  --spring.profiles.active=kafka \
-  --spring.kafka.bootstrap-servers=localhost:9092
-
-# Cron EOD scheduler
-java -jar market-risk-processing/target/market-risk-processing-*.jar \
-  --scenario.schedule.enabled=true \
-  --scenario.schedule.default-portfolio-path=/data/portfolio.csv \
-  --scenario.schedule.default-prices-path=/data/prices
-```
-
----
-
-## REST API
-
-```
-POST /scenarios/run
-Content-Type: application/json
-
-{
-  "portfolioCsvPath": "/data/portfolio.csv",
-  "pricesCsvPath":    "/data/prices",
-  "asOfDate":         "2024-12-31",
-  "confidenceLevel":  0.99,
-  "numPaths":         10000,
-  "timeGrid":         "GRID_53"
-}
-
-HTTP 202 Accepted
-{ "correlationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6" }
-```
-
-Error responses follow `ScenarioRiskException` — `errorCode`, `status`, `message`, `violations[]`.
 
 ---
 
@@ -172,56 +130,27 @@ Error responses follow `ScenarioRiskException` — `errorCode`, `status`, `messa
 
 **Portfolio CSV** — `portfolioId,ticker,quantity,assetClass`
 
-**Prices CSV** — `Ticker,Date,Open,High,Low,Close,Volume,OpenInt`
-
-The `Ticker` column identifies the risk factor. `Date` must be `YYYY-MM-DD`. Only `Ticker`, `Date`, and `Close` are consumed; other columns are ignored.
+**Prices CSV** — `Ticker,Date,Open,High,Low,Close,Volume,OpenInt`  
+(`Date` must be `YYYY-MM-DD`; only `Ticker`, `Date`, `Close` are consumed.)
 
 ---
 
 ## Testing
 
 ```bash
-# domain unit tests
-mvn test -pl market-risk-business
-
-# BDD (Cucumber)
-mvn test -pl market-risk-business -Dtest=CucumberRunner
-
-# integration test (full Spring Boot + Spark context)
-mvn verify -pl market-risk-processing
-
-# JMH benchmark — quadratic form delta-transposed-Sigma-delta
-mvn test -pl market-risk-business -Dtest=VarianceComputationBenchmark#main -DfailIfNoTests=false
+mvn test -pl market-risk-business                         # unit tests
+mvn test -pl market-risk-business -Dtest=CucumberRunner   # BDD
+mvn verify -pl market-risk-processing                     # integration
 ```
 
 ---
 
 ## Roadmap
 
-**Sprint 1** — complete (8/8)
-
-| Item | Status |
-|---|---|
-| Root package `com.kacemrisk.market.*`, `groupId` | Done |
-| `Portfolio` typo fix | Done |
-| REST validation + `ScenarioRiskException` | Done |
-| `local` Maven profile (Spark `provided` → `compile`) | Done |
-| Immutable `VaRAggregator` | Done |
-| Port cleanup (`CalibrateMarketDataUseCase` wired) | Done |
-| Delete dead `MonteCarloVaRPipeline` | Done |
-| GitHub Actions CI | Done |
-
-**Sprint 2** — QuestDB persistence (done), VaR result query API (done), Kafka publisher (done), Docker Compose (done), Flyway-style migrations (done), OpenAPI + idempotency pending
-
-**Sprint 3** — Component VaR (Euler allocation), Filtered Historical Simulation, Stress Testing, distributed Spark compute
-
-**Sprint 4** — Micrometer + Prometheus, OpenTelemetry tracing, health checks
-
----
-
-## Contributing
-
-- Domain changes go in `market-risk-business` — the module must remain framework-free.
-- New trigger mechanisms are inbound adapters under `market-risk-processing/adapter/in/`.
-- New persistence or publishing targets are outbound adapters under `market-risk-processing/adapter/out/`.
-- All new quant logic requires a Cucumber feature or JMH benchmark.
+| Sprint | Theme | Items |
+|---|---|---|
+| ✅ 1 | Foundation | Hexagonal layout, REST validation, CI, immutable aggregator |
+| ✅ 2 | Persistence & Delivery | QuestDB, Kafka publisher, Docker Compose, Flyway migrations, VaR query API |
+| 🔄 3 | Observability | Micrometer metrics, Prometheus scrape endpoint, Grafana dashboard, structured JSON logging, correlation-ID tracing through all layers |
+| 📋 4 | Distributed Tracing | OpenTelemetry SDK, Jaeger/Tempo export, span propagation across Spark stages, trace-aware error reporting |
+| 📋 5 | Advanced Quant | Component VaR (Euler allocation), Filtered Historical Simulation, Stress Testing |
