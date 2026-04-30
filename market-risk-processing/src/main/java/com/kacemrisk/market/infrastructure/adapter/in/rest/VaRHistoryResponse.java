@@ -1,23 +1,22 @@
 package com.kacemrisk.market.infrastructure.adapter.in.rest;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Value;
-
-import java.util.List;
 
 @Value
 @Builder
 public class VaRHistoryResponse {
-    String              portfolioId;
-    String              method;
-    int                 totalPoints;
+    String portfolioId;
+    String method;
+    int totalPoints;
     // Summary stats
-    double              latestVar;
-    double              minVar;
-    double              maxVar;
-    double              avgVar;
+    double latestVar;
+    double minVar;
+    double maxVar;
+    double avgVar;
     // Chronological time series (oldest → newest)
-    List<VaRDataPoint>  series;
+    List<VaRDataPoint> series;
 
     @Value
     @Builder
@@ -28,4 +27,3 @@ public class VaRHistoryResponse {
         double alpha;
     }
 }
-

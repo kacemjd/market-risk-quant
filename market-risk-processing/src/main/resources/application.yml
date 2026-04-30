@@ -72,14 +72,17 @@ alphavantage:
 
 # ── Actuator ──────────────────────────────────────────────────────────────────
 # Expose /actuator/health — includes AlphaVantageHealthIndicator
+# Expose /actuator/shutdown — allows a clean Spring shutdown via POST (Docker / ops scripts)
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health, shutdown
   endpoint:
     health:
       show-details: always
+    shutdown:
+      access: unrestricted
 
 # OpenAPI / Swagger UI — disabled by default (no servlet container in default profile)
 springdoc:
@@ -114,9 +117,13 @@ spring:
       on-profile: local
   main:
     web-application-type: servlet   # expose REST + Swagger UI
+  lifecycle:
+    # Allow up to 30 s for in-flight requests / Spark jobs to finish before the JVM exits.
+    timeout-per-shutdown-phase: 30s
 
 server:
   port: 8080
+  shutdown: graceful   # SIGTERM → drain, then stop (instead of immediate kill)
 
 spark:
   master: local[*]
@@ -182,9 +189,14 @@ spring:
       on-profile: docker
   main:
     web-application-type: servlet
+  lifecycle:
+    # Allow up to 30 s for in-flight requests / Spark jobs to finish before the JVM exits.
+    # docker-compose stop_grace_period is set to 40 s — always > this value.
+    timeout-per-shutdown-phase: 30s
 
 server:
   port: 8080
+  shutdown: graceful   # SIGTERM → drain, then stop (instead of immediate kill)
 
 spark:
   master: local[1]          # single thread — conserves Docker container memory

@@ -1,17 +1,15 @@
 package com.kacemrisk.market.domain.model;
 
-import lombok.Builder;
-import lombok.Value;
-
 import java.io.Serial;
 import java.io.Serializable;
+import lombok.Builder;
+import lombok.Value;
 
 @Value
 @Builder
 public class Position implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
     String ticker;
     AssetClass assetClass;
@@ -19,21 +17,22 @@ public class Position implements Serializable {
     double spotPrice;
 
     /**
-     * Unit price sensitivity (Δ): P&L change per $1 move in the underlying.
-     * Pre-computed by the pricing engine and stored here so the risk calculator
-     * never needs to re-price.
+     * Unit price sensitivity (Δ): P&L change per $1 move in the underlying. Pre-computed by the
+     * pricing engine and stored here so the risk calculator never needs to re-price.
+     *
      * <ul>
-     *   <li>Equity spot / future: always 1.0</li>
-     *   <li>Call option: (0, 1) — typically ~0.5 at-the-money</li>
-     *   <li>Put option: (-1, 0)</li>
+     *   <li>Equity spot / future: always 1.0
+     *   <li>Call option: (0, 1) — typically ~0.5 at-the-money
+     *   <li>Put option: (-1, 0)
      * </ul>
+     *
      * Dollar delta = quantity × spotPrice × delta.
      */
     double delta;
 
     /**
-     * Second-order price sensitivity (Γ): rate of change of delta per $1 move.
-     * Zero for linear instruments (equities, futures).
+     * Second-order price sensitivity (Γ): rate of change of delta per $1 move. Zero for linear
+     * instruments (equities, futures).
      */
     double gamma;
 
@@ -44,8 +43,8 @@ public class Position implements Serializable {
     }
 
     /**
-     * Factory for a plain equity spot position.
-     * Delta is 1.0 by definition — the position value moves 1:1 with the spot price.
+     * Factory for a plain equity spot position. Delta is 1.0 by definition — the position value
+     * moves 1:1 with the spot price.
      */
     public static Position equitySpot(String ticker, double quantity, double spotPrice) {
         return Position.builder()

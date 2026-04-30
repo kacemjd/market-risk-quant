@@ -6,9 +6,9 @@ import lombok.Getter;
 /**
  * Raised when a historical price fetch fails for a specific instrument.
  *
- * <p>Carries enough context for structured audit logging — ticker symbol and
- * asset class — so that the bulk-fetch orchestrator can skip the position and
- * continue processing the rest of the portfolio without losing traceability.
+ * <p>Carries enough context for structured audit logging — ticker symbol and asset class — so that
+ * the bulk-fetch orchestrator can skip the position and continue processing the rest of the
+ * portfolio without losing traceability.
  */
 @Getter
 public class HistoricalPriceFetchException extends DomainException {
@@ -25,11 +25,10 @@ public class HistoricalPriceFetchException extends DomainException {
         this.assetClass = assetClass;
     }
 
-    public HistoricalPriceFetchException(String ticker, AssetClass assetClass,
-                                         String message, Throwable cause) {
+    public HistoricalPriceFetchException(
+            String ticker, AssetClass assetClass, String message, Throwable cause) {
         super(message, cause);
         this.ticker = ticker;
         this.assetClass = assetClass;
     }
 }
-

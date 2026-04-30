@@ -3,18 +3,17 @@ package com.kacemrisk.market.infrastructure.adapter.in.rest;
 import com.kacemrisk.market.domain.model.MaturityGrid;
 import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.infrastructure.model.ScenarioRequest;
+import com.kacemrisk.market.workflow.ScenarioNotification;
+import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import com.kacemrisk.market.workflow.ScenarioNotification;
-import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
-
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -27,7 +26,8 @@ public class RestScenarioController {
 
     @Operation(
             summary = "Trigger VaR scenario",
-            description = """
+            description =
+                    """
                     Runs the full VaR pipeline for the portfolio defined in the request.
                     All fields are optional — an empty `{}` body runs a Historical VaR
                     against today's date with the default portfolio and parameters.
@@ -37,7 +37,8 @@ public class RestScenarioController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Map<String, String> run(@RequestBody(required = false) ScenarioRequest request) {
         if (request == null) request = new ScenarioRequest();
-        log.info("REST trigger | method={} | asOfDate={} | portfolio={}",
+        log.info(
+                "REST trigger | method={} | asOfDate={} | portfolio={}",
                 request.getVarMethod(),
                 request.getAsOfDate() != null ? request.getAsOfDate() : "today",
                 request.getPortfolioCsvPath());

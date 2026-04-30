@@ -6,14 +6,11 @@ import com.kacemrisk.market.domain.model.VaRResult;
 import com.kacemrisk.market.domain.service.pricing.PortfolioPricer;
 import com.kacemrisk.market.domain.service.simulation.VaRAggregator;
 import com.kacemrisk.market.domain.service.simulation.VaRCalculator;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * Full-revaluation Historical Simulation VaR.
- */
+/** Full-revaluation Historical Simulation VaR. */
 @Slf4j
 public class HistoricalVaRCalculator implements VaRCalculator {
 
@@ -25,33 +22,49 @@ public class HistoricalVaRCalculator implements VaRCalculator {
 
     @Override
     public VaRResult calculate(Portfolio portfolio, MarketData marketData, double alpha) {
-        log.info("Historical VaR | portfolio={} | window={} days | α={}",
-                portfolio.getId(), windowSize, alpha);
+        log.info(
+                "Historical VaR | portfolio={} | window={} days | α={}",
+                portfolio.getId(),
+                windowSize,
+                alpha);
 
         Map<String, double[]> historicalReturnsMap = marketData.getHistoricalReturns();
 
         if (historicalReturnsMap == null || historicalReturnsMap.isEmpty()) {
-            throw new IllegalStateException("MarketData is missing historical returns map needed for HISTORICAL VaR");
+            throw new IllegalStateException(
+                    "MarketData is missing historical returns map needed for HISTORICAL VaR");
         }
 
-        double[] scenarioPnLs = replayHistoricalScenarios(portfolio, marketData, historicalReturnsMap);
+        double[] scenarioPnLs =
+                replayHistoricalScenarios(portfolio, marketData, historicalReturnsMap);
         return extractQuantile(scenarioPnLs, alpha);
     }
 
-
-    double[] replayHistoricalScenarios(Portfolio portfolio, MarketData marketData, Map<String, double[]> historicalReturnsMap) {
+    double[] replayHistoricalScenarios(
+            Portfolio portfolio,
+            MarketData marketData,
+            Map<String, double[]> historicalReturnsMap) {
         List<String> riskFactors = marketData.getRiskFactors();
 
-        riskFactors.forEach(ticker -> {
-            double[] returns = historicalReturnsMap.get(ticker);
-            if (returns == null) {
-                log.warn("No historical returns found for risk factor '{}' — contributing zero P&L", ticker);
-            } else if (returns.length < windowSize) {
-                log.warn("Risk factor '{}' has only {} days of history — requested window is {} days. " +
-                         "VaR will be computed on the available {} days for this factor.",
-                        ticker, returns.length, windowSize, returns.length);
-            }
-        });
+        riskFactors.forEach(
+                ticker -> {
+                    double[] returns = historicalReturnsMap.get(ticker);
+                    if (returns == null) {
+                        log.warn(
+                                "No historical returns found for risk factor '{}' — contributing"
+                                        + " zero P&L",
+                                ticker);
+                    } else if (returns.length < windowSize) {
+                        log.warn(
+                                "Risk factor '{}' has only {} days of history — requested window is"
+                                    + " {} days. VaR will be computed on the available {} days for"
+                                    + " this factor.",
+                                ticker,
+                                returns.length,
+                                windowSize,
+                                returns.length);
+                    }
+                });
 
         double[] scenarioPnLs = new double[windowSize];
         double[] currentShocks = new double[riskFactors.size()];

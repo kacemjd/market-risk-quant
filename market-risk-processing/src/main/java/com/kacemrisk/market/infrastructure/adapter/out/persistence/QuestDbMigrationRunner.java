@@ -1,6 +1,12 @@
 package com.kacemrisk.market.infrastructure.adapter.out.persistence;
 
 import jakarta.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -8,13 +14,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -29,8 +28,9 @@ public class QuestDbMigrationRunner {
         bootstrap();
         Set<String> applied = appliedVersions();
 
-        Resource[] scripts = new PathMatchingResourcePatternResolver()
-                .getResources("classpath:questdb/migration/V*.sql");
+        Resource[] scripts =
+                new PathMatchingResourcePatternResolver()
+                        .getResources("classpath:questdb/migration/V*.sql");
 
         Arrays.stream(scripts)
                 .sorted(Comparator.comparing(Resource::getFilename))
@@ -40,7 +40,8 @@ public class QuestDbMigrationRunner {
     }
 
     private void bootstrap() {
-        jdbc.execute("""
+        jdbc.execute(
+                """
                 CREATE TABLE IF NOT EXISTS schema_version (
                     version     SYMBOL,
                     script_name SYMBOL,
@@ -50,13 +51,13 @@ public class QuestDbMigrationRunner {
     }
 
     private Set<String> appliedVersions() {
-        return jdbc.queryForList("SELECT version FROM schema_version", String.class)
-                .stream().collect(Collectors.toSet());
+        return jdbc.queryForList("SELECT version FROM schema_version", String.class).stream()
+                .collect(Collectors.toSet());
     }
 
     private void apply(Resource script, Set<String> applied) {
         String filename = script.getFilename();
-        String version  = filename.substring(0, filename.indexOf("__"));
+        String version = filename.substring(0, filename.indexOf("__"));
         if (applied.contains(version)) {
             log.debug("Migration {} already applied — skipping", filename);
             return;
@@ -67,12 +68,14 @@ public class QuestDbMigrationRunner {
                 String trimmed = statement.strip();
                 if (!trimmed.isEmpty()) jdbc.execute(trimmed);
             }
-            jdbc.update("INSERT INTO schema_version (version, script_name, applied_at) VALUES (?, ?, systimestamp())",
-                    version, filename);
+            jdbc.update(
+                    "INSERT INTO schema_version (version, script_name, applied_at) VALUES (?, ?,"
+                            + " systimestamp())",
+                    version,
+                    filename);
             log.info("Applied migration {}", filename);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read migration " + filename, e);
         }
     }
 }
-

@@ -15,6 +15,5 @@ public class VaRResultResponse {
     double alpha;
     double meanPnL;
     double stdDevPnL;
-    int    numScenarios;
+    int numScenarios;
 }
-

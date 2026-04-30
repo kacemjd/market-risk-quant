@@ -1,5 +1,14 @@
 package com.kacemrisk.market.infrastructure.loader;
 
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.upper;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Dataset;
@@ -12,16 +21,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.upper;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -33,18 +32,15 @@ public class PortfolioLoader {
     @Value("${input.portfolio.path:data/portfolio.csv}")
     private String portfolioPath;
 
-    /**
-     * Explicit schema — avoids inferSchema scan and enforces column contract.
-     */
-    public static final StructType SCHEMA = new StructType()
-            .add("portfolioId", DataTypes.StringType, true)
-            .add("ticker", DataTypes.StringType, true)
-            .add("quantity", DataTypes.DoubleType, true)
-            .add("assetClass", DataTypes.StringType, true);
+    /** Explicit schema — avoids inferSchema scan and enforces column contract. */
+    public static final StructType SCHEMA =
+            new StructType()
+                    .add("portfolioId", DataTypes.StringType, true)
+                    .add("ticker", DataTypes.StringType, true)
+                    .add("quantity", DataTypes.DoubleType, true)
+                    .add("assetClass", DataTypes.StringType, true);
 
-    /**
-     * Loads, normalises, and deduplicates the portfolio.
-     */
+    /** Loads, normalises, and deduplicates the portfolio. */
     public Dataset<Row> load() {
         String path = resolveSparkPath(portfolioPath);
         log.info("[PortfolioLoader] Reading portfolio from '{}'", path);
@@ -55,7 +51,8 @@ public class PortfolioLoader {
                 .csv(path)
                 .withColumn("ticker", upper(col("ticker")))
                 .withColumn("assetClass", upper(col("assetClass")))
-                .na().drop()
+                .na()
+                .drop()
                 .dropDuplicates("portfolioId", "ticker");
     }
 
@@ -63,12 +60,14 @@ public class PortfolioLoader {
      * Resolves a config path to something Spark's {@code csv()} can open.
      *
      * <ul>
-     *   <li>Cloud / HDFS / absolute → returned unchanged.</li>
-     *   <li>Classpath-relative      → resolved to absolute filesystem path via Spring.</li>
+     *   <li>Cloud / HDFS / absolute → returned unchanged.
+     *   <li>Classpath-relative → resolved to absolute filesystem path via Spring.
      * </ul>
      */
     private String resolveSparkPath(String path) {
-        if (path.startsWith("s3://") || path.startsWith("hdfs://") || Paths.get(path).isAbsolute()) {
+        if (path.startsWith("s3://")
+                || path.startsWith("hdfs://")
+                || Paths.get(path).isAbsolute()) {
             return path;
         }
         Resource resource = resourceLoader.getResource("classpath:" + path);
@@ -78,7 +77,9 @@ public class PortfolioLoader {
         } catch (IOException e) {
             // Inside a fat JAR the resource lives inside the archive and has no real File.
             // Extract it to a temp file so Spark can open it via the local filesystem.
-            log.info("[PortfolioLoader] Resource '{}' is inside a JAR — extracting to temp file.", path);
+            log.info(
+                    "[PortfolioLoader] Resource '{}' is inside a JAR — extracting to temp file.",
+                    path);
             try (InputStream in = resource.getInputStream()) {
                 String suffix = path.contains(".") ? path.substring(path.lastIndexOf('.')) : ".tmp";
                 Path tmp = Files.createTempFile("portfolio-", suffix);
@@ -87,10 +88,12 @@ public class PortfolioLoader {
                 log.info("[PortfolioLoader] Extracted to '{}'", tmp);
                 return tmp.toAbsolutePath().toString();
             } catch (IOException ex) {
-                log.warn("[PortfolioLoader] Cannot extract '{}' ({}); passing through.", path, ex.getMessage());
+                log.warn(
+                        "[PortfolioLoader] Cannot extract '{}' ({}); passing through.",
+                        path,
+                        ex.getMessage());
                 return path;
             }
         }
     }
 }
-

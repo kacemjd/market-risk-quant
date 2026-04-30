@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 public class MonteCarloVaRCalculator implements VaRCalculator {
 
-    @Builder.Default private final int          numPaths = 10_000;
+    @Builder.Default private final int numPaths = 10_000;
     @Builder.Default private final MaturityGrid timeGrid = MaturityGrid.GRID_53;
-    @Builder.Default private final long         seed     = 42L;
+    @Builder.Default private final long seed = 42L;
 
     @Override
     public VaRResult calculate(Portfolio portfolio, MarketData marketData, double alpha) {
@@ -39,7 +39,8 @@ public class MonteCarloVaRCalculator implements VaRCalculator {
                 .generateShocks();
     }
 
-    private double[] evaluateScenarios(Portfolio portfolio, MarketData marketData, double[][] pathShocks) {
+    private double[] evaluateScenarios(
+            Portfolio portfolio, MarketData marketData, double[][] pathShocks) {
         double[] pnlScenarios = new double[numPaths];
         for (int i = 0; i < numPaths; i++) {
             pnlScenarios[i] = PortfolioPricer.price(portfolio, marketData, pathShocks[i]);

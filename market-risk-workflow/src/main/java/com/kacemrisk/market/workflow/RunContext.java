@@ -2,7 +2,6 @@ package com.kacemrisk.market.workflow;
 
 import com.kacemrisk.market.domain.model.MaturityGrid;
 import com.kacemrisk.market.domain.model.VaRMethod;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,10 +9,9 @@ import java.time.LocalDate;
 /**
  * Execution metadata for one scenario run.
  *
- * <p>Built from {@link ScenarioNotification} at the start of
- * {@link com.kacemrisk.market.workflow.TriggerScenarioUseCase} and threaded through
- * the pipeline so that no downstream component needs to hold a reference to the
- * raw notification.
+ * <p>Built from {@link ScenarioNotification} at the start of {@link
+ * com.kacemrisk.market.workflow.TriggerScenarioUseCase} and threaded through the pipeline so that
+ * no downstream component needs to hold a reference to the raw notification.
  *
  * <p>Implements {@link Serializable} so it can be broadcast to Spark executors.
  */
@@ -24,15 +22,12 @@ public record RunContext(
         double confidenceLevel,
         int historicalWindow,
         int numPaths,
-        MaturityGrid timeGrid
-) implements Serializable {
+        MaturityGrid timeGrid)
+        implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+    @Serial private static final long serialVersionUID = 1L;
 
-    /**
-     * Factory — extracts the execution-relevant fields from an inbound notification.
-     */
+    /** Factory — extracts the execution-relevant fields from an inbound notification. */
     public static RunContext from(ScenarioNotification n) {
         return new RunContext(
                 n.getCorrelationId(),
@@ -44,4 +39,3 @@ public record RunContext(
                 n.getTimeGrid());
     }
 }
-

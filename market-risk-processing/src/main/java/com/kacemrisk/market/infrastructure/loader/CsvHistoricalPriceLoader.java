@@ -3,6 +3,12 @@ package com.kacemrisk.market.infrastructure.loader;
 import com.kacemrisk.market.application.port.out.HistoricalPriceProvider;
 import com.kacemrisk.market.domain.model.AssetClass;
 import com.kacemrisk.market.domain.model.HistoricalPrice;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,24 +16,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  * {@link HistoricalPriceProvider} that reads prices from local CSV files.
  *
- * <p>Active when {@code input.source=csv}. Used by the {@code local} profile so developers
- * can work offline without consuming Alpha Vantage API quota.
+ * <p>Active when {@code input.source=csv}. Used by the {@code local} profile so developers can work
+ * offline without consuming Alpha Vantage API quota.
  *
- * <p>Implements the per-ticker {@link #fetch} method directly; the bulk {@link #fetchAll}
- * default on the port interface delegates to it sequentially (no network I/O so concurrency
- * is not needed here).
+ * <p>Implements the per-ticker {@link #fetch} method directly; the bulk {@link #fetchAll} default
+ * on the port interface delegates to it sequentially (no network I/O so concurrency is not needed
+ * here).
  *
  * <h3>Expected layout (classpath)</h3>
+ *
  * <pre>
  *   {input.csv.prices-path}/
  *       AAPL.csv
@@ -36,7 +36,9 @@ import java.util.Map;
  * </pre>
  *
  * <h3>CSV format</h3>
+ *
  * <pre>Ticker,Date,Open,High,Low,Close,Volume,OpenInt</pre>
+ *
  * Column names are detected case-insensitively; only {@code Date} and {@code Close} are required.
  * Rows outside [{@code from}, {@code to}] are silently skipped.
  */
@@ -48,12 +50,10 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
     @Value("${input.csv.prices-path:data/prices}")
     private String pricesPath;
 
-    /**
-     * Loads closing prices for a single ticker from its CSV file.
-     */
+    /** Loads closing prices for a single ticker from its CSV file. */
     @Override
-    public List<HistoricalPrice> fetch(String ticker, AssetClass assetClass,
-                                       LocalDate from, LocalDate to) {
+    public List<HistoricalPrice> fetch(
+            String ticker, AssetClass assetClass, LocalDate from, LocalDate to) {
         String pattern = "classpath:" + pricesPath + "/" + ticker + ".csv";
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
@@ -71,14 +71,16 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
         }
     }
 
-    /**
-     * Bulk load — overrides the default to add aggregate logging.
-     */
+    /** Bulk load — overrides the default to add aggregate logging. */
     @Override
-    public List<HistoricalPrice> fetchAll(Map<String, AssetClass> tickers,
-                                          LocalDate from, LocalDate to) {
-        log.info("[CSV] Loading {} ticker(s) from classpath:{} | window=[{} → {}]",
-                tickers.size(), pricesPath, from, to);
+    public List<HistoricalPrice> fetchAll(
+            Map<String, AssetClass> tickers, LocalDate from, LocalDate to) {
+        log.info(
+                "[CSV] Loading {} ticker(s) from classpath:{} | window=[{} → {}]",
+                tickers.size(),
+                pricesPath,
+                from,
+                to);
 
         List<HistoricalPrice> result = new ArrayList<>();
         int loaded = 0;
@@ -93,17 +95,21 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
             }
         }
 
-        log.info("[CSV] Loaded {} records | {}/{} tickers ok | {} missing",
-                result.size(), loaded, tickers.size(), missing);
+        log.info(
+                "[CSV] Loaded {} records | {}/{} tickers ok | {} missing",
+                result.size(),
+                loaded,
+                tickers.size(),
+                missing);
         return result;
     }
 
-    private List<HistoricalPrice> parseCsv(Resource resource, String ticker,
-                                            LocalDate from, LocalDate to) throws Exception {
+    private List<HistoricalPrice> parseCsv(
+            Resource resource, String ticker, LocalDate from, LocalDate to) throws Exception {
         List<HistoricalPrice> prices = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(resource.getInputStream()))) {
+        try (BufferedReader reader =
+                new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
 
             String header = reader.readLine();
             if (header == null) return prices;
@@ -113,7 +119,10 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
             int closeIdx = findColumn(cols, "Close");
 
             if (dateIdx < 0 || closeIdx < 0) {
-                log.warn("[CSV] ticker='{}' — CSV header '{}' missing Date or Close column", ticker, header);
+                log.warn(
+                        "[CSV] ticker='{}' — CSV header '{}' missing Date or Close column",
+                        ticker,
+                        header);
                 return prices;
             }
 
@@ -127,11 +136,12 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
                     LocalDate date = LocalDate.parse(parts[dateIdx].trim());
                     double close = Double.parseDouble(parts[closeIdx].trim());
                     if (!date.isBefore(from) && !date.isAfter(to)) {
-                        prices.add(HistoricalPrice.builder()
-                                .ticker(ticker)
-                                .date(date)
-                                .closePrice(close)
-                                .build());
+                        prices.add(
+                                HistoricalPrice.builder()
+                                        .ticker(ticker)
+                                        .date(date)
+                                        .closePrice(close)
+                                        .build());
                     }
                 } catch (Exception ex) {
                     // Skip malformed rows silently
@@ -141,9 +151,7 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
         return prices;
     }
 
-    /**
-     * Case-insensitive column index lookup.
-     */
+    /** Case-insensitive column index lookup. */
     private int findColumn(String[] headers, String name) {
         for (int i = 0; i < headers.length; i++) {
             if (headers[i].trim().equalsIgnoreCase(name)) return i;
@@ -151,4 +159,3 @@ public class CsvHistoricalPriceLoader implements HistoricalPriceProvider {
         return -1;
     }
 }
-

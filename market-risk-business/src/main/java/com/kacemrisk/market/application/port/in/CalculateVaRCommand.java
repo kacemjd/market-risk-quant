@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Value;
 
 /**
- * Command object carrying all inputs required by the Application layer
- * to execute a VaR calculation.
+ * Command object carrying all inputs required by the Application layer to execute a VaR
+ * calculation.
  */
 @Value
 @Builder
@@ -25,4 +25,3 @@ public class CalculateVaRCommand {
     int historicalWindow;
     MaturityGrid timeGrid;
 }
-

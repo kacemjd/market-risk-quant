@@ -4,8 +4,8 @@ import com.kacemrisk.market.domain.model.Position;
 
 /**
  * Basic linear pricer for equities and linear derivatives (futures).
- * <p>
- * P&L = quantity * (Delta * delta S)
+ *
+ * <p>P&L = quantity * (Delta * delta S)
  */
 public class LinearPricer implements Pricer {
 
@@ -15,4 +15,3 @@ public class LinearPricer implements Pricer {
         return position.getQuantity() * position.getDelta() * deltaS;
     }
 }
-

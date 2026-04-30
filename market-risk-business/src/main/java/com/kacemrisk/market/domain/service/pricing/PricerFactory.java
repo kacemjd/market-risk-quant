@@ -2,9 +2,7 @@ package com.kacemrisk.market.domain.service.pricing;
 
 import com.kacemrisk.market.domain.model.Position;
 
-/**
- * Factory linking Instruments to their corresponding Pricer strategy.
- */
+/** Factory linking Instruments to their corresponding Pricer strategy. */
 public class PricerFactory {
 
     private static final Pricer LINEAR = new LinearPricer();
@@ -13,8 +11,8 @@ public class PricerFactory {
     private PricerFactory() {}
 
     /**
-     * Determine best pricing strategy per instrument. Over-simplified logic here
-     * checks for non-zero Gamma to route to DeltaGammaPricer.
+     * Determine best pricing strategy per instrument. Over-simplified logic here checks for
+     * non-zero Gamma to route to DeltaGammaPricer.
      */
     public static Pricer getPricerFor(Position position) {
         if (position.getGamma() != 0.0) {
@@ -23,4 +21,3 @@ public class PricerFactory {
         return LINEAR;
     }
 }
-

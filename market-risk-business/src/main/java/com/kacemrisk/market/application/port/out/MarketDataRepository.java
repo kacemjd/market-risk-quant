@@ -1,13 +1,12 @@
 package com.kacemrisk.market.application.port.out;
 
 import com.kacemrisk.market.domain.model.MarketData;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
 /**
- * Driven port — SPI that infrastructure adapters must implement to
- * provide raw market data to the domain.
+ * Driven port — SPI that infrastructure adapters must implement to provide raw market data to the
+ * domain.
  */
 public interface MarketDataRepository {
 
@@ -26,4 +25,3 @@ public interface MarketDataRepository {
      */
     void save(MarketData marketData);
 }
-

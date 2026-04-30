@@ -4,24 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kacemrisk.market.domain.model.MaturityGrid;
 import com.kacemrisk.market.domain.model.VaRMethod;
 import com.kacemrisk.market.infrastructure.model.ScenarioRequest;
+import com.kacemrisk.market.workflow.ScenarioNotification;
+import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
+import java.time.LocalDate;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import com.kacemrisk.market.workflow.ScenarioNotification;
-import com.kacemrisk.market.workflow.TriggerScenarioUseCase;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 /**
- * Inbound Kafka adapter — listens on {@code scenario-notifications} and delegates
- * to {@link TriggerScenarioUseCase}.
+ * Inbound Kafka adapter — listens on {@code scenario-notifications} and delegates to {@link
+ * TriggerScenarioUseCase}.
  *
- * <p>The consumer factory is configured with {@code StringDeserializer}; this class
- * owns the JSON → {@link ScenarioRequest} mapping via Jackson {@link ObjectMapper},
- * avoiding the Spring Kafka 4.x deprecated {@code JsonDeserializer}.
+ * <p>The consumer factory is configured with {@code StringDeserializer}; this class owns the JSON →
+ * {@link ScenarioRequest} mapping via Jackson {@link ObjectMapper}, avoiding the Spring Kafka 4.x
+ * deprecated {@code JsonDeserializer}.
  */
 @Slf4j
 @ConditionalOnProperty(name = "spring.kafka.bootstrap-servers")
@@ -33,10 +32,9 @@ public class KafkaScenarioConsumer {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
-            topics           = "${scenario.kafka.topic:scenario-notifications}",
+            topics = "${scenario.kafka.topic:scenario-notifications}",
             containerFactory = "scenarioListenerContainerFactory",
-            groupId          = "${spring.kafka.consumer.group-id:market-risk-processing}"
-    )
+            groupId = "${spring.kafka.consumer.group-id:market-risk-processing}")
     public void onNotification(String message) {
         try {
             ScenarioRequest request = objectMapper.readValue(message, ScenarioRequest.class);

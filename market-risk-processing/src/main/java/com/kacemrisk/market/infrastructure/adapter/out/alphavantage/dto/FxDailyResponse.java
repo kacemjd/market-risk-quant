@@ -2,20 +2,19 @@ package com.kacemrisk.market.infrastructure.adapter.out.alphavantage.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
-
 /**
  * Deserialisation DTO for the Alpha Vantage {@code FX_DAILY} endpoint response.
  *
- * <p>Used exclusively by the {@code FX} strategy. The JSON structure is similar to
- * {@link TimeSeriesDailyResponse} but uses a different time-series key and omits
- * the volume field.
+ * <p>Used exclusively by the {@code FX} strategy. The JSON structure is similar to {@link
+ * TimeSeriesDailyResponse} but uses a different time-series key and omits the volume field.
  *
  * <p>Example response shape:
+ *
  * <pre>
  * {
  *   "Meta Data": { "2. From Symbol": "EUR", "3. To Symbol": "USD", ... },
@@ -34,10 +33,7 @@ public class FxDailyResponse {
     @JsonProperty("Time Series FX (Daily)")
     private Map<String, FxBar> timeSeries;
 
-    /**
-     * Single bar (OHLC) for one FX trading day.
-     * Only the closing mid-rate is extracted.
-     */
+    /** Single bar (OHLC) for one FX trading day. Only the closing mid-rate is extracted. */
     @Getter
     @Setter
     @NoArgsConstructor
@@ -48,4 +44,3 @@ public class FxDailyResponse {
         private String close;
     }
 }
-

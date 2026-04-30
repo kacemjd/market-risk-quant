@@ -12,9 +12,7 @@ import org.apache.spark.sql.SparkSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Spring wiring for framework-free domain services and Spark context helpers.
- */
+/** Spring wiring for framework-free domain services and Spark context helpers. */
 @Configuration
 public class DomainConfig {
 
@@ -29,14 +27,13 @@ public class DomainConfig {
     }
 
     /**
-     * Provides a {@link JavaSparkContext} wrapping the singleton {@link SparkSession},
-     * used by {@code ComposeAdapter} to broadcast objects to executors.
+     * Provides a {@link JavaSparkContext} wrapping the singleton {@link SparkSession}, used by
+     * {@code ComposeAdapter} to broadcast objects to executors.
      */
     @Bean
     public JavaSparkContext javaSparkContext(SparkSession sparkSession) {
         return JavaSparkContext.fromSparkContext(sparkSession.sparkContext());
     }
-
 
     @Bean
     public FetchHistoricalPricesUseCase fetchHistoricalPricesUseCase(

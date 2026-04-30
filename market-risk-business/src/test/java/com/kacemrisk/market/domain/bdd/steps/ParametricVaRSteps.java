@@ -1,5 +1,8 @@
 package com.kacemrisk.market.domain.bdd.steps;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
 import com.kacemrisk.market.domain.model.Position;
@@ -8,13 +11,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ParametricVaRSteps {
 
@@ -46,21 +45,20 @@ public class ParametricVaRSteps {
 
         Position position = Position.equitySpot(TICKER, quantity, spotPrice);
 
-        Portfolio portfolio = Portfolio.builder()
-                .id("test-portfolio")
-                .positions(List.of(position))
-                .build();
+        Portfolio portfolio =
+                Portfolio.builder().id("test-portfolio").positions(List.of(position)).build();
 
         double dailyVol = annualVol / TRADING_DAYS_SQRT;
         double[][] covMatrix = {{dailyVol * dailyVol}};
 
-        MarketData marketData = MarketData.builder()
-                .asOfDate(LocalDate.now())
-                .volatilities(Map.of(TICKER, annualVol))
-                .correlationMatrix(new double[][]{{1.0}})
-                .covarianceMatrix(covMatrix)
-                .riskFactors(List.of(TICKER))
-                .build();
+        MarketData marketData =
+                MarketData.builder()
+                        .asOfDate(LocalDate.now())
+                        .volatilities(Map.of(TICKER, annualVol))
+                        .correlationMatrix(new double[][] {{1.0}})
+                        .covarianceMatrix(covMatrix)
+                        .riskFactors(List.of(TICKER))
+                        .build();
 
         varResult = calculator.calculate(portfolio, marketData, alpha).getVar();
     }
@@ -72,8 +70,10 @@ public class ParametricVaRSteps {
 
     @And("the VaR should be approximately {double} with a tolerance of {double}")
     public void theVaRShouldBeApproximately(double expected, double tolerance) {
-        assertEquals(expected, varResult, tolerance,
+        assertEquals(
+                expected,
+                varResult,
+                tolerance,
                 "VaR expected ~" + expected + " ± " + tolerance + " but got " + varResult);
     }
 }
-

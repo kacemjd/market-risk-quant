@@ -12,6 +12,8 @@ services:
       QDB_LINE_TCP_MAINTENANCE_JOB_INTERVAL: 100
     volumes:
       - questdb-data:/root/.questdb
+    # QuestDB flushes its WAL on SIGTERM — give it time before Docker sends SIGKILL.
+    stop_grace_period: 30s
     # Use the /exec SQL endpoint — more reliable than /health and confirms the engine
     # is truly ready (not just the HTTP listener).  Falls back to wget if curl is absent.
     healthcheck:
@@ -72,8 +74,12 @@ services:
       QUESTDB_USER: admin
       QUESTDB_PASSWORD: quest
     mem_limit: 3g
+    # Must be > spring.lifecycle.timeout-per-shutdown-phase (30 s).
+    # Docker sends SIGTERM → Spring drains in-flight requests/Spark jobs (≤30 s) → exits cleanly.
+    # Docker only sends SIGKILL if the JVM hasn't exited within this window.
+    stop_grace_period: 40s
     healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:8080/ >/dev/null 2>&1 || wget -qO- http://localhost:8080/ >/dev/null 2>&1"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/actuator/health >/dev/null 2>&1 || wget -qO- http://localhost:8080/actuator/health >/dev/null 2>&1"]
       start_period: 120s
       interval: 15s
       timeout: 10s

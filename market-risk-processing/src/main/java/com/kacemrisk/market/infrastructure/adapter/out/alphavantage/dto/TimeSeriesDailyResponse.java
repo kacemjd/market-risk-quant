@@ -2,11 +2,10 @@ package com.kacemrisk.market.infrastructure.adapter.out.alphavantage.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Map;
 
 /**
  * Deserialisation DTO for the Alpha Vantage {@code TIME_SERIES_DAILY} endpoint response.
@@ -15,6 +14,7 @@ import java.util.Map;
  * Jackson maps the oddly-named JSON keys via {@link JsonProperty}.
  *
  * <p>Example response shape:
+ *
  * <pre>
  * {
  *   "Meta Data": { "2. Symbol": "AAPL", ... },
@@ -34,8 +34,8 @@ public class TimeSeriesDailyResponse {
     private Map<String, DailyBar> timeSeries;
 
     /**
-     * Single bar (OHLCV) for one trading day.
-     * Only the closing price is extracted for VaR / calibration purposes.
+     * Single bar (OHLCV) for one trading day. Only the closing price is extracted for VaR /
+     * calibration purposes.
      */
     @Getter
     @Setter
@@ -47,4 +47,3 @@ public class TimeSeriesDailyResponse {
         private String close;
     }
 }
-

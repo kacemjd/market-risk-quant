@@ -1,8 +1,10 @@
 package com.kacemrisk.market.domain.model;
 
 public enum AssetClass {
-
-    EQD, CTY, FX, IRD;
+    EQD,
+    CTY,
+    FX,
+    IRD;
 
     public static AssetClass of(String assetClass) {
         return switch (assetClass) {

@@ -1,14 +1,13 @@
 package com.kacemrisk.market.domain.service.simulation;
 
 import com.kacemrisk.market.domain.service.simulation.analytical.ParametricVaRCalculator;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -61,10 +60,10 @@ public class VarianceComputationBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
-        Options opts = new OptionsBuilder()
-                .include(VarianceComputationBenchmark.class.getSimpleName())
-                .build();
+        Options opts =
+                new OptionsBuilder()
+                        .include(VarianceComputationBenchmark.class.getSimpleName())
+                        .build();
         new Runner(opts).run();
     }
 }
-

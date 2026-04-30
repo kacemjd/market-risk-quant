@@ -1,13 +1,12 @@
 package com.kacemrisk.market.application.port.out;
 
 import com.kacemrisk.market.domain.model.Portfolio;
-
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Driven port — SPI that infrastructure adapters must implement to
- * provide portfolio data to the domain.
+ * Driven port — SPI that infrastructure adapters must implement to provide portfolio data to the
+ * domain.
  */
 public interface PortfolioRepository {
 
@@ -22,4 +21,3 @@ public interface PortfolioRepository {
      */
     List<Portfolio> findAll();
 }
-

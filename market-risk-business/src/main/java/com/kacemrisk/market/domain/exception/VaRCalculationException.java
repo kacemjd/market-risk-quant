@@ -1,8 +1,6 @@
 package com.kacemrisk.market.domain.exception;
 
-/**
- * Raised when a VaR calculation cannot proceed due to missing or inconsistent input data.
- */
+/** Raised when a VaR calculation cannot proceed due to missing or inconsistent input data. */
 public class VaRCalculationException extends DomainException {
 
     public VaRCalculationException(String message) {
@@ -13,4 +11,3 @@ public class VaRCalculationException extends DomainException {
         super(message, cause);
     }
 }
-

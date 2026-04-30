@@ -1,19 +1,18 @@
 package com.kacemrisk.market.domain.service.simulation;
 
 import com.kacemrisk.market.domain.model.VaRResult;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class VaRAggregator {
 
     private final double[] pnlScenarios;
-    private final double   alpha;
+    private final double alpha;
 
     private VaRAggregator(double[] pnlScenarios, double alpha) {
         this.pnlScenarios = pnlScenarios;
-        this.alpha        = alpha;
+        this.alpha = alpha;
     }
 
     public static VaRAggregator of(double[] pnlScenarios, double alpha) {
@@ -38,9 +37,7 @@ public class VaRAggregator {
         double expectedShortfall = tailCount > 0 ? (tailLossesSum / tailCount) : var;
 
         double mean = Arrays.stream(sorted).average().orElse(0.0);
-        double variance = Arrays.stream(sorted)
-                .map(x -> Math.pow(x - mean, 2))
-                .sum() / (n - 1);
+        double variance = Arrays.stream(sorted).map(x -> Math.pow(x - mean, 2)).sum() / (n - 1);
 
         log.info("VaRAggregator: α={}, N={}, VaR={}, ES={}", alpha, n, var, expectedShortfall);
 
@@ -54,4 +51,3 @@ public class VaRAggregator {
                 .build();
     }
 }
-

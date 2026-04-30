@@ -1,5 +1,7 @@
 package com.kacemrisk.market.infrastructure.adapter.in.kafka;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,9 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ConditionalOnProperty(name = "spring.kafka.bootstrap-servers")
 @Configuration
@@ -27,9 +26,8 @@ public class KafkaConfig {
     private String autoOffsetReset;
 
     /**
-     * Consumer factory producing raw {@code String} values.
-     * JSON-to-POJO conversion is handled by {@link KafkaScenarioConsumer}
-     * via Jackson {@code ObjectMapper} — avoids the Spring Kafka 4.x
+     * Consumer factory producing raw {@code String} values. JSON-to-POJO conversion is handled by
+     * {@link KafkaScenarioConsumer} via Jackson {@code ObjectMapper} — avoids the Spring Kafka 4.x
      * deprecated / removed {@code JsonDeserializer}.
      */
     @Bean
@@ -39,9 +37,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         return new DefaultKafkaConsumerFactory<>(
-                props,
-                new StringDeserializer(),
-                new StringDeserializer());
+                props, new StringDeserializer(), new StringDeserializer());
     }
 
     @Bean

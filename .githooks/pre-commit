@@ -1,0 +1,27 @@
+#!/bin/sh
+# .githooks/pre-commit
+#
+# Runs Spotless before every commit:
+#   1. Applies Google Java Format (AOSP) to all modified Java files.
+#   2. Re-stages any files that were reformatted so the commit includes clean code.
+#   3. Exits 0 → commit proceeds; exits non-zero → commit is aborted.
+#
+# Installed automatically via exec-maven-plugin on the first `mvn` run.
+# To install manually: git config core.hooksPath .githooks
+
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+echo "[pre-commit] Running Spotless (Google Java Format AOSP)..."
+
+# Run spotless:apply from the project root — formats all modules in one pass.
+# --no-transfer-progress suppresses the noisy download progress lines.
+mvn --quiet --no-transfer-progress spotless:apply \
+    -f "${REPO_ROOT}/pom.xml"
+
+# Re-stage any files that Spotless just reformatted so they appear in the commit.
+git add -u
+
+echo "[pre-commit] Spotless complete — commit proceeds."
+

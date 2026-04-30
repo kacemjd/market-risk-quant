@@ -1,6 +1,8 @@
 package com.kacemrisk.market.infrastructure.adapter.out.alphavantage;
 
 import com.kacemrisk.market.infrastructure.config.AlphaVantageProperties;
+import java.time.Duration;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.health.contributor.Health;
@@ -8,18 +10,16 @@ import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.Duration;
-import java.util.Map;
-
 /**
  * Spring Boot Actuator {@link HealthIndicator} for the Alpha Vantage REST API.
  *
- * <p>Issues a lightweight {@code GLOBAL_QUOTE} probe for the configured
- * {@code alphavantage.health-check-ticker} (default: {@code IBM}).
- * {@code GLOBAL_QUOTE} returns a single-record payload — it is the cheapest
- * non-trivial call available on the free tier, and IBM is always present.
+ * <p>Issues a lightweight {@code GLOBAL_QUOTE} probe for the configured {@code
+ * alphavantage.health-check-ticker} (default: {@code IBM}). {@code GLOBAL_QUOTE} returns a
+ * single-record payload — it is the cheapest non-trivial call available on the free tier, and IBM
+ * is always present.
  *
  * <h3>Status mapping</h3>
+ *
  * <table border="1">
  *   <tr><th>Condition</th><th>Status</th></tr>
  *   <tr><td>Valid quote returned</td><td>UP</td></tr>
@@ -51,15 +51,18 @@ public class AlphaVantageHealthIndicator implements HealthIndicator {
 
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> body = alphaVantageWebClient.get()
-                    .uri(ub -> ub
-                            .queryParam("function", FUNCTION)
-                            .queryParam("symbol", ticker)
-                            .queryParam("apikey", properties.getApiKey())
-                            .build())
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block(Duration.ofSeconds(properties.getResponseTimeoutSeconds()));
+            Map<String, Object> body =
+                    alphaVantageWebClient
+                            .get()
+                            .uri(
+                                    ub ->
+                                            ub.queryParam("function", FUNCTION)
+                                                    .queryParam("symbol", ticker)
+                                                    .queryParam("apikey", properties.getApiKey())
+                                                    .build())
+                            .retrieve()
+                            .bodyToMono(Map.class)
+                            .block(Duration.ofSeconds(properties.getResponseTimeoutSeconds()));
 
             if (body == null) {
                 return Health.down().withDetail("reason", "empty response").build();
@@ -94,11 +97,11 @@ public class AlphaVantageHealthIndicator implements HealthIndicator {
                     .build();
 
         } catch (Exception ex) {
-            log.warn("[AlphaVantageHealth] Probe failed | ticker={} | error={}", ticker, ex.getMessage());
-            return Health.down(ex)
-                    .withDetail("ticker", ticker)
-                    .build();
+            log.warn(
+                    "[AlphaVantageHealth] Probe failed | ticker={} | error={}",
+                    ticker,
+                    ex.getMessage());
+            return Health.down(ex).withDetail("ticker", ticker).build();
         }
     }
 }
-

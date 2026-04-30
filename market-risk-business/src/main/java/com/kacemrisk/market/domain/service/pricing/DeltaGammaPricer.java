@@ -4,8 +4,8 @@ import com.kacemrisk.market.domain.model.Position;
 
 /**
  * Non-linear Taylor expansion pricer for options.
- * <p>
- * P&L = quantity * (Delta * delta S + 0.5 * Gamma * (delta S)^2)
+ *
+ * <p>P&L = quantity * (Delta * delta S + 0.5 * Gamma * (delta S)^2)
  */
 public class DeltaGammaPricer implements Pricer {
 
@@ -18,4 +18,3 @@ public class DeltaGammaPricer implements Pricer {
         return position.getQuantity() * (deltaTerm + gammaTerm);
     }
 }
-

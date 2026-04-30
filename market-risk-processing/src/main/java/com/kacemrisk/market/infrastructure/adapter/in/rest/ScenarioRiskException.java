@@ -1,11 +1,10 @@
 package com.kacemrisk.market.infrastructure.adapter.in.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Value;
-
 import java.time.Instant;
 import java.util.List;
+import lombok.Builder;
+import lombok.Value;
 
 @Value
 @Builder
@@ -13,12 +12,11 @@ import java.util.List;
 public class ScenarioRiskException {
 
     String errorCode;
-    int    status;
+    int status;
     String error;
     String message;
 
-    @Builder.Default
-    Instant timestamp = Instant.now();
+    @Builder.Default Instant timestamp = Instant.now();
 
     List<ConstraintViolation> violations;
 
@@ -37,4 +35,3 @@ public class ScenarioRiskException {
         String message;
     }
 }
-

@@ -1,9 +1,8 @@
 package com.kacemrisk.market.domain.model;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
-
-import java.time.LocalDate;
 
 /**
  * Immutable value object representing a single end-of-day closing price for a given instrument.
@@ -22,4 +21,3 @@ public class HistoricalPrice {
     /** Adjusted closing price in the instrument's native currency. */
     double closePrice;
 }
-

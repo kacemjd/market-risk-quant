@@ -33,6 +33,7 @@
         <jmh.version>1.37</jmh.version>
         <jacoco.version>0.8.12</jacoco.version>
         <springdoc.version>2.8.9</springdoc.version>
+        <spotless.version>2.44.0</spotless.version>
     </properties>
 
   <dependencyManagement>
@@ -153,12 +154,83 @@
             </execution>
           </executions>
         </plugin>
+
+        <!--
+          Spotless — enforces Google Java Format (AOSP / 4-space) across all modules.
+          Developer workflow:
+            mvn spotless:apply    ← reformat everything in one shot
+            mvn spotless:check    ← fail if anything is out-of-format (same as CI)
+          CI: spotless:check is bound to the verify phase — build fails on unformatted code.
+          Pre-commit hook: runs spotless:apply automatically before every commit (see .githooks/).
+        -->
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless.version}</version>
+          <configuration>
+            <java>
+              <!-- Google Java Format AOSP style — 4-space indent, matches existing codebase -->
+              <googleJavaFormat>
+                <version>1.24.0</version>
+                <style>AOSP</style>
+                <reflowLongStrings>true</reflowLongStrings>
+              </googleJavaFormat>
+              <removeUnusedImports/>
+              <trimTrailingWhitespace/>
+              <endWithNewline/>
+            </java>
+          </configuration>
+          <executions>
+            <!-- Fail the build on unformatted code during verify (CI gate) -->
+            <execution>
+              <id>spotless-check</id>
+              <phase>verify</phase>
+              <goals><goal>check</goal></goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+
+      <!-- Spotless — active in every module -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+      </plugin>
+
+      <!--
+        Auto-configure the git hooks path on every Maven run so that
+        .githooks/pre-commit is picked up without any manual setup step.
+        Runs only in the root module (inherited=false).
+        failOnError=false — gracefully skips if git is not on PATH.
+      -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.4.1</version>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <id>install-git-hooks</id>
+            <phase>initialize</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <executable>git</executable>
+              <arguments>
+                <argument>config</argument>
+                <argument>core.hooksPath</argument>
+                <argument>.githooks</argument>
+              </arguments>
+              <failOnError>false</failOnError>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

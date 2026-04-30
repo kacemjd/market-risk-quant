@@ -1,17 +1,14 @@
 package com.kacemrisk.market.domain.service.simulation;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ParametricVaRCalculatorTest {
 
     @Test
-    void calculateVar95() {
-    }
-
+    void calculateVar95() {}
 
     @Test
-    void calculateVar99() {
-    }
+    void calculateVar99() {}
 }

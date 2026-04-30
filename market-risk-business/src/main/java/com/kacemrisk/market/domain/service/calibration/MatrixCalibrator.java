@@ -2,7 +2,6 @@ package com.kacemrisk.market.domain.service.calibration;
 
 import com.kacemrisk.market.domain.model.MarketData;
 import com.kacemrisk.market.domain.model.Portfolio;
-
 import java.util.List;
 
 public class MatrixCalibrator {
@@ -18,8 +17,8 @@ public class MatrixCalibrator {
     }
 
     /**
-     * Re-derives the covariance matrix from the stored volatilities and correlation matrix.
-     * Σ_ij = ρ_ij × σ_i × σ_j
+     * Re-derives the covariance matrix from the stored volatilities and correlation matrix. Σ_ij =
+     * ρ_ij × σ_i × σ_j
      */
     public double[][] calculateSigma() {
         List<String> factors = marketData.getRiskFactors();
@@ -28,14 +27,14 @@ public class MatrixCalibrator {
         double[][] sigma = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                sigma[i][j] = rho[i][j]
-                        * marketData.getVolFor(factors.get(i))
-                        * marketData.getVolFor(factors.get(j));
+                sigma[i][j] =
+                        rho[i][j]
+                                * marketData.getVolFor(factors.get(i))
+                                * marketData.getVolFor(factors.get(j));
             }
         }
         return sigma;
     }
-
 
     /**
      * Extracts the dollar-delta vector aligned with {@link MarketData#getRiskFactors()}.
@@ -43,11 +42,16 @@ public class MatrixCalibrator {
      */
     public double[] extractDeltas(Portfolio portfolio) {
         return marketData.getRiskFactors().stream()
-                .mapToDouble(ticker -> portfolio.getPositions().stream()
-                        .filter(p -> p.getTicker().equals(ticker))
-                        .mapToDouble(p -> p.getQuantity() * p.getSpotPrice() * p.getDelta())
-                        .sum())
+                .mapToDouble(
+                        ticker ->
+                                portfolio.getPositions().stream()
+                                        .filter(p -> p.getTicker().equals(ticker))
+                                        .mapToDouble(
+                                                p ->
+                                                        p.getQuantity()
+                                                                * p.getSpotPrice()
+                                                                * p.getDelta())
+                                        .sum())
                 .toArray();
     }
 }
-

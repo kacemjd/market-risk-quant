@@ -4,9 +4,10 @@ package com.kacemrisk.market.domain.model;
  * Enumeration of supported VaR simulation methodologies.
  *
  * <ul>
- *   <li>{@link #PARAMETRIC}  — closed-form, assumes Gaussian P&L (fast, linear portfolios)</li>
- *   <li>{@link #MONTE_CARLO} — N correlated GBM paths via Cholesky (configurable paths/horizon)</li>
- *   <li>{@link #HISTORICAL}  — full-revaluation replay of T historical days (model-free, captures fat tails)</li>
+ *   <li>{@link #PARAMETRIC} — closed-form, assumes Gaussian P&L (fast, linear portfolios)
+ *   <li>{@link #MONTE_CARLO} — N correlated GBM paths via Cholesky (configurable paths/horizon)
+ *   <li>{@link #HISTORICAL} — full-revaluation replay of T historical days (model-free, captures
+ *       fat tails)
  * </ul>
  */
 public enum VaRMethod {
@@ -14,4 +15,3 @@ public enum VaRMethod {
     MONTE_CARLO,
     HISTORICAL
 }
-

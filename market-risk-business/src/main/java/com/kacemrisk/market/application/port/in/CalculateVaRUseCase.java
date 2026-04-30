@@ -3,8 +3,8 @@ package com.kacemrisk.market.application.port.in;
 import com.kacemrisk.market.domain.model.VaRResult;
 
 /**
- * Driving port — entry point for triggering a VaR calculation.
- * Implementations live in the application service layer ({@code VaRService}).
+ * Driving port — entry point for triggering a VaR calculation. Implementations live in the
+ * application service layer ({@code VaRService}).
  */
 public interface CalculateVaRUseCase {
 
@@ -16,4 +16,3 @@ public interface CalculateVaRUseCase {
      */
     VaRResult calculate(CalculateVaRCommand command);
 }
-
