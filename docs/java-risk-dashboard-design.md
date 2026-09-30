@@ -174,7 +174,7 @@ The backtest dataset must declare realised versus hypothetical P&L and treatment
 
 ### Alternative representations of Screen 1
 
-Five alternative layouts were explored to test how far the same measurement contract can be
+Six alternative layouts were explored to test how far the same measurement contract can be
 pushed before it distorts. Each keeps the non-negotiable rules above — additive component VaR,
 diversification reported separately, approximation labelling, limits only when configured — and
 varies only how the information is framed.
@@ -205,6 +205,10 @@ varies only how the information is framed.
 
 ![Narrative review risk desk variant](assets/risk-desk-variant-narrative-review.svg)
 
+##### Brutalist operations broadsheet
+
+![Brutalist operations broadsheet risk desk variant](assets/risk-desk-variant-brutalist.svg)
+
 | Variant | Mockup | Rationale | Canvas | Framing |
 |---|---|---|---|---|
 | Control room | [SVG](assets/risk-desk-variant-control-room.svg) | [Notes](risk-desk-variant-control-room.md) | 1280x960 | Status-first monitoring wall; one scan line of current risk |
@@ -212,19 +216,20 @@ varies only how the information is framed.
 | Limit-first | [SVG](assets/risk-desk-variant-limit-first.svg) | [Notes](risk-desk-variant-limit-first.md) | 1280x1300 | Status chip before magnitude; grey reserved exclusively for absence |
 | Analytical canvas | [SVG](assets/risk-desk-variant-analytical-canvas.svg) | [Notes](risk-desk-variant-analytical-canvas.md) | 1280x1344 | Chart-led; arithmetic shown on the page, including the ES tail |
 | Narrative review | [SVG](assets/risk-desk-variant-narrative-review.svg) | [Notes](risk-desk-variant-narrative-review.md) | 1280x1660 | Three acts — what changed, why it moved, the evidence |
+| Brutalist broadsheet | [SVG](assets/risk-desk-variant-brutalist.svg) | [Notes](risk-desk-variant-brutalist.md) | 1280x1260 | Exposed grid, oversized verdict, and visible arithmetic |
 
 #### Comparison
 
-| Criterion | Control room | Compact terminal | Limit-first | Analytical canvas | Narrative review |
-|---|---|---|---|---|---|
-| Primary audience | Risk monitoring | Trading desk | Risk control / limits | Quant / model review | Committee and review packs |
-| Answers "is anything wrong?" | Immediate | Immediate | Strongest — status precedes magnitude | Indirect | Stated as a sentence |
-| Answers "why did it move?" | Weak | Weak | Weak | Strong | Strongest — dedicated act with deltas |
-| Information density | High | Highest | Medium | Medium-high | Lowest per pixel |
-| Reconciliation visibility | Stated | Stated | Stated with arithmetic | Explicit residual line | Explicit, plus a delta column |
-| Unavailable / not-configured states | Implicit | Implicit | Best in class — a dedicated coverage panel | Amber approximation flags | Inline caveats |
-| Scroll cost | One screen | None | Two screens | Two screens | Three screens |
-| Frontend build cost | Moderate | Moderate | Low (mostly layout) | Highest (calibrated histogram, tail detail) | High (prose plus an exception log) |
+| Criterion | Control room | Compact terminal | Limit-first | Analytical canvas | Narrative review | Brutalist |
+|---|---|---|---|---|---|---|
+| Primary audience | Risk monitoring | Trading desk | Risk control / limits | Quant / model review | Committee and review packs | Control room / design-led demo |
+| Answers "is anything wrong?" | Immediate | Immediate | Strongest — status precedes magnitude | Indirect | Stated as a sentence | Loudest — verdict dominates |
+| Answers "why did it move?" | Weak | Weak | Weak | Strong | Strongest — dedicated act with deltas | Moderate — evidence is adjacent |
+| Information density | High | Highest | Medium | Medium-high | Lowest per pixel | Medium-high |
+| Reconciliation visibility | Stated | Stated | Stated with arithmetic | Explicit residual line | Explicit, plus a delta column | Explicit arithmetic and residual |
+| Unavailable / not-configured states | Implicit | Implicit | Best in class — a dedicated coverage panel | Amber approximation flags | Inline caveats | Large labelled blocks |
+| Scroll cost | One screen | None | Two screens | Two screens | Three screens | Two screens |
+| Frontend build cost | Moderate | Moderate | Low (mostly layout) | Highest (calibrated histogram, tail detail) | High (prose plus an exception log) | Moderate (CSS Grid, custom SVG) |
 
 #### Recommendation
 
@@ -243,6 +248,9 @@ No single variant should be adopted wholesale. The recommended v1 Risk desk comp
 The **narrative review** framing is not the daily screen, but its three-act structure and exception
 log are the right basis for a later export or scheduled review pack. The **compact terminal** density
 target should be kept as the constraint for a future dense mode rather than the default.
+The **brutalist broadsheet** is the strongest visual identity and a useful design-review route. Its
+exposed arithmetic and verdict hierarchy can inform v1, but its sustained visual volume should be
+tested with daily users before becoming the default operating skin.
 
 Two findings that came out of this exploration have already been folded into the conventions above:
 ES at 97.5% must average the worst 2.5% of observations (not the VaR 99% tail), and ES at a different
