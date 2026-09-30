@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="960" viewBox="0 0 1280 960" role="img" aria-labelledby="control-room-title control-room-desc">
+  <!--
+  THESIS: A risk control board where every headline number remains visually tethered to evidence; it refuses the generic equal-card dashboard.
+  OWN-WORLD: Cool off-white field, graphite rails, tabular figures, hairline rules, and restrained purple/red/amber/green status coding.
+  STORY: The manager confirms method and freshness, scans four measures, then verifies distribution, additive allocation, diversification, and backtest evidence.
+  FIRST VIEWPORT: A narrow command header and full-width method rail lead into a metric ledger, with a wide distribution plot beside a reconciliation column and a 60-day evidence strip below.
+  FORM: Operations ledger, ranked first; staged as a page-wide control rail above linked evidence zones; no concept seed because the brief explicitly pins CONTROL ROOM.
+  -->
+  <title id="control-room-title">Control Room alternative for a Java market-risk dashboard</title>
+  <desc id="control-room-desc">A 1280 pixel desktop static mockup using a calm, dense operations layout. It shows illustrative synthetic values for VaR, expected shortfall, approximate ten-day VaR, exceptions, a P and L distribution, additive component VaR, diversification, and a sixty-day backtest.</desc>
+
+  <rect width="1280" height="960" fill="#F4F4F1"/>
+
+  <!-- top command bar -->
+  <rect x="0" y="0" width="1280" height="64" fill="#202126"/>
+  <text x="32" y="27" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" letter-spacing="1.6">MARKET RISK</text>
+  <text x="32" y="48" fill="#D8D7D2" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700">Control room</text>
+  <line x1="177" y1="16" x2="177" y2="48" stroke="#51525A" stroke-width="1"/>
+  <text x="197" y="26" fill="#9C9DA4" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="1.2">PORTFOLIO</text>
+  <text x="197" y="47" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">Global Multi-Asset</text>
+  <text x="399" y="26" fill="#9C9DA4" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="1.2">AS OF</text>
+  <text x="399" y="47" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">30 Sep 2026</text>
+  <circle cx="849" cy="32" r="5" fill="#1D9E75"/>
+  <text x="862" y="36" fill="#D8D7D2" font-family="Arial, Helvetica, sans-serif" font-size="12">Data complete</text>
+  <rect x="982" y="18" width="266" height="28" rx="3" fill="#35363D"/>
+  <text x="995" y="36" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">ILLUSTRATIVE / SYNTHETIC DATA</text>
+
+  <!-- page-wide method selector -->
+  <rect x="0" y="64" width="1280" height="70" fill="#FFFFFF"/>
+  <text x="32" y="91" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">METHOD APPLIES TO ALL MEASURES</text>
+  <rect x="32" y="101" width="196" height="25" rx="3" fill="#7F77DD"/>
+  <text x="46" y="118" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Historical simulation · 500d</text>
+  <rect x="236" y="101" width="148" height="25" rx="3" fill="#EEEDEA"/>
+  <text x="250" y="118" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11">Parametric</text>
+  <rect x="392" y="101" width="168" height="25" rx="3" fill="#EEEDEA"/>
+  <text x="406" y="118" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11">Monte Carlo · 10k</text>
+  <line x1="590" y1="82" x2="590" y2="121" stroke="#D4D3CE" stroke-width="1"/>
+  <text x="610" y="96" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Base currency</text>
+  <text x="610" y="118" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">EUR</text>
+  <text x="720" y="96" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Window</text>
+  <text x="720" y="118" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">500 trading days</text>
+  <text x="894" y="96" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Valuation</text>
+  <text x="894" y="118" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Close · synthetic</text>
+  <rect x="1120" y="94" width="128" height="32" rx="3" fill="#202126"/>
+  <text x="1141" y="114" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Run scenario</text>
+
+  <!-- metric ledger -->
+  <rect x="0" y="134" width="1280" height="136" fill="#E9E9E5"/>
+  <text x="32" y="158" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">CURRENT RISK · ALL VALUES ILLUSTRATIVE / SYNTHETIC</text>
+  <line x1="32" y1="174" x2="1248" y2="174" stroke="#B4B2A9" stroke-width="1"/>
+  <line x1="326" y1="174" x2="326" y2="250" stroke="#C9C8C2" stroke-width="1"/>
+  <line x1="622" y1="174" x2="622" y2="250" stroke="#C9C8C2" stroke-width="1"/>
+  <line x1="918" y1="174" x2="918" y2="250" stroke="#C9C8C2" stroke-width="1"/>
+  <text x="32" y="196" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">VaR 99% · 1 day</text>
+  <text x="32" y="232" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">€12.8m</text>
+  <text x="203" y="231" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="11">1.26% NAV</text>
+  <text x="350" y="196" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">ES 97.5% · 1 day</text>
+  <text x="350" y="232" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">€17.6m</text>
+  <text x="521" y="231" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="11">tail mean</text>
+  <text x="646" y="196" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Approx. VaR 99% · 10 day</text>
+  <text x="646" y="232" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">€40.5m</text>
+  <text x="817" y="231" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="11">√10 scaling</text>
+  <text x="942" y="196" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Exceptions · 250 day</text>
+  <text x="942" y="232" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700">4</text>
+  <rect x="987" y="216" width="42" height="18" rx="9" fill="#FCE3E1"/>
+  <text x="999" y="229" fill="#A52F2E" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">1.6%</text>
+  <text x="1051" y="231" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="11">observed · synthetic</text>
+
+  <!-- main evidence field -->
+  <rect x="20" y="290" width="780" height="356" rx="4" fill="#FFFFFF" stroke="#D4D3CE" stroke-width="1"/>
+  <text x="44" y="322" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">P&amp;L distribution</text>
+  <text x="44" y="341" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">500 synthetic daily observations · EUR millions</text>
+  <rect x="598" y="307" width="72" height="20" rx="10" fill="#FCE3E1"/>
+  <circle cx="610" cy="317" r="3" fill="#E24B4A"/>
+  <text x="618" y="321" fill="#8F302F" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">LOSS TAIL</text>
+  <rect x="680" y="307" width="95" height="20" rx="10" fill="#ECEAFC"/>
+  <circle cx="692" cy="317" r="3" fill="#7F77DD"/>
+  <text x="700" y="321" fill="#4C469C" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">DISTRIBUTION</text>
+  <line x1="62" y1="582" x2="765" y2="582" stroke="#8C8D92" stroke-width="1"/>
+  <line x1="62" y1="382" x2="62" y2="582" stroke="#D4D3CE" stroke-width="1"/>
+  <line x1="62" y1="532" x2="765" y2="532" stroke="#EEEDEA" stroke-width="1"/>
+  <line x1="62" y1="482" x2="765" y2="482" stroke="#EEEDEA" stroke-width="1"/>
+  <line x1="62" y1="432" x2="765" y2="432" stroke="#EEEDEA" stroke-width="1"/>
+  <rect x="79" y="570" width="18" height="12" fill="#E24B4A"/>
+  <rect x="101" y="564" width="18" height="18" fill="#E24B4A"/>
+  <rect x="123" y="555" width="18" height="27" fill="#E24B4A"/>
+  <rect x="145" y="543" width="18" height="39" fill="#E24B4A"/>
+  <rect x="167" y="526" width="18" height="56" fill="#E24B4A"/>
+  <rect x="189" y="505" width="18" height="77" fill="#E24B4A"/>
+  <rect x="211" y="477" width="18" height="105" fill="#7F77DD"/>
+  <rect x="233" y="449" width="18" height="133" fill="#7F77DD"/>
+  <rect x="255" y="421" width="18" height="161" fill="#7F77DD"/>
+  <rect x="277" y="399" width="18" height="183" fill="#7F77DD"/>
+  <rect x="299" y="384" width="18" height="198" fill="#7F77DD"/>
+  <rect x="321" y="377" width="18" height="205" fill="#7F77DD"/>
+  <rect x="343" y="386" width="18" height="196" fill="#7F77DD"/>
+  <rect x="365" y="405" width="18" height="177" fill="#7F77DD"/>
+  <rect x="387" y="429" width="18" height="153" fill="#7F77DD"/>
+  <rect x="409" y="451" width="18" height="131" fill="#7F77DD"/>
+  <rect x="431" y="472" width="18" height="110" fill="#7F77DD"/>
+  <rect x="453" y="491" width="18" height="91" fill="#7F77DD"/>
+  <rect x="475" y="511" width="18" height="71" fill="#7F77DD"/>
+  <rect x="497" y="528" width="18" height="54" fill="#7F77DD"/>
+  <rect x="519" y="542" width="18" height="40" fill="#7F77DD"/>
+  <rect x="541" y="552" width="18" height="30" fill="#7F77DD"/>
+  <rect x="563" y="559" width="18" height="23" fill="#7F77DD"/>
+  <rect x="585" y="565" width="18" height="17" fill="#7F77DD"/>
+  <rect x="607" y="570" width="18" height="12" fill="#7F77DD"/>
+  <rect x="629" y="573" width="18" height="9" fill="#7F77DD"/>
+  <rect x="651" y="576" width="18" height="6" fill="#7F77DD"/>
+  <rect x="673" y="578" width="18" height="4" fill="#7F77DD"/>
+  <line x1="205" y1="366" x2="205" y2="594" stroke="#E24B4A" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="116" y="371" fill="#A52F2E" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">VaR −€12.8m</text>
+  <line x1="151" y1="389" x2="151" y2="594" stroke="#EF9F27" stroke-width="2"/>
+  <text x="78" y="399" fill="#8A570B" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">ES −€17.6m</text>
+  <text x="57" y="608" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">−25</text>
+  <text x="196" y="608" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">−12.8</text>
+  <text x="320" y="608" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">0</text>
+  <text x="468" y="608" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">+10</text>
+  <text x="686" y="608" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">+25</text>
+  <text x="44" y="632" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">Illustrative / synthetic observations; not a forecast or regulatory statement.</text>
+
+  <!-- component reconciliation -->
+  <rect x="820" y="290" width="440" height="356" rx="4" fill="#FFFFFF" stroke="#D4D3CE" stroke-width="1"/>
+  <text x="844" y="322" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Component VaR reconciliation</text>
+  <text x="844" y="341" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Additive Euler allocation · illustrative / synthetic · EUR m</text>
+  <text x="844" y="373" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10">Rates</text>
+  <rect x="938" y="362" width="151" height="14" rx="2" fill="#7F77DD"/>
+  <text x="1101" y="373" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">4.2</text>
+  <text x="844" y="407" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10">Equities</text>
+  <rect x="938" y="396" width="126" height="14" rx="2" fill="#7F77DD"/>
+  <text x="1076" y="407" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">3.5</text>
+  <text x="844" y="441" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10">Credit</text>
+  <rect x="938" y="430" width="101" height="14" rx="2" fill="#7F77DD"/>
+  <text x="1051" y="441" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">2.8</text>
+  <text x="844" y="475" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10">FX</text>
+  <rect x="938" y="464" width="50" height="14" rx="2" fill="#7F77DD"/>
+  <text x="1000" y="475" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">1.4</text>
+  <text x="844" y="509" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="10">Commodities</text>
+  <rect x="938" y="498" width="32" height="14" rx="2" fill="#7F77DD"/>
+  <text x="982" y="509" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">0.9</text>
+  <line x1="844" y1="535" x2="1236" y2="535" stroke="#B4B2A9" stroke-width="1"/>
+  <text x="844" y="561" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">COMPONENT TOTAL</text>
+  <text x="1155" y="561" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">12.8</text>
+  <circle cx="1222" cy="556" r="8" fill="#DDF3EB"/>
+  <path d="M1218 556 l3 3 l5 -7" fill="none" stroke="#1D9E75" stroke-width="2"/>
+  <text x="844" y="591" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Reconciles to VaR 99% · 1 day</text>
+  <rect x="844" y="607" width="392" height="22" rx="2" fill="#F2F1EE"/>
+  <text x="854" y="622" fill="#55565C" font-family="Arial, Helvetica, sans-serif" font-size="9">4.2 + 3.5 + 2.8 + 1.4 + 0.9 = 12.8</text>
+
+  <!-- backtest evidence -->
+  <rect x="20" y="666" width="920" height="266" rx="4" fill="#FFFFFF" stroke="#D4D3CE" stroke-width="1"/>
+  <text x="44" y="699" fill="#202126" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">60-day backtest</text>
+  <text x="44" y="718" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="10">Synthetic daily P&amp;L against prior-day VaR · EUR millions</text>
+  <line x1="62" y1="757" x2="912" y2="757" stroke="#E24B4A" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="768" y="749" fill="#A52F2E" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">VaR threshold</text>
+  <line x1="62" y1="831" x2="912" y2="831" stroke="#B4B2A9" stroke-width="1"/>
+  <line x1="62" y1="738" x2="62" y2="889" stroke="#D4D3CE" stroke-width="1"/>
+  <polyline points="62,823 76,817 90,840 104,808 118,814 132,835 146,820 160,803 174,824 188,813 202,846 216,817 230,809 244,799 258,823 272,811 286,849 300,836 314,818 328,807 342,821 356,832 370,813 384,798 398,819 412,842 426,816 440,804 454,810 468,826 482,838 496,812 510,801 524,817 538,844 552,829 566,807 580,795 594,814 608,822 622,839 636,809 650,800 664,815 678,866 692,825 706,803 720,818 734,837 748,808 762,792 776,813 790,827 804,841 818,806 832,796 846,812 860,872 874,820 888,804 902,816" fill="none" stroke="#7F77DD" stroke-width="2"/>
+  <circle cx="678" cy="866" r="5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="860" cy="872" r="5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="44" y="916" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">60 observations shown · 2 illustrative exceptions highlighted · latest at right</text>
+  <text x="62" y="901" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">−60d</text>
+  <text x="887" y="901" fill="#77787D" font-family="Arial, Helvetica, sans-serif" font-size="9">Today</text>
+
+  <!-- diversification separated from component allocation -->
+  <rect x="960" y="666" width="300" height="266" rx="4" fill="#28292F"/>
+  <text x="984" y="699" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Diversification</text>
+  <text x="984" y="718" fill="#BFC0C5" font-family="Arial, Helvetica, sans-serif" font-size="10">Separate view · illustrative / synthetic</text>
+  <text x="984" y="758" fill="#BFC0C5" font-family="Arial, Helvetica, sans-serif" font-size="10">Standalone sum</text>
+  <text x="1236" y="758" text-anchor="end" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">€18.9m</text>
+  <line x1="984" y1="774" x2="1236" y2="774" stroke="#51525A" stroke-width="1"/>
+  <text x="984" y="805" fill="#BFC0C5" font-family="Arial, Helvetica, sans-serif" font-size="10">Diversification benefit</text>
+  <text x="1236" y="805" text-anchor="end" fill="#1D9E75" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">−€6.1m</text>
+  <line x1="984" y1="821" x2="1236" y2="821" stroke="#51525A" stroke-width="1"/>
+  <text x="984" y="853" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">TOTAL VaR</text>
+  <text x="1236" y="853" text-anchor="end" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">€12.8m</text>
+  <rect x="984" y="879" width="252" height="28" rx="3" fill="#3A3B43"/>
+  <rect x="984" y="879" width="81" height="28" rx="3" fill="#1D9E75"/>
+  <text x="1110" y="897" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">32.3% benefit</text>
+</svg>
