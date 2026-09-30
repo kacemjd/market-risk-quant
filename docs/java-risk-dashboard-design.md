@@ -183,6 +183,28 @@ varies only how the information is framed.
 > illustrative figures and canvas heights differ (a 4.82M portfolio in three of them, 8.42M in
 > another). Compare the *framing*, not the numbers.
 
+#### Visual gallery
+
+##### Control room
+
+![Control room risk desk variant](assets/risk-desk-variant-control-room.svg)
+
+##### Compact terminal
+
+![Compact terminal risk desk variant](assets/risk-desk-variant-compact-terminal.svg)
+
+##### Limit-first
+
+![Limit-first risk desk variant](assets/risk-desk-variant-limit-first.svg)
+
+##### Analytical canvas
+
+![Analytical canvas risk desk variant](assets/risk-desk-variant-analytical-canvas.svg)
+
+##### Narrative review
+
+![Narrative review risk desk variant](assets/risk-desk-variant-narrative-review.svg)
+
 | Variant | Mockup | Rationale | Canvas | Framing |
 |---|---|---|---|---|
 | Control room | [SVG](assets/risk-desk-variant-control-room.svg) | [Notes](risk-desk-variant-control-room.md) | 1280x960 | Status-first monitoring wall; one scan line of current risk |
