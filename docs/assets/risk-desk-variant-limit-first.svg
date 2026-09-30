@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1280" height="1300" viewBox="0 0 1280 1300" role="img" aria-labelledby="titleLimitFirst descLimitFirst" preserveAspectRatio="xMidYMin meet">
+<title id="titleLimitFirst">Market risk desk dashboard, limit-first variant (synthetic mockup)</title>
+<desc id="descLimitFirst">Static 1280 pixel desktop mockup of screen 1 of a Java market-risk dashboard, organised so that risk versus approved limits is the primary question. It shows VaR 99 percent 1 day at 4.82 million USD against a 6.50 million limit (74 percent utilisation, within limit), Expected Shortfall 97.5 percent 1 day at 5.41 million with no limit configured, an approximate VaR 99 percent 10 day figure of 15.24 million derived by square-root-of-time scaling and explicitly not limit-monitored, and 4 backtesting exceptions over 250 days in the Basel green zone. A page-wide method banner states historical simulation with a 501 observation window and an empirical unsmoothed distribution. A 60 day backtest chart plots daily profit and loss against the VaR and Expected Shortfall thresholds with two exceptions highlighted. A component table lists reconciled additive component VaR summing exactly to the desk total, with the diversification benefit reported separately and never netted into components. Limit states are shown as first-class values including one sub-limit breach on credit spread, four components with no sub-limit configured, and one metric where a limit is not applicable. All figures are synthetic and labelled as such.</desc>
+<defs>
+<pattern id="notConfigured" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#EDEBE5"/><rect width="3" height="8" fill="#B4B2A9" fill-opacity="0.55"/></pattern>
+<pattern id="notApplicable" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#F0EEE9"/><circle cx="3" cy="3" r="1.1" fill="#B4B2A9" fill-opacity="0.65"/></pattern>
+</defs>
+<rect x="0" y="0" width="1280" height="1300" rx="0" fill="#F6F5F2"/>
+<rect x="0" y="0" width="1280" height="88" rx="0" fill="#2B2833"/>
+<text x="32" y="38" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF" text-anchor="start">Market Risk — Desk Dashboard</text>
+<text x="32" y="62" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#C9C6D6" text-anchor="start">EMEA Rates &amp; Credit  ·  COB 31 Mar 2026  ·  Base currency USD  ·  Screen 1 of 4</text>
+<text x="1248" y="33" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#9B97AD" text-anchor="end" letter-spacing="0.8">METHOD (applies to every figure on this page)</text>
+<text x="1248" y="52" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#FFFFFF" text-anchor="end">Historical simulation · 501 obs (2y) · full revaluation · equal weights</text>
+<text x="1248" y="70" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#C9C6D6" text-anchor="end">Distribution: empirical, unsmoothed · no parametric fit · no scaling except where stated</text>
+<rect x="32" y="104" width="1216" height="34" rx="6" fill="#FDF3E0" stroke="#EF9F27" stroke-width="1"/>
+<rect x="32" y="104" width="4" height="34" rx="2" fill="#EF9F27"/>
+<text x="50" y="126" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="14" font-weight="700" fill="#EF9F27" text-anchor="start">⚠</text>
+<text x="70" y="125" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#8A6516" text-anchor="start">SYNTHETIC DATA — all numbers, limits and exceptions on this screen are illustrative and do not represent any real portfolio, desk or approved limit.</text>
+<text x="32" y="172" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="700" fill="#5C5964" text-anchor="start" letter-spacing="1.2">RISK VERSUS APPROVED LIMITS</text>
+<text x="1248" y="172" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#B4B2A9" text-anchor="end">Limit source: Risk Mandate v14, effective 01 Mar 2026 · unconfigured limits are never inferred</text>
+<rect x="32" y="188" width="289" height="218" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<rect x="32" y="194" width="4" height="206" rx="2" fill="#1D9E75"/>
+<text x="52" y="216" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">VaR 99% · 1 day</text>
+<rect x="52" y="228" width="101.8" height="20" rx="10.0" fill="#1D9E75"/>
+<text x="102.9" y="242" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">WITHIN LIMIT</text>
+<text x="52" y="288" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="38" font-weight="700" fill="#26242B" text-anchor="start">4.82</text>
+<text x="144" y="288" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" fill="#5C5964" text-anchor="start">USD m</text>
+<text x="52" y="310" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="400" fill="#5C5964" text-anchor="start">Approved limit  6.50 USD m</text>
+<rect x="52" y="328" width="249" height="10" rx="5" fill="#EDEBE5"/>
+<rect x="52" y="328" width="147.7" height="10" rx="5" fill="#1D9E75"/>
+<line x1="251.20000000000002" y1="324" x2="251.20000000000002" y2="342" stroke="#26242B" stroke-width="1.5"/>
+<text x="251.2" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="middle">limit</text>
+<text x="52" y="374" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#5C5964" text-anchor="start">74% utilised · headroom 1.68 USD m</text>
+<text x="52" y="390" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">1-day holding period, direct measurement</text>
+<rect x="341" y="188" width="289" height="218" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<rect x="341" y="194" width="4" height="206" rx="2" fill="#B4B2A9"/>
+<text x="361" y="216" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Expected Shortfall 97.5% · 1 day</text>
+<rect x="361" y="228" width="149.6" height="20" rx="10.0" fill="#B4B2A9"/>
+<text x="435.8" y="242" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">NO LIMIT CONFIGURED</text>
+<text x="361" y="288" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="38" font-weight="700" fill="#26242B" text-anchor="start">5.41</text>
+<text x="453" y="288" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" fill="#5C5964" text-anchor="start">USD m</text>
+<text x="361" y="310" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="400" fill="#B4B2A9" text-anchor="start">Approved limit  —  not configured</text>
+<rect x="361" y="328" width="249" height="10" rx="5" fill="url(#notConfigured)" stroke="#B4B2A9" stroke-width="1"/>
+<text x="361" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">No utilisation can be computed</text>
+<text x="361" y="374" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#5C5964" text-anchor="start">Measured value is reliable; limit status is unknown</text>
+<text x="361" y="390" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">Mandate v14 defines no ES limit for this desk</text>
+<rect x="650" y="188" width="289" height="218" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<rect x="650" y="194" width="4" height="206" rx="2" fill="#EF9F27"/>
+<text x="670" y="216" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">VaR 99% · 10 day (approx.)</text>
+<rect x="670" y="228" width="108.7" height="20" rx="10.0" fill="#EF9F27"/>
+<text x="724.3" y="242" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">APPROXIMATION</text>
+<text x="670" y="288" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="38" font-weight="700" fill="#26242B" text-anchor="start">15.24</text>
+<text x="793" y="288" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" fill="#5C5964" text-anchor="start">USD m</text>
+<text x="670" y="310" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="400" fill="#B4B2A9" text-anchor="start">Approved limit  —  not applicable</text>
+<rect x="670" y="328" width="249" height="10" rx="5" fill="url(#notApplicable)" stroke="#B4B2A9" stroke-width="1"/>
+<text x="670" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">Not limit-monitored by mandate</text>
+<text x="670" y="374" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#8A6516" text-anchor="start">4.82 × √10 · square-root-of-time scaling</text>
+<text x="670" y="390" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">Assumes i.i.d. returns — not a 10-day revaluation</text>
+<rect x="959" y="188" width="289" height="218" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<rect x="959" y="194" width="4" height="206" rx="2" fill="#1D9E75"/>
+<text x="979" y="216" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Backtesting exceptions · 250 days</text>
+<rect x="979" y="228" width="129.1" height="20" rx="10.0" fill="#1D9E75"/>
+<text x="1043.6" y="242" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.4">BASEL GREEN ZONE</text>
+<text x="979" y="288" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="38" font-weight="700" fill="#26242B" text-anchor="start">4</text>
+<text x="1004" y="288" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" fill="#5C5964" text-anchor="start">of 250 observations</text>
+<text x="979" y="310" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="400" fill="#5C5964" text-anchor="start">Expected at 99%: 2.5 · green zone 0–4</text>
+<rect x="979" y="328" width="99.60000000000001" height="10" rx="0" fill="#1D9E75"/>
+<rect x="1078.6" y="328" width="99.60000000000001" height="10" rx="0" fill="#EF9F27"/>
+<rect x="1178.2" y="328" width="49.800000000000004" height="10" rx="0" fill="#E24B4A"/>
+<path d="M1072.4 325 l6 -9 h-12 z" fill="#26242B"/>
+<text x="979" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="start">0</text>
+<text x="1078.6" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="middle">5</text>
+<text x="1178.2" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="middle">10</text>
+<text x="1228" y="356" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="end">≥ 10</text>
+<text x="979" y="374" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#5C5964" text-anchor="start">One more exception moves the desk to amber</text>
+<text x="979" y="390" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">Clean P&amp;L, 1-day horizon, 99% one-tailed test</text>
+<text x="32" y="444" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="700" fill="#5C5964" text-anchor="start" letter-spacing="1.2">BACKTESTING · LAST 60 TRADING DAYS</text>
+<text x="1248" y="444" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#5C5964" text-anchor="end">2 exceptions in window · 4 in the rolling 250-day count</text>
+<rect x="32" y="460" width="1216" height="322" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<line x1="98" y1="508.9" x2="1218" y2="508.9" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="512.9" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">+6</text>
+<line x1="98" y1="542.6" x2="1218" y2="542.6" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="546.6" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">+4</text>
+<line x1="98" y1="576.3" x2="1218" y2="576.3" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="580.3" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">+2</text>
+<line x1="98" y1="610.0" x2="1218" y2="610.0" stroke="#CFCCC4" stroke-width="1.4"/>
+<text x="90" y="614.0" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">0</text>
+<line x1="98" y1="643.7" x2="1218" y2="643.7" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="647.7" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">-2</text>
+<line x1="98" y1="677.4" x2="1218" y2="677.4" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="681.4" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">-4</text>
+<line x1="98" y1="711.1" x2="1218" y2="711.1" stroke="#E4E2DC" stroke-width="1"/>
+<text x="90" y="715.1" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="end">-6</text>
+<text x="52" y="486" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Daily clean P&amp;L versus VaR / ES thresholds</text>
+<text x="52" y="504" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="start">USD m · negative values are losses</text>
+<rect x="109.8" y="589.8" width="11.0" height="20.2" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="128.3" y="610" width="11.0" height="13.5" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="146.8" y="603.3" width="11.0" height="6.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="165.4" y="574.6" width="11.0" height="35.4" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="183.9" y="610" width="11.0" height="27.0" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="202.4" y="594.8" width="11.0" height="15.2" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="221.0" y="610" width="11.0" height="38.8" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="239.5" y="584.7" width="11.0" height="25.3" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="258.0" y="606.6" width="11.0" height="3.4" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="276.6" y="610" width="11.0" height="8.4" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="295.1" y="557.7" width="11.0" height="52.3" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="313.6" y="610" width="11.0" height="18.5" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="332.2" y="599.9" width="11.0" height="10.1" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="350.7" y="610" width="11.0" height="48.9" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="369.2" y="579.7" width="11.0" height="30.3" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="387.8" y="604.9" width="11.0" height="5.1" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="406.3" y="610" width="11.0" height="3.4" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="424.8" y="569.5" width="11.0" height="40.5" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="443.4" y="610" width="11.0" height="57.3" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="461.9" y="593.1" width="11.0" height="16.9" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="480.4" y="610" width="11.0" height="11.8" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="499.0" y="601.6" width="11.0" height="8.4" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="517.5" y="578.0" width="11.0" height="32.0" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="536.0" y="610" width="11.0" height="21.9" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="554.6" y="610" width="11.0" height="86.0" rx="1.5" fill="#E24B4A" fill-opacity="1"/>
+<circle cx="560.1" cy="710.0" r="4.5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="1.5"/>
+<text x="560.1" y="730.0" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#E24B4A" text-anchor="middle">exception</text>
+<rect x="573.1" y="572.9" width="11.0" height="37.1" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="591.6" y="596.5" width="11.0" height="13.5" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="610.2" y="610" width="11.0" height="6.7" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="628.7" y="586.4" width="11.0" height="23.6" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="647.2" y="610" width="11.0" height="33.7" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="665.8" y="598.2" width="11.0" height="11.8" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="684.3" y="549.3" width="11.0" height="60.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="702.8" y="610" width="11.0" height="30.3" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="721.4" y="608.3" width="11.0" height="1.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="739.9" y="610" width="11.0" height="15.2" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="758.4" y="564.5" width="11.0" height="45.5" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="777.0" y="610" width="11.0" height="42.1" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="795.5" y="591.5" width="11.0" height="18.5" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="814.0" y="603.3" width="11.0" height="6.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="832.6" y="610" width="11.0" height="23.6" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="851.1" y="561.1" width="11.0" height="48.9" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="869.6" y="610" width="11.0" height="5.1" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="888.2" y="599.9" width="11.0" height="10.1" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="906.7" y="610" width="11.0" height="64.1" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="925.2" y="581.3" width="11.0" height="28.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="943.8" y="606.6" width="11.0" height="3.4" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="962.3" y="610" width="11.0" height="16.9" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="980.8" y="539.2" width="11.0" height="70.8" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="999.4" y="610" width="11.0" height="37.1" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="1017.9" y="594.8" width="11.0" height="15.2" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1036.4" y="610" width="11.0" height="10.1" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="1055.0" y="588.1" width="11.0" height="21.9" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1073.5" y="610" width="11.0" height="94.4" rx="1.5" fill="#E24B4A" fill-opacity="1"/>
+<circle cx="1079.0" cy="718.4" r="4.5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="1.5"/>
+<text x="1079.0" y="738.4" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#E24B4A" text-anchor="middle">exception</text>
+<rect x="1092.0" y="601.6" width="11.0" height="8.4" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1110.6" y="576.3" width="11.0" height="33.7" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1129.1" y="610" width="11.0" height="28.7" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="1147.6" y="596.5" width="11.0" height="13.5" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1166.2" y="610" width="11.0" height="1.7" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<rect x="1184.7" y="583.0" width="11.0" height="27.0" rx="1.5" fill="#7F77DD" fill-opacity="0.42"/>
+<rect x="1203.2" y="610" width="11.0" height="47.2" rx="1.5" fill="#7F77DD" fill-opacity="0.85"/>
+<line x1="98" y1="691.3" x2="1218" y2="691.3" stroke="#E24B4A" stroke-width="1.6" stroke-dasharray="7 4"/>
+<text x="1218" y="685.3" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#E24B4A" text-anchor="end">VaR 99% 1d  −4.82</text>
+<line x1="98" y1="701.2" x2="1218" y2="701.2" stroke="#7F77DD" stroke-width="1.6" stroke-dasharray="3 4"/>
+<text x="1218" y="715.2" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#7F77DD" text-anchor="end">ES 97.5% 1d  −5.41</text>
+<line x1="98" y1="610" x2="1218" y2="610" stroke="#9B988F" stroke-width="1.2"/>
+<text x="115.3" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-59</text>
+<text x="282.1" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-50</text>
+<text x="467.4" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-40</text>
+<text x="652.7" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-30</text>
+<text x="838.1" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-20</text>
+<text x="1023.4" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-10</text>
+<text x="1208.7" y="748" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="middle">D-0</text>
+<text x="52" y="748" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="start">Legend</text>
+<rect x="52" y="756" width="10" height="10" rx="2" fill="#7F77DD" fill-opacity="0.42"/>
+<text x="68" y="765" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="start">gain</text>
+<rect x="104" y="756" width="10" height="10" rx="2" fill="#7F77DD"/>
+<text x="120" y="765" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="start">loss</text>
+<rect x="156" y="756" width="10" height="10" rx="2" fill="#E24B4A"/>
+<text x="172" y="765" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#5C5964" text-anchor="start">exception</text>
+<text x="32" y="812" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="700" fill="#5C5964" text-anchor="start" letter-spacing="1.2">WHERE THE RISK SITS · COMPONENT VaR AND SUB-LIMITS</text>
+<rect x="32" y="828" width="768" height="386" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<text x="52" y="856" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Component VaR reconciles additively to the desk total</text>
+<text x="52" y="874" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="start">Euler / marginal allocation · components sum exactly to 4.82 · diversification is reported separately, never netted into a component</text>
+<text x="52" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="start" letter-spacing="0.6">Risk factor group</text>
+<text x="282" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="end" letter-spacing="0.6">Standalone</text>
+<text x="398" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="end" letter-spacing="0.6">Component</text>
+<text x="502" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="end" letter-spacing="0.6">Share</text>
+<text x="592" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="end" letter-spacing="0.6">Sub-limit</text>
+<text x="692" y="906" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#5C5964" text-anchor="start" letter-spacing="0.6">Limit status</text>
+<line x1="52" y1="916" x2="780" y2="916" stroke="#CFCCC4" stroke-width="1.2"/>
+<text x="52" y="942" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">Interest rate delta</text>
+<text x="282" y="942" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">3.05</text>
+<text x="398" y="942" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">2.31</text>
+<text x="502" y="942" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">48%</text>
+<text x="592" y="942" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">3.20</text>
+<rect x="692" y="931" width="9" height="9" rx="2" fill="#1D9E75"/>
+<text x="707" y="942" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1D9E75" text-anchor="start" letter-spacing="0.4">WITHIN</text>
+<text x="707" y="954" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">72% used</text>
+<rect x="44" y="969" width="744" height="30" rx="4" fill="#FAF9F6"/>
+<text x="52" y="986" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">Credit spread</text>
+<text x="282" y="986" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">2.12</text>
+<text x="398" y="986" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">1.42</text>
+<text x="502" y="986" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">29%</text>
+<text x="592" y="986" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">1.30</text>
+<rect x="692" y="975" width="9" height="9" rx="2" fill="#E24B4A"/>
+<text x="707" y="986" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#E24B4A" text-anchor="start" letter-spacing="0.4">BREACH</text>
+<text x="707" y="998" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">109% used</text>
+<text x="52" y="1030" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">FX</text>
+<text x="282" y="1030" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">0.78</text>
+<text x="398" y="1030" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">0.51</text>
+<text x="502" y="1030" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">11%</text>
+<text x="592" y="1030" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#B4B2A9" text-anchor="end">—</text>
+<rect x="692" y="1019" width="9" height="9" rx="2" fill="#B4B2A9"/>
+<text x="707" y="1030" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.4">NOT CONFIGURED</text>
+<text x="707" y="1042" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">no limit configured</text>
+<rect x="44" y="1057" width="744" height="30" rx="4" fill="#FAF9F6"/>
+<text x="52" y="1074" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">Equity</text>
+<text x="282" y="1074" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">0.63</text>
+<text x="398" y="1074" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">0.34</text>
+<text x="502" y="1074" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">7%</text>
+<text x="592" y="1074" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#B4B2A9" text-anchor="end">—</text>
+<rect x="692" y="1063" width="9" height="9" rx="2" fill="#B4B2A9"/>
+<text x="707" y="1074" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.4">NOT CONFIGURED</text>
+<text x="707" y="1086" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">no limit configured</text>
+<text x="52" y="1118" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">Volatility / vega</text>
+<text x="282" y="1118" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">0.36</text>
+<text x="398" y="1118" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">0.18</text>
+<text x="502" y="1118" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">4%</text>
+<text x="592" y="1118" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#B4B2A9" text-anchor="end">—</text>
+<rect x="692" y="1107" width="9" height="9" rx="2" fill="#B4B2A9"/>
+<text x="707" y="1118" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.4">NOT CONFIGURED</text>
+<text x="707" y="1130" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">no limit configured</text>
+<rect x="44" y="1145" width="744" height="30" rx="4" fill="#FAF9F6"/>
+<text x="52" y="1162" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#26242B" text-anchor="start">Commodity</text>
+<text x="282" y="1162" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">0.15</text>
+<text x="398" y="1162" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="end">0.06</text>
+<text x="502" y="1162" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">1%</text>
+<text x="592" y="1162" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#B4B2A9" text-anchor="end">—</text>
+<rect x="692" y="1151" width="9" height="9" rx="2" fill="#B4B2A9"/>
+<text x="707" y="1162" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.4">NOT CONFIGURED</text>
+<text x="707" y="1174" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">no limit configured</text>
+<line x1="52" y1="1176" x2="780" y2="1176" stroke="#CFCCC4" stroke-width="1.2"/>
+<text x="52" y="1198" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#26242B" text-anchor="start">Desk total VaR 99% 1d</text>
+<text x="282" y="1198" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#B4B2A9" text-anchor="end">7.09</text>
+<text x="398" y="1198" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="end">4.82</text>
+<text x="502" y="1198" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">100%</text>
+<text x="592" y="1198" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="12.5" font-weight="400" fill="#5C5964" text-anchor="end">6.50</text>
+<rect x="692" y="1187" width="9" height="9" rx="2" fill="#1D9E75"/>
+<text x="707" y="1198" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="700" fill="#1D9E75" text-anchor="start" letter-spacing="0.4">WITHIN</text>
+<text x="707" y="1210" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">74% used</text>
+<text x="52" y="1220" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">Sum of components 2.31 + 1.42 + 0.51 + 0.34 + 0.18 + 0.06 = 4.82 — reconciled, no residual</text>
+<rect x="816" y="828" width="432" height="178" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<rect x="816" y="834" width="4" height="166" rx="2" fill="#7F77DD"/>
+<text x="836" y="856" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Diversification benefit</text>
+<text x="836" y="874" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="start">Reported separately · not a limit and not allocated</text>
+<text x="836" y="920" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="32" font-weight="700" fill="#7F77DD" text-anchor="start">2.27</text>
+<text x="920" y="920" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13" font-weight="400" fill="#5C5964" text-anchor="start">USD m  (32.0%)</text>
+<rect x="836" y="938" width="392" height="14" rx="3" fill="#EDEBE5"/>
+<rect x="836" y="938" width="266.5" height="14" rx="3" fill="#7F77DD"/>
+<text x="836" y="972" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#5C5964" text-anchor="start">Standalone sum 7.09</text>
+<text x="1228" y="972" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="700" fill="#7F77DD" text-anchor="end">Diversified total 4.82</text>
+<text x="836" y="990" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10.5" font-weight="400" fill="#B4B2A9" text-anchor="start">No limit is configured against the diversification benefit.</text>
+<rect x="816" y="1022" width="432" height="192" rx="10" fill="#FFFFFF" stroke="#E4E2DC" stroke-width="1"/>
+<text x="836" y="1050" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#26242B" text-anchor="start">Limit coverage on this screen</text>
+<text x="836" y="1068" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="start">Unavailable states are shown, never substituted</text>
+<rect x="836" y="1085" width="4" height="30" rx="2" fill="#E24B4A"/>
+<text x="852" y="1104" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#26242B" text-anchor="start">1</text>
+<text x="878" y="1097" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="600" fill="#26242B" text-anchor="start">Breached</text>
+<text x="878" y="1111" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">Credit spread sub-limit</text>
+<rect x="836" y="1123" width="4" height="30" rx="2" fill="#EF9F27"/>
+<text x="852" y="1142" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#26242B" text-anchor="start">0</text>
+<text x="878" y="1135" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="600" fill="#26242B" text-anchor="start">Near limit (≥ 90%)</text>
+<text x="878" y="1149" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">None</text>
+<rect x="836" y="1161" width="4" height="30" rx="2" fill="#1D9E75"/>
+<text x="852" y="1180" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#26242B" text-anchor="start">2</text>
+<text x="878" y="1173" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="600" fill="#26242B" text-anchor="start">Within limit</text>
+<text x="878" y="1187" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">Desk VaR, IR delta sub-limit</text>
+<rect x="836" y="1199" width="4" height="30" rx="2" fill="#B4B2A9"/>
+<text x="852" y="1218" font-family="Consolas, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#26242B" text-anchor="start">5</text>
+<text x="878" y="1211" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="12" font-weight="600" fill="#26242B" text-anchor="start">Not configured / not applicable</text>
+<text x="878" y="1225" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="start">ES 97.5%, 10d VaR, 4 sub-limits</text>
+<line x1="32" y1="1244" x2="1248" y2="1244" stroke="#E4E2DC" stroke-width="1"/>
+<text x="32" y="1270" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="start">Generated 31 Mar 2026 18:05 UTC · engine: Java 21 risk service · run id HS-2026-03-31-EOD · SYNTHETIC — not for decision making</text>
+<text x="1248" y="1270" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="11" font-weight="400" fill="#B4B2A9" text-anchor="end">Screen 1 · variant: limit-first</text>
+</svg>
