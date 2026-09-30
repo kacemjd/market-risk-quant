@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1320" viewBox="0 0 1280 1320" role="img" aria-labelledby="canvasTitle canvasDesc" preserveAspectRatio="xMidYMid meet">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1344" viewBox="0 0 1280 1344" role="img" aria-labelledby="canvasTitle canvasDesc" preserveAspectRatio="xMidYMid meet">
 <title id="canvasTitle">Market risk desk dashboard — Analytical Canvas variant</title>
-<desc id="canvasDesc">Static desktop mockup of a market-risk dashboard screen using illustrative synthetic data. A page-wide method selector (Historical Simulation, Parametric, Monte Carlo) drives every panel. Four headline metrics show VaR 99% one-day of 4.82 million US dollars, Expected Shortfall 97.5% one-day of 5.41 million, an approximate 10-day VaR 99% of 15.24 million derived by square-root-of-ten scaling, and 4 backtest exceptions over 250 days against 2.5 expected. A P&amp;L distribution histogram of 500 historical scenarios marks the VaR and Expected Shortfall quantiles and shades the left tail. A component VaR panel lists Rates 1.94, Credit 1.28, Equity 0.86, FX 0.49 and Commodity 0.25, which sum exactly to the 4.82 total with zero residual, while the 1.93 diversification benefit is reported on a separate reconciling line rather than allocated to components. A 60-day backtest chart plots realised daily profit and loss against the VaR threshold line and highlights 2 exceptions in the window.</desc>
+<desc id="canvasDesc">Static desktop mockup of a market-risk dashboard screen using illustrative synthetic data. A page-wide method selector (Historical Simulation, Parametric, Monte Carlo) drives every panel. Four headline metrics show VaR 99% one-day of 4.82 million US dollars, Expected Shortfall 97.5% one-day of 5.14 million, an approximate 10-day VaR 99% of 15.24 million derived by square-root-of-ten scaling, and 4 backtest exceptions over 250 days against 2.5 expected. A P&amp;L distribution histogram of 500 historical scenarios marks the VaR and Expected Shortfall quantiles, shades the 1 percent tail in red and the remaining 97.5 to 99 percent band in amber, and lists the worst scenarios in a tail-detail card showing that Expected Shortfall 97.5% is the mean of the worst 2.5 percent of scenarios, that is the worst 12 observations plus half weight on the 13th, 12.5 in total. A component VaR panel lists Rates 1.94, Credit 1.28, Equity 0.86, FX 0.49 and Commodity 0.25, which sum exactly to the 4.82 total with zero residual, while the 1.93 diversification benefit is reported on a separate reconciling line rather than allocated to components. A 60-day backtest chart plots realised daily profit and loss against the VaR threshold line and highlights 2 exceptions in the window.</desc>
 <g id="header">
-<rect x="0" y="0" width="1280" height="1320" rx="0" fill="#F6F5F1"/>
+<rect x="0" y="0" width="1280" height="1344" rx="0" fill="#F6F5F1"/>
 <rect x="0" y="0" width="1280" height="96" rx="0" fill="#FFFFFF"/>
 <line x1="0" y1="96" x2="1280" y2="96" stroke="#E3E1DA" stroke-width="1" stroke-linecap="butt"/>
 <rect x="0" y="0" width="4" height="96" rx="0" fill="#7F77DD"/>
@@ -32,9 +32,9 @@
 <rect x="340.0" y="120" width="292.0" height="108" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
 <rect x="340.0" y="120" width="292.0" height="3" rx="0" fill="#7F77DD"/>
 <text x="358.0" y="148" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.8">ES 97.5% · 1-DAY</text>
-<text x="358.0" y="182" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="30" font-weight="600" fill="#17171C" text-anchor="start">5.41</text>
+<text x="358.0" y="182" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="30" font-weight="600" fill="#17171C" text-anchor="start">5.14</text>
 <text x="440.0" y="182" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="11.5" font-weight="500" fill="#4A4A52" text-anchor="start">USD m</text>
-<text x="358.0" y="200" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Mean loss beyond 97.5%</text>
+<text x="358.0" y="200" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Mean of the worst 2.5% (12.5 of 500)</text>
 <text x="358.0" y="216" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="600" fill="#E24B4A" text-anchor="start">+0.18 vs prior day</text>
 <rect x="648.0" y="120" width="292.0" height="108" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
 <rect x="648.0" y="120" width="292.0" height="3" rx="0" fill="#B4B2A9"/>
@@ -54,7 +54,7 @@
 <g id="distribution">
 <rect x="32" y="252" width="744" height="462" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
 <text x="54" y="282" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="14.5" font-weight="600" fill="#17171C" text-anchor="start">P&amp;L distribution — 500 historical scenarios</text>
-<text x="54" y="300" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="11" font-weight="400" fill="#4A4A52" text-anchor="start">Daily revalued P&amp;L, USD millions. Left tail shaded beyond the 99% quantile.</text>
+<text x="54" y="300" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="11" font-weight="400" fill="#4A4A52" text-anchor="start">Daily revalued P&amp;L, USD millions. Red is beyond VaR 99%; amber completes the 2.5% ES tail.</text>
 <text x="754" y="282" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="600" fill="#7F77DD" text-anchor="end">Historical Sim</text>
 <line x1="94" y1="610.0" x2="738" y2="610.0" stroke="#E3E1DA" stroke-width="1" stroke-linecap="butt"/>
 <text x="84" y="614.0" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="400" fill="#B4B2A9" text-anchor="end">0</text>
@@ -72,15 +72,15 @@
 <text x="52" y="487.0" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10" font-weight="600" fill="#B4B2A9" text-anchor="middle">scenario count</text>
 </g>
 <rect x="95.00" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
-<rect x="116.47" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
+<rect x="116.47" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#E24B4A" opacity="0.9"/>
 <rect x="137.93" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
-<rect x="159.40" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#E24B4A" opacity="0.9"/>
-<rect x="180.87" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
-<rect x="202.33" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
+<rect x="159.40" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
+<rect x="180.87" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#E24B4A" opacity="0.9"/>
+<rect x="202.33" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#E24B4A" opacity="0.9"/>
 <rect x="223.80" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#E24B4A" opacity="0.9"/>
 <rect x="245.27" y="610.00" width="19.47" height="0.60" rx="1.5" fill="#E24B4A" opacity="0.9"/>
-<rect x="266.73" y="576.21" width="19.47" height="33.79" rx="1.5" fill="#EF9F27" opacity="0.75"/>
-<rect x="288.20" y="605.78" width="19.47" height="4.22" rx="1.5" fill="#EF9F27" opacity="0.75"/>
+<rect x="266.73" y="597.33" width="19.47" height="12.67" rx="1.5" fill="#EF9F27" opacity="0.75"/>
+<rect x="288.20" y="593.10" width="19.47" height="16.90" rx="1.5" fill="#EF9F27" opacity="0.75"/>
 <rect x="309.67" y="593.10" width="19.47" height="16.90" rx="1.5" fill="#7F77DD" opacity="0.45"/>
 <rect x="331.13" y="563.54" width="19.47" height="46.46" rx="1.5" fill="#7F77DD" opacity="0.45"/>
 <rect x="352.60" y="546.64" width="19.47" height="63.36" rx="1.5" fill="#7F77DD" opacity="0.45"/>
@@ -101,21 +101,26 @@
 <rect x="674.60" y="576.21" width="19.47" height="33.79" rx="1.5" fill="#1D9E75" opacity="0.5"/>
 <rect x="696.07" y="597.33" width="19.47" height="12.67" rx="1.5" fill="#1D9E75" opacity="0.5"/>
 <rect x="717.53" y="588.88" width="19.47" height="21.12" rx="1.5" fill="#1D9E75" opacity="0.5"/>
-<rect x="98.29" y="388.00" width="140" height="118" rx="7" fill="#F6F5F1" stroke="#E3E1DA" stroke-width="1"/>
-<text x="109.29" y="408.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.8">1% TAIL DETAIL</text>
-<text x="109.29" y="426.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#1</text>
-<text x="227.29" y="426.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−7.02</text>
-<text x="109.29" y="441.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#2</text>
-<text x="227.29" y="441.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−5.54</text>
-<text x="109.29" y="456.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#3</text>
-<text x="227.29" y="456.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−4.85</text>
-<text x="109.29" y="471.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#4</text>
-<text x="227.29" y="471.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−4.82</text>
-<text x="109.29" y="486.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#5</text>
-<text x="227.29" y="486.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−4.82</text>
-<line x1="109.29" y1="486.00" x2="227.29" y2="486.00" stroke="#E3E1DA" stroke-width="1" stroke-linecap="butt"/>
-<text x="109.29" y="500.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="9.5" font-weight="400" fill="#4A4A52" text-anchor="start">mean = ES</text>
-<text x="227.29" y="500.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="700" fill="#17171C" text-anchor="end">−5.41</text>
+<rect x="98.29" y="384.00" width="154" height="156" rx="7" fill="#F6F5F1" stroke="#E3E1DA" stroke-width="1"/>
+<text x="109.29" y="403.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#B4B2A9" text-anchor="start" letter-spacing="0.8">2.5% TAIL DETAIL</text>
+<text x="109.29" y="416.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="8.5" font-weight="400" fill="#B4B2A9" text-anchor="start">12.5 of 500 scenarios</text>
+<text x="109.29" y="434.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#1</text>
+<text x="241.29" y="434.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−8.10</text>
+<text x="109.29" y="448.50" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#2</text>
+<text x="241.29" y="448.50" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−6.95</text>
+<text x="109.29" y="463.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#3</text>
+<text x="241.29" y="463.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−6.40</text>
+<text x="109.29" y="477.50" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#4</text>
+<text x="241.29" y="477.50" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−5.95</text>
+<text x="109.29" y="492.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#5</text>
+<text x="241.29" y="492.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#E24B4A" text-anchor="end">−4.82</text>
+<text x="109.29" y="506.50" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#6–#12 mean</text>
+<text x="241.29" y="506.50" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#4A4A52" text-anchor="end">−4.29</text>
+<text x="109.29" y="521.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="9.5" font-weight="400" fill="#B4B2A9" text-anchor="start">#13 (½ weight)</text>
+<text x="241.29" y="521.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#4A4A52" text-anchor="end">−3.88</text>
+<line x1="109.29" y1="520.00" x2="241.29" y2="520.00" stroke="#E3E1DA" stroke-width="1" stroke-linecap="butt"/>
+<text x="109.29" y="534.00" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="9.5" font-weight="400" fill="#4A4A52" text-anchor="start">2.5% tail mean = ES</text>
+<text x="241.29" y="534.00" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="700" fill="#17171C" text-anchor="end">−5.14</text>
 <line x1="94" y1="610" x2="738" y2="610" stroke="#4A4A52" stroke-width="1.2" stroke-linecap="butt"/>
 <line x1="94.00" y1="610" x2="94.00" y2="615" stroke="#B4B2A9" stroke-width="1" stroke-linecap="butt"/>
 <text x="94.00" y="629" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="400" fill="#4A4A52" text-anchor="middle">-9</text>
@@ -151,20 +156,20 @@
 <text x="738.00" y="629" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="400" fill="#4A4A52" text-anchor="middle">+6</text>
 <text x="416.0" y="650" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="11" font-weight="600" fill="#4A4A52" text-anchor="middle">Daily P&amp;L (USD m)</text>
 <line x1="480.40" y1="364" x2="480.40" y2="610" stroke="#B4B2A9" stroke-width="1.2" stroke-linecap="butt" stroke-dasharray="3 3"/>
-<line x1="248.13" y1="356" x2="248.13" y2="610" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="butt" stroke-dasharray="5 4"/>
-<rect x="194.13" y="313" width="108" height="18" rx="4" fill="#E24B4A"/>
-<text x="248.13" y="326" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#FFFFFF" text-anchor="middle">ES 97.5%  −5.41</text>
+<line x1="259.89" y1="356" x2="259.89" y2="610" stroke="#E24B4A" stroke-width="1.8" stroke-linecap="butt" stroke-dasharray="5 4"/>
+<rect x="205.89" y="313" width="108" height="18" rx="4" fill="#E24B4A"/>
+<text x="259.89" y="326" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#FFFFFF" text-anchor="middle">ES 97.5%  −5.14</text>
 <line x1="273.46" y1="356" x2="273.46" y2="610" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="butt" stroke-dasharray="5 4"/>
 <rect x="219.46" y="335" width="108" height="18" rx="4" fill="#7F77DD"/>
 <text x="273.46" y="348" font-family="'IBM Plex Mono','SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" font-weight="600" fill="#FFFFFF" text-anchor="middle">VaR 99%  −4.82</text>
 <rect x="94" y="659" width="11" height="11" rx="2.5" fill="#E24B4A" opacity="0.85"/>
-<text x="111" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Worst 1% tail — 5 scenarios, mean −5.41</text>
-<rect x="334.4" y="659" width="11" height="11" rx="2.5" fill="#EF9F27" opacity="0.85"/>
-<text x="351.4" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">97.5–99% band</text>
-<rect x="429.2" y="659" width="11" height="11" rx="2.5" fill="#7F77DD" opacity="0.85"/>
-<text x="446.2" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Losses inside VaR</text>
-<rect x="546.4" y="659" width="11" height="11" rx="2.5" fill="#1D9E75" opacity="0.85"/>
-<text x="563.4" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Gains</text>
+<text x="111" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Beyond VaR 99% — the 1% tail</text>
+<rect x="272.79999999999995" y="659" width="11" height="11" rx="2.5" fill="#EF9F27" opacity="0.85"/>
+<text x="289.79999999999995" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">97.5–99% band — rest of the ES tail</text>
+<rect x="490.79999999999995" y="659" width="11" height="11" rx="2.5" fill="#7F77DD" opacity="0.85"/>
+<text x="507.79999999999995" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Losses inside VaR</text>
+<rect x="608.0" y="659" width="11" height="11" rx="2.5" fill="#1D9E75" opacity="0.85"/>
+<text x="625.0" y="668" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">Gains</text>
 </g>
 <g id="component-var">
 <rect x="792" y="252" width="456" height="462" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
@@ -336,13 +341,14 @@
 <text x="1169.0" y="1127.5" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="8" font-weight="700" fill="#4A4A52" text-anchor="middle">Red 10+</text>
 </g>
 <g id="footnotes">
-<rect x="32" y="1166" width="1216" height="108" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
+<rect x="32" y="1166" width="1216" height="126" rx="10" fill="#FFFFFF" stroke="#E3E1DA" stroke-width="1"/>
 <text x="54" y="1194" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="12.5" font-weight="600" fill="#17171C" text-anchor="start">Method &amp; measurement notes</text>
 <text x="54" y="1216" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  All figures are illustrative synthetic values generated for design review; they do not describe any real portfolio or institution.</text>
-<text x="54" y="1231" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  10-day VaR is a √10 scaling of the 1-day figure, shown in neutral to flag that it is an approximation rather than a 10-day resimulation.</text>
-<text x="54" y="1246" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  Component VaR is additive and reconciles to total VaR with zero residual; the diversification benefit is reported as a separate line, never allocated.</text>
-<text x="54" y="1261" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  Backtest uses clean P&amp;L against the same method selected page-wide. Exception counts and Basel zone bands are shown for context only.</text>
+<text x="54" y="1231" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  ES 97.5% averages the worst 2.5% of the 500-scenario set — the worst 12 observations at full weight plus the 13th at half weight (12.5 in total).</text>
+<text x="54" y="1246" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  10-day VaR is a √10 scaling of the 1-day figure, shown in neutral to flag that it is an approximation rather than a 10-day resimulation.</text>
+<text x="54" y="1261" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  Component VaR is additive and reconciles to total VaR with zero residual; the diversification benefit is reported as a separate line, never allocated.</text>
+<text x="54" y="1276" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="400" fill="#4A4A52" text-anchor="start">•  Backtest uses clean P&amp;L against the same method selected page-wide. Exception counts and Basel zone bands are shown for context only.</text>
 </g>
-<text x="32" y="1298" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="500" fill="#B4B2A9" text-anchor="start">Screen 1 of 1 · Concept: Analytical Canvas · Static mockup, 1280px desktop</text>
-<text x="1248" y="1298" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="500" fill="#B4B2A9" text-anchor="end">Synthetic data · No investment or regulatory advice</text>
+<text x="32" y="1322" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="500" fill="#B4B2A9" text-anchor="start">Screen 1 of 1 · Concept: Analytical Canvas · Static mockup, 1280px desktop</text>
+<text x="1248" y="1322" font-family="'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="10.5" font-weight="500" fill="#B4B2A9" text-anchor="end">Synthetic data · No investment or regulatory advice</text>
 </svg>
