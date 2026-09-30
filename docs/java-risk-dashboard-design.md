@@ -104,13 +104,20 @@ Filtering reads persisted results. Selecting a method must not silently launch a
 
 **Question:** What is the portfolio's risk, and what evidence supports the verdict?
 
-![Revised Risk desk desktop mockup with page-wide method selection, reconciled components, and a qualified backtest badge](assets/risk-desk-revised.svg)
+![Precision Ledger v2 Risk desk with an asymmetric metric ledger, shared evidence field, and qualified backtest](assets/risk-desk-revised-v2.svg)
 
-The image is a static design proposal. Values and chart shapes are illustrative; it does not imply that the Java backend already supplies these panels.
+The image is the recommended **Precision Ledger v2** direction. Its [design rationale and frontend
+notes](risk-desk-revised-v2.md) explain how it keeps the first proposal's calm analytical structure
+while replacing its generic equal-card composition. The [original revised mockup](assets/risk-desk-revised.svg)
+remains available for comparison. Values and chart shapes are illustrative; they do not imply that
+the Java backend already supplies these panels.
 
 ### Changes to the original screen
 
-Preserve the four-card row, histogram/attribution pair, full-width backtest, light surfaces, and purple/red/amber/green visual language.
+Preserve the four headline measures, histogram/attribution pair, full-width backtest, light
+surfaces, and purple/red/amber/green visual language. The v2 composition no longer requires the
+four measures to appear as equal cards: VaR is the primary verdict, while ES, approximate 10-day
+VaR, and exceptions form a supporting ledger.
 
 | Original screen | Revision | Reason |
 |---|---|---|
