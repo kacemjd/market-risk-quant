@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1060" viewBox="0 0 1280 1060" role="img" aria-labelledby="title description">
+  <title id="title">Revised Risk desk dashboard - static design mockup</title>
+  <desc id="description">An illustrative desktop dashboard with page-wide method selection, four risk metrics, a P&amp;L distribution, reconciled component VaR, separate diversification, and a backtest. All values and chart shapes are synthetic examples, not Java engine output. The green badge describes only the backtesting zone.</desc>
+  <rect width="1280" height="1060" fill="#F6F6F8"/>
+  <rect width="1280" height="64" fill="#FFFFFF"/>
+  <path d="M0 64H1280" stroke="#DDDDE4"/>
+  <text x="32" y="39" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="16px" font-weight="700">Market Risk Quant</text>
+  <text x="280" y="39" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Risk desk</text>
+  <path d="M280 62H347" stroke="#7F77DD" stroke-width="3"/>
+  <text x="386" y="39" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Extended metrics</text>
+  <text x="515" y="39" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Planned</text>
+  <text x="604" y="39" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Counterparty risk</text>
+  <text x="736" y="39" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Planned</text>
+  <text x="1248" y="39" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#865400" font-size="12px">SYNTHETIC DESIGN EXAMPLE</text>
+
+  <text x="32" y="111" font-size="28" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#252735">Market risk desk</text>
+  <text x="32" y="139" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Global markets / COB 14 Sep 2026 / example run #412</text>
+  <rect x="978" y="86" width="270" height="36" rx="8" fill="#E0F3EC"/>
+  <text x="1113" y="109" text-anchor="middle" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#126B50" font-size="14px">Backtest: green / 3 of 250 days</text>
+
+  <rect x="32" y="160" width="247" height="42" rx="6" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="48" y="186" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Portfolio: Global markets</text>
+  <path d="M254 178l5 5 5-5" fill="none" stroke="#5D6170" stroke-width="1.5"/>
+  <rect x="295" y="160" width="190" height="42" rx="6" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="311" y="186" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">COB: 14 Sep 2026</text>
+  <path d="M460 178l5 5 5-5" fill="none" stroke="#5D6170" stroke-width="1.5"/>
+  <rect x="501" y="160" width="430" height="42" rx="6" fill="#EBEBF0"/>
+  <rect x="505" y="164" width="148" height="34" rx="4" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="579" y="186" text-anchor="middle" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Monte Carlo</text>
+  <text x="719" y="186" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Historical</text>
+  <text x="854" y="186" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Parametric</text>
+  <rect x="1104" y="160" width="144" height="42" rx="6" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="1176" y="186" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Run details</text>
+  <text x="32" y="231" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Run succeeded / Data complete / 50,000 paths / 1 business day / EUR / CPU - local Java</text>
+  <text x="1248" y="231" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Limits not configured</text>
+
+  <rect x="32" y="250" width="292" height="112" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="48" y="277" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">VaR 99% / 1 day</text>
+  <text x="48" y="314" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="30px" font-weight="700">EUR 4.82M</text>
+  <text x="48" y="343" font-family="Arial, Helvetica, sans-serif" fill="#B52C32" font-size="12px">+6.1% versus comparable prior run</text>
+  <rect x="340" y="250" width="292" height="112" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="356" y="277" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Expected shortfall 97.5% / 1 day</text>
+  <text x="356" y="314" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="30px" font-weight="700">EUR 6.37M</text>
+  <text x="356" y="343" font-family="Arial, Helvetica, sans-serif" fill="#B52C32" font-size="12px">+4.8% versus comparable prior run</text>
+  <rect x="648" y="250" width="292" height="112" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="664" y="277" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">VaR 99% / 10 days</text>
+  <text x="664" y="314" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="30px" font-weight="700">EUR 15.2M</text>
+  <text x="664" y="343" font-family="Arial, Helvetica, sans-serif" fill="#865400" font-size="12px">Approximate / square-root time scaling</text>
+  <rect x="956" y="250" width="292" height="112" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="972" y="277" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="14px">Exceptions / 250 business days</text>
+  <text x="972" y="314" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="30px" font-weight="700">3 / 250</text>
+  <text x="972" y="343" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Kupiec p = 0.76 / 99% VaR</text>
+
+  <rect x="32" y="380" width="680" height="350" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="52" y="410" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="16px" font-weight="700">P&amp;L distribution</text>
+  <text x="52" y="435" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Monte Carlo / illustrative histogram / losses to the left</text>
+  <path d="M80 464H650 M80 514H650 M80 564H650 M80 614H650" stroke="#E9E9EE" stroke-width="1"/>
+  <path d="M80 464V614H650 M405 464V614" fill="none" stroke="#B4B6C1" stroke-width="1"/>
+  <g fill="#7F77DD" fill-opacity=".7">
+    <rect x="254" y="599" width="19" height="15"/>
+    <rect x="275" y="584" width="19" height="30"/>
+    <rect x="296" y="560" width="19" height="54"/>
+    <rect x="317" y="531" width="19" height="83"/>
+    <rect x="338" y="504" width="19" height="110"/>
+    <rect x="359" y="482" width="19" height="132"/>
+    <rect x="380" y="472" width="19" height="142"/>
+    <rect x="401" y="478" width="19" height="136"/>
+    <rect x="422" y="493" width="19" height="121"/>
+    <rect x="443" y="520" width="19" height="94"/>
+    <rect x="464" y="549" width="19" height="65"/>
+    <rect x="485" y="572" width="19" height="42"/>
+    <rect x="506" y="589" width="19" height="25"/>
+    <rect x="527" y="601" width="19" height="13"/>
+    <rect x="548" y="607" width="19" height="7"/>
+    <rect x="569" y="611" width="19" height="3"/>
+  </g>
+  <g fill="#E24B4A">
+    <rect x="170" y="613" width="19" height="1"/>
+    <rect x="191" y="612" width="19" height="2"/>
+    <rect x="212" y="610" width="19" height="4"/>
+    <rect x="233" y="606" width="15" height="8"/>
+  </g>
+  <path d="M248 460V614" stroke="#E24B4A" stroke-width="2"/>
+  <path d="M198 460V614" stroke="#EF9F27" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="80" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">-10</text>
+  <text x="242" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">-5</text>
+  <text x="405" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">0</text>
+  <text x="567" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">5</text>
+  <text x="650" y="637" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">7.5</text>
+  <text x="365" y="661" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">P&amp;L (EUR millions) / vertical axis: scenario count</text>
+  <path d="M52 688H76" stroke="#E24B4A" stroke-width="2"/>
+  <text x="84" y="692" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="12px">VaR 99%: -4.82M</text>
+  <path d="M290 688H314" stroke="#EF9F27" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="322" y="692" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="12px">ES 97.5%: -6.37M</text>
+
+  <rect x="728" y="380" width="520" height="350" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="748" y="410" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="16px" font-weight="700">Component VaR by desk</text>
+  <text x="748" y="435" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Illustrative additive allocation / all amounts in EUR millions</text>
+  <g fill="#ECECF1">
+    <rect x="819" y="465" width="302" height="14" rx="3"/>
+    <rect x="819" y="503" width="302" height="14" rx="3"/>
+    <rect x="819" y="541" width="302" height="14" rx="3"/>
+    <rect x="819" y="579" width="302" height="14" rx="3"/>
+  </g>
+  <g fill="#7F77DD">
+    <rect x="819" y="465" width="258" height="14" rx="3"/>
+    <rect x="819" y="503" width="159" height="14" rx="3"/>
+    <rect x="819" y="541" width="127" height="14" rx="3"/>
+    <rect x="819" y="579" width="69" height="14" rx="3"/>
+  </g>
+  <text x="748" y="477" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Rates</text>
+  <text x="748" y="515" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">FX</text>
+  <text x="748" y="553" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Equity</text>
+  <text x="748" y="591" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Credit</text>
+  <text x="1228" y="477" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">2.03M</text>
+  <text x="1228" y="515" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">1.25M</text>
+  <text x="1228" y="553" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">1.00M</text>
+  <text x="1228" y="591" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">0.54M</text>
+  <path d="M748 612H1228" stroke="#DDDDE4"/>
+  <text x="748" y="636" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">Components sum to portfolio VaR</text>
+  <text x="1228" y="636" text-anchor="end" font-weight="700" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="14px">4.82M</text>
+  <text x="748" y="669" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Standalone total 5.01M - portfolio 4.82M</text>
+  <text x="748" y="698" font-family="Arial, Helvetica, sans-serif" fill="#126B50" font-size="14px">Diversification benefit: 0.19M</text>
+  <text x="1228" y="698" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Shown separately</text>
+
+  <rect x="32" y="746" width="1216" height="250" rx="8" fill="#FFFFFF" stroke="#DDDDE4"/>
+  <text x="52" y="776" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="16px" font-weight="700">Backtest / last 60 business days</text>
+  <text x="1228" y="776" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Hypothetical P&amp;L / 2 exceptions in this view</text>
+  <path d="M94 812H1220 M94 850H1220 M94 888H1220 M94 926H1220" stroke="#E9E9EE" stroke-width="1"/>
+  <path d="M94 804V933H1220" fill="none" stroke="#B4B6C1" stroke-width="1"/>
+  <text x="82" y="817" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">2.5</text>
+  <text x="82" y="855" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">0</text>
+  <text x="82" y="893" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">-2.5</text>
+  <text x="82" y="931" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">-5</text>
+  <polyline points="106,854 130,811 154,865 178,884 202,849 226,851 250,883 274,821 298,826 322,858 346,814 370,865 394,889 418,856 442,849 466,879 490,822 514,825 538,925 562,863 586,883 610,830 634,857 658,881 682,873 706,821 730,814 754,861 778,882 802,834 826,869 850,886 874,852 898,926 922,864 946,858 970,881 994,829 1018,866 1042,887 1066,856 1090,833 1114,848 1138,881 1162,859 1186,882 1210,873" fill="none" stroke="#7F77DD" stroke-width="2"/>
+  <polyline points="106,910 322,915 538,916 754,909 898,916 1042,914 1210,919" fill="none" stroke="#E24B4A" stroke-width="2" stroke-dasharray="6 4"/>
+  <circle cx="538" cy="925" r="4" fill="#E24B4A"/>
+  <circle cx="898" cy="926" r="4" fill="#E24B4A"/>
+  <text x="106" y="950" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">23 Jun</text>
+  <text x="382" y="950" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">14 Jul</text>
+  <text x="658" y="950" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">04 Aug</text>
+  <text x="934" y="950" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">25 Aug</text>
+  <text x="1210" y="950" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">14 Sep</text>
+  <path d="M106 977H130" stroke="#7F77DD" stroke-width="2"/>
+  <text x="138" y="981" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="12px">Hypothetical P&amp;L</text>
+  <path d="M336 977H360" stroke="#E24B4A" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="368" y="981" font-family="Arial, Helvetica, sans-serif" fill="#252735" font-size="12px">Negative forecast VaR 99%</text>
+  <text x="1228" y="981" text-anchor="end" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">P&amp;L in EUR millions / 2026</text>
+  <text x="32" y="1023" font-family="Arial, Helvetica, sans-serif" fill="#5D6170" font-size="12px">Run details: snapshots, seed, conventions and quality report / Source code</text>
+  <text x="32" y="1048" font-family="Arial, Helvetica, sans-serif" fill="#865400" font-size="12px">Static design only. Values and chart shapes are illustrative, not results from the Java application.</text>
+</svg>
