@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">Compact terminal market-risk dashboard desktop mockup</title>
+  <desc id="desc">A dense, keyboard-oriented browser dashboard showing one-day and ten-day risk measures, a profit and loss distribution, additive component VaR, diversification, and a sixty-day backtest. All values are illustrative synthetic data.</desc>
+  <!--
+    THESIS: One continuous risk sheet optimized for rapid scanning; it refuses a dashboard made from floating metric cards.
+    OWN-WORLD: Graphite rails, paper-white data fields, crisp rules, and restrained purple, red, amber, green, and stone signals.
+    STORY: Select one method globally, read portfolio loss limits, inspect the distribution and additive drivers, then verify model behavior.
+    FIRST VIEWPORT: Navigation and method controls lead into one metric band; distribution and allocation dominate left, with backtesting persistent at right.
+    FORM: Compact terminal expert workspace, pinned by the brief; dense ruled regions and keyboard-visible controls.
+  -->
+  <rect x="0" y="0" width="1280" height="800" fill="#F4F4F1"/>
+
+  <rect x="0" y="0" width="1280" height="56" fill="#191A1D"/>
+  <rect x="20" y="15" width="26" height="26" rx="4" fill="#7F77DD"/>
+  <path d="M27 22h12M27 28h8M27 34h12" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  <text x="58" y="25" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" letter-spacing="0.8">RISK DESK</text>
+  <text x="58" y="42" fill="#B4B2A9" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="600" letter-spacing="0.6">PORTFOLIO P-104 · GLOBAL MACRO</text>
+
+  <text x="300" y="34" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Overview</text>
+  <rect x="294" y="53" width="64" height="3" fill="#7F77DD"/>
+  <text x="390" y="34" fill="#B4B2A9" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600">Exposures</text>
+  <text x="477" y="34" fill="#B4B2A9" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600">Scenarios</text>
+  <text x="561" y="34" fill="#B4B2A9" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="600">Model health</text>
+
+  <rect x="1030" y="15" width="112" height="26" rx="4" fill="#2A2B2F" stroke="#47484E"/>
+  <text x="1042" y="32" fill="#DAD9D4" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">ILLUSTRATIVE</text>
+  <circle cx="1156" cy="28" r="4" fill="#1D9E75"/>
+  <text x="1170" y="32" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Live view</text>
+
+  <rect x="0" y="56" width="1280" height="50" fill="#FFFFFF"/>
+  <line x1="0" y1="105.5" x2="1280" y2="105.5" stroke="#D6D5CF"/>
+  <text x="20" y="77" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="0.7">GLOBAL METHOD</text>
+  <text x="20" y="95" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700">Historical simulation</text>
+  <path d="M174 85l5 5 5-5" fill="none" stroke="#7F77DD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="210" y1="68" x2="210" y2="94" stroke="#D6D5CF"/>
+  <text x="230" y="77" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="0.7">AS OF</text>
+  <text x="230" y="95" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">30 Sep 2026 · EOD</text>
+  <line x1="376" y1="68" x2="376" y2="94" stroke="#D6D5CF"/>
+  <text x="396" y="77" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="0.7">BASE CURRENCY</text>
+  <text x="396" y="95" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">USD</text>
+  <line x1="486" y1="68" x2="486" y2="94" stroke="#D6D5CF"/>
+  <text x="506" y="77" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="0.7">WINDOW</text>
+  <text x="506" y="95" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">500 observations</text>
+  <rect x="1030" y="68" width="42" height="24" rx="4" fill="#F4F4F1" stroke="#C6C5BF"/>
+  <text x="1042" y="84" fill="#4B4B46" font-family="Consolas, 'Courier New', monospace" font-size="10" font-weight="700">G M</text>
+  <text x="1080" y="84" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">method</text>
+  <rect x="1150" y="68" width="30" height="24" rx="4" fill="#F4F4F1" stroke="#C6C5BF"/>
+  <text x="1161" y="84" fill="#4B4B46" font-family="Consolas, 'Courier New', monospace" font-size="10" font-weight="700">/</text>
+  <text x="1188" y="84" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">search</text>
+
+  <rect x="0" y="106" width="1280" height="104" fill="#FFFFFF"/>
+  <line x1="20" y1="209.5" x2="1260" y2="209.5" stroke="#B4B2A9"/>
+  <line x1="319.5" y1="122" x2="319.5" y2="194" stroke="#D6D5CF"/>
+  <line x1="624.5" y1="122" x2="624.5" y2="194" stroke="#D6D5CF"/>
+  <line x1="934.5" y1="122" x2="934.5" y2="194" stroke="#D6D5CF"/>
+
+  <text x="20" y="132" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">VaR 99% · 1 day</text>
+  <text x="20" y="172" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700" letter-spacing="-1.1">−$2.84m</text>
+  <text x="20" y="193" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">2.31% of gross market value</text>
+  <rect x="254" y="125" width="45" height="20" rx="10" fill="#F0EEFF"/>
+  <text x="264" y="139" fill="#655DBD" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">−4.2%</text>
+
+  <text x="340" y="132" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">ES 97.5% · 1 day</text>
+  <text x="340" y="172" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700" letter-spacing="-1.1">−$3.61m</text>
+  <text x="340" y="193" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">Mean loss beyond threshold</text>
+  <rect x="559" y="125" width="45" height="20" rx="10" fill="#FFF1F0"/>
+  <text x="569" y="139" fill="#C53A39" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">+1.8%</text>
+
+  <text x="645" y="132" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">Approx. VaR 99% · 10 day</text>
+  <text x="645" y="172" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700" letter-spacing="-1.1">−$8.98m</text>
+  <text x="645" y="193" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">Square-root-of-time estimate</text>
+  <rect x="867" y="125" width="46" height="20" rx="10" fill="#FFF6E8"/>
+  <text x="877" y="139" fill="#A96808" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">APPROX.</text>
+
+  <text x="955" y="132" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">Exceptions · 250 day</text>
+  <text x="955" y="172" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700">4</text>
+  <text x="982" y="171" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="13">/ 250</text>
+  <rect x="955" y="184" width="8" height="8" rx="2" fill="#1D9E75"/>
+  <text x="970" y="193" fill="#3F6256" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">Within illustrative green zone</text>
+
+  <rect x="20" y="228" width="790" height="238" fill="#FFFFFF"/>
+  <line x1="20" y1="228.5" x2="810" y2="228.5" stroke="#191A1D" stroke-width="1.5"/>
+  <text x="20" y="252" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">P&amp;L distribution</text>
+  <text x="143" y="252" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">500 daily observations · USD millions</text>
+  <circle cx="646" cy="247" r="4" fill="#7F77DD"/>
+  <text x="656" y="251" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9">frequency</text>
+  <line x1="719" y1="247" x2="731" y2="247" stroke="#E24B4A" stroke-width="2"/>
+  <text x="737" y="251" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9">VaR</text>
+
+  <line x1="56" y1="420" x2="784" y2="420" stroke="#C6C5BF"/>
+  <line x1="56" y1="288" x2="56" y2="420" stroke="#C6C5BF"/>
+  <line x1="56" y1="376" x2="784" y2="376" stroke="#ECEBE7"/>
+  <line x1="56" y1="332" x2="784" y2="332" stroke="#ECEBE7"/>
+  <text x="43" y="423" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">0</text>
+  <text x="43" y="379" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">25</text>
+  <text x="43" y="335" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">50</text>
+
+  <rect x="75" y="413" width="22" height="7" fill="#E8E7F7"/>
+  <rect x="101" y="408" width="22" height="12" fill="#DCD9F5"/>
+  <rect x="127" y="401" width="22" height="19" fill="#D0CDF1"/>
+  <rect x="153" y="392" width="22" height="28" fill="#C4C0EC"/>
+  <rect x="179" y="378" width="22" height="42" fill="#B7B2E8"/>
+  <rect x="205" y="361" width="22" height="59" fill="#AAA4E3"/>
+  <rect x="231" y="340" width="22" height="80" fill="#9C95DE"/>
+  <rect x="257" y="318" width="22" height="102" fill="#8E86D9"/>
+  <rect x="283" y="300" width="22" height="120" fill="#7F77DD"/>
+  <rect x="309" y="287" width="22" height="133" fill="#7F77DD"/>
+  <rect x="335" y="294" width="22" height="126" fill="#7F77DD"/>
+  <rect x="361" y="307" width="22" height="113" fill="#7F77DD"/>
+  <rect x="387" y="327" width="22" height="93" fill="#7F77DD"/>
+  <rect x="413" y="345" width="22" height="75" fill="#7F77DD"/>
+  <rect x="439" y="364" width="22" height="56" fill="#7F77DD"/>
+  <rect x="465" y="381" width="22" height="39" fill="#7F77DD"/>
+  <rect x="491" y="393" width="22" height="27" fill="#7F77DD"/>
+  <rect x="517" y="401" width="22" height="19" fill="#7F77DD"/>
+  <rect x="543" y="407" width="22" height="13" fill="#7F77DD"/>
+  <rect x="569" y="412" width="22" height="8" fill="#7F77DD"/>
+  <rect x="595" y="415" width="22" height="5" fill="#7F77DD"/>
+  <rect x="621" y="417" width="22" height="3" fill="#7F77DD"/>
+  <rect x="647" y="418" width="22" height="2" fill="#7F77DD"/>
+  <line x1="197" y1="278" x2="197" y2="420" stroke="#E24B4A" stroke-width="2"/>
+  <rect x="156" y="268" width="82" height="19" rx="3" fill="#E24B4A"/>
+  <text x="197" y="281" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">VaR −2.84</text>
+  <line x1="147" y1="288" x2="147" y2="420" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="143" y="302" text-anchor="end" fill="#A96808" font-family="Arial, Helvetica, sans-serif" font-size="8" font-weight="700">ES −3.61</text>
+  <text x="75" y="439" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">−5</text>
+  <text x="205" y="439" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">−3</text>
+  <text x="335" y="439" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">−1</text>
+  <text x="465" y="439" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">1</text>
+  <text x="595" y="439" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">3</text>
+  <text x="784" y="454" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">Illustrative synthetic data</text>
+
+  <rect x="20" y="482" width="790" height="298" fill="#FFFFFF"/>
+  <line x1="20" y1="482.5" x2="810" y2="482.5" stroke="#191A1D" stroke-width="1.5"/>
+  <text x="20" y="507" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Component VaR allocation</text>
+  <text x="190" y="507" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">Reconciled additive contribution · USD millions</text>
+  <text x="784" y="507" text-anchor="end" fill="#1D9E75" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">Σ = $2.84m</text>
+  <line x1="20" y1="521.5" x2="810" y2="521.5" stroke="#D6D5CF"/>
+  <text x="34" y="540" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">RISK FACTOR</text>
+  <text x="420" y="540" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">COMPONENT</text>
+  <text x="490" y="540" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">SHARE</text>
+  <text x="784" y="540" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">CONTRIBUTION SCALE</text>
+
+  <line x1="20" y1="550.5" x2="810" y2="550.5" stroke="#ECEBE7"/>
+  <text x="34" y="572" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Rates</text>
+  <text x="420" y="572" text-anchor="end" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11">$1.12m</text>
+  <text x="490" y="572" text-anchor="end" fill="#686861" font-family="Consolas, 'Courier New', monospace" font-size="10">39.4%</text>
+  <rect x="530" y="562" width="254" height="10" fill="#ECEBE7"/><rect x="530" y="562" width="181" height="10" fill="#7F77DD"/>
+  <line x1="20" y1="587.5" x2="810" y2="587.5" stroke="#ECEBE7"/>
+  <text x="34" y="609" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Equities</text>
+  <text x="420" y="609" text-anchor="end" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11">$0.78m</text>
+  <text x="490" y="609" text-anchor="end" fill="#686861" font-family="Consolas, 'Courier New', monospace" font-size="10">27.5%</text>
+  <rect x="530" y="599" width="254" height="10" fill="#ECEBE7"/><rect x="530" y="599" width="126" height="10" fill="#7F77DD"/>
+  <line x1="20" y1="624.5" x2="810" y2="624.5" stroke="#ECEBE7"/>
+  <text x="34" y="646" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">FX</text>
+  <text x="420" y="646" text-anchor="end" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11">$0.51m</text>
+  <text x="490" y="646" text-anchor="end" fill="#686861" font-family="Consolas, 'Courier New', monospace" font-size="10">18.0%</text>
+  <rect x="530" y="636" width="254" height="10" fill="#ECEBE7"/><rect x="530" y="636" width="82" height="10" fill="#7F77DD"/>
+  <line x1="20" y1="661.5" x2="810" y2="661.5" stroke="#ECEBE7"/>
+  <text x="34" y="683" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Credit</text>
+  <text x="420" y="683" text-anchor="end" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11">$0.31m</text>
+  <text x="490" y="683" text-anchor="end" fill="#686861" font-family="Consolas, 'Courier New', monospace" font-size="10">10.9%</text>
+  <rect x="530" y="673" width="254" height="10" fill="#ECEBE7"/><rect x="530" y="673" width="50" height="10" fill="#7F77DD"/>
+  <line x1="20" y1="698.5" x2="810" y2="698.5" stroke="#ECEBE7"/>
+  <text x="34" y="720" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Commodities</text>
+  <text x="420" y="720" text-anchor="end" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11">$0.12m</text>
+  <text x="490" y="720" text-anchor="end" fill="#686861" font-family="Consolas, 'Courier New', monospace" font-size="10">4.2%</text>
+  <rect x="530" y="710" width="254" height="10" fill="#ECEBE7"/><rect x="530" y="710" width="19" height="10" fill="#7F77DD"/>
+
+  <rect x="20" y="738" width="790" height="42" fill="#F4F4F1"/>
+  <text x="34" y="755" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">DIVERSIFICATION · REPORTED SEPARATELY</text>
+  <text x="34" y="772" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="10">Standalone sum</text>
+  <text x="121" y="772" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="10" font-weight="700">$3.47m</text>
+  <text x="213" y="772" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="10">Portfolio VaR</text>
+  <text x="292" y="772" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="10" font-weight="700">$2.84m</text>
+  <text x="384" y="772" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="10">Benefit</text>
+  <text x="428" y="772" fill="#1D9E75" font-family="Consolas, 'Courier New', monospace" font-size="10" font-weight="700">$0.63m · 18.2%</text>
+  <text x="784" y="772" text-anchor="end" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9">Illustrative synthetic data</text>
+
+  <rect x="826" y="228" width="434" height="552" fill="#FFFFFF"/>
+  <line x1="826" y1="228.5" x2="1260" y2="228.5" stroke="#191A1D" stroke-width="1.5"/>
+  <text x="826" y="252" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">60-day backtest</text>
+  <text x="1228" y="252" text-anchor="end" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="10">Daily P&amp;L vs 99% VaR</text>
+  <rect x="826" y="267" width="434" height="52" fill="#F4F4F1"/>
+  <text x="842" y="285" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">EXCEPTIONS</text>
+  <text x="842" y="307" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">2 / 60</text>
+  <line x1="944" y1="277" x2="944" y2="309" stroke="#D6D5CF"/>
+  <text x="962" y="285" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700">OBSERVED RANGE</text>
+  <text x="962" y="305" fill="#191A1D" font-family="Consolas, 'Courier New', monospace" font-size="11" font-weight="700">−$3.16m — +$2.08m</text>
+
+  <line x1="860" y1="354" x2="1228" y2="354" stroke="#ECEBE7"/>
+  <line x1="860" y1="408" x2="1228" y2="408" stroke="#ECEBE7"/>
+  <line x1="860" y1="462" x2="1228" y2="462" stroke="#C6C5BF"/>
+  <line x1="860" y1="516" x2="1228" y2="516" stroke="#ECEBE7"/>
+  <line x1="860" y1="570" x2="1228" y2="570" stroke="#ECEBE7"/>
+  <text x="850" y="357" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">+2m</text>
+  <text x="850" y="411" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">+1m</text>
+  <text x="850" y="465" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">0</text>
+  <text x="850" y="519" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">−1m</text>
+  <text x="850" y="573" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">−2m</text>
+  <line x1="860" y1="614" x2="1228" y2="614" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="1228" y="608" text-anchor="end" fill="#C53A39" font-family="Arial, Helvetica, sans-serif" font-size="8" font-weight="700">VaR threshold</text>
+  <path d="M860 487 L866 438 L872 470 L878 402 L884 456 L890 498 L896 446 L902 374 L908 431 L914 462 L920 512 L926 474 L932 421 L938 450 L944 391 L950 481 L956 468 L962 535 L968 495 L974 444 L980 459 L986 418 L992 477 L998 506 L1004 452 L1010 397 L1016 436 L1022 490 L1028 466 L1034 425 L1040 640 L1046 503 L1052 471 L1058 443 L1064 411 L1070 457 L1076 486 L1082 438 L1088 474 L1094 525 L1100 461 L1106 408 L1112 445 L1118 492 L1124 470 L1130 430 L1136 626 L1142 496 L1148 454 L1154 385 L1160 425 L1166 478 L1172 448 L1178 511 L1184 462 L1190 414 L1196 439 L1202 486 L1208 453 L1214 427 L1220 468 L1228 446" fill="none" stroke="#7F77DD" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="1040" cy="640" r="5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="2"/>
+  <circle cx="1136" cy="626" r="5" fill="#E24B4A" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="860" y="660" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">D−60</text>
+  <text x="1044" y="660" text-anchor="middle" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">D−30</text>
+  <text x="1228" y="660" text-anchor="end" fill="#85847D" font-family="Arial, Helvetica, sans-serif" font-size="8">TODAY</text>
+
+  <line x1="826" y1="682.5" x2="1260" y2="682.5" stroke="#D6D5CF"/>
+  <text x="842" y="706" fill="#191A1D" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700">Traffic-light context</text>
+  <circle cx="842" cy="730" r="5" fill="#1D9E75"/>
+  <text x="856" y="734" fill="#3F6256" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">0–4 exceptions</text>
+  <circle cx="976" cy="730" r="5" fill="#EF9F27"/>
+  <text x="990" y="734" fill="#775119" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">5–9</text>
+  <circle cx="1052" cy="730" r="5" fill="#E24B4A"/>
+  <text x="1066" y="734" fill="#8F302F" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700">10+</text>
+  <text x="842" y="758" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9">Reference context only; no compliance claim.</text>
+  <text x="842" y="773" fill="#686861" font-family="Arial, Helvetica, sans-serif" font-size="9">All values are illustrative synthetic data.</text>
+</svg>
