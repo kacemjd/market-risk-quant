@@ -158,7 +158,8 @@
 <line x1="284.9" y1="990" x2="284.9" y2="1176" stroke="#E24B4A" stroke-width="2"/>
 <text x="292.9" y="1000" font-size="11.5" font-weight="700" fill="#E24B4A" text-anchor="start">VaR 99%  −$8.42M</text>
 <text x="268.88" y="1020" font-size="11.5" font-weight="700" fill="#B0700F" text-anchor="end">ES 97.5%  −$8.95M</text>
-<text x="136" y="1232" font-size="11.5" font-weight="400" fill="#6B6862" text-anchor="start">Red bars are the 1% loss tail. ES averages that tail, so it always sits further left than VaR.</text>
+<text x="136" y="1226" font-size="11.5" font-weight="400" fill="#6B6862" text-anchor="start">Red bars mark the worst 1% of scenarios — the tail VaR 99% cuts off at its threshold.</text>
+<text x="136" y="1242" font-size="11.5" font-weight="400" fill="#6B6862" text-anchor="start">ES 97.5% averages the worst 2.5%: a different, wider tail that here sits deeper in loss.</text>
 <rect x="676" y="882" width="556" height="372" fill="#FFFFFF" rx="14" stroke="#E0DDD6" stroke-width="1"/>
 <rect x="676" y="882" width="5" height="372" fill="#B4B2A9" rx="2.5"/>
 <text x="708" y="920" font-size="16.5" font-weight="700" fill="#232129" text-anchor="start">60-day backtest</text>

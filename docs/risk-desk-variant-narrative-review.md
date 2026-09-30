@@ -37,16 +37,18 @@ The variant changes presentation, not substance. Every quantity from the baselin
 and internally consistent:
 
 - **VaR 99% · 1-day — $8.42M** (2.04% of a $412.0M NAV), up **$1.26M / +17.6%** on the day.
-- **ES 97.5% · 1-day — $8.95M**. Rendered to the right of VaR in the tail of the distribution, which
-  is the correct relationship: ES averages the tail, so it always sits further into the loss side.
+- **ES 97.5% · 1-day — $8.95M**. Rendered to the left of the VaR line in the loss tail. The two
+  measures use *different* thresholds: VaR 99% is the 99th-percentile loss, while ES 97.5% is the
+  average of losses beyond the 97.5th percentile. In this synthetic distribution that average lands
+  deeper in loss than VaR 99%; the mockup states the relationship as an observation, not a rule.
 - **VaR 99% · 10-day — $26.6M, approximate.** Labelled as a √10 scaling of the 1-day figure in three
   places (the metric label, its note, and the footer). It is never presented as a re-simulation.
 - **Exceptions · trailing 250 days — 4**, against an expected ≈ 2.5 at 99% confidence, flagged amber
   rather than red because it is a watch item, not a verdict.
 - **Method selection is page-wide.** A single segmented control in the header, with explicit copy
   stating that switching method re-derives every figure below. There is no per-card method override.
-- **P&L distribution** — 500 simulated 1-day scenarios; the 1% loss tail is coloured, the VaR line is
-  solid, the ES line is dashed.
+- **P&L distribution** — 500 simulated 1-day scenarios; the worst 1% of scenarios (the tail VaR 99%
+  cuts off) is coloured, the VaR line is solid, the ES 97.5% line is dashed.
 - **Component VaR is additive and reconciles exactly**: 4.86 + 1.94 + 1.02 + 0.41 + 0.19 = **8.42**,
   with a 100.0% share column and no residual row.
 - **Diversification is separate**: standalone sum 11.87 − benefit 3.45 = 8.42. It is shown in its own
